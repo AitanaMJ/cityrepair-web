@@ -1,0 +1,12 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# build/output
+dist/
+build/
+
+# node (si más adelante usás npm)
+node_modules/
+.env

@@ -1,0 +1,5 @@
+:root{
+  --blue:#0057A0;
+  --green:#27AE60;
+}
+body{ scroll-behavior:smooth; }
