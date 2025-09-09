@@ -3,75 +3,141 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CityRepair • Sistema de Reportes EDET</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="src/css/styles.css" rel="stylesheet" />
+
+  <title>CityRepair · Inicio</title>
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <!-- Bootstrap Icons (para los iconos de nav y tarjetas) -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    rel="stylesheet"
+  />
+  <!-- Tus estilos -->
+  <link href="./src/css/styles.css" rel="stylesheet" />
 </head>
 <body class="bg-light">
+
+  <!-- ============ NAVBAR (arriba) ============ -->
   <nav class="navbar navbar-expand-lg border-bottom bg-white sticky-top">
     <div class="container">
-      <a class="navbar-brand fw-semibold" href="index.html">
-        <span class="badge text-bg-primary rounded-circle me-2">E</span> CityRepair
-        <small class="text-muted d-block" style="font-size:.75rem;margin-top:-.25rem">Sistema de Reportes EDET</small>
+      <!-- Marca izquierda -->
+      <a class="navbar-brand fw-semibold d-flex align-items-center gap-2" href="./index.html">
+        <span class="brand-badge">E</span>
+        <span>
+          CityRepair
+          <small class="d-block text-muted lh-1" style="font-size:.75rem;">Sistema de Reportes EDET</small>
+        </span>
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div id="nav" class="collapse navbar-collapse">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
-          <li class="nav-item"><a class="nav-link" href="pages/reportar.html">Reportar</a></li>
-          <li class="nav-item"><a class="nav-link" href="pages/mis-reportes.html">Mis Reportes</a></li>
-          <li class="nav-item"><a class="nav-link" href="pages/contacto.html">Contacto</a></li>
-          <li class="nav-item"><a class="nav-link" href="pages/admin.html">Admin</a></li>
+
+      <!-- Menú centrado -->
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav mx-auto nav-pills gap-2">
+          <li class="nav-item">
+            <a class="nav-link d-inline-flex align-items-center gap-2" href="./index.html">
+              <i class="bi bi-house-door"></i><span>Inicio</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-inline-flex align-items-center gap-2" href="./pages/reportar.html">
+              <i class="bi bi-flag"></i><span>Reportar</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-inline-flex align-items-center gap-2" href="./pages/mis-reportes.html">
+              <i class="bi bi-clipboard-check"></i><span>Mis Reportes</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-inline-flex align-items-center gap-2" href="./pages/contacto.html">
+              <i class="bi bi-telephone"></i><span>Contacto</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-inline-flex align-items-center gap-2" href="./pages/admin.html">
+              <i class="bi bi-shield-lock"></i><span>Admin</span>
+            </a>
+          </li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <main class="container py-5">
-    <section class="text-center mb-5">
-      <div class="mx-auto mb-3 rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width:64px;height:64px;font-weight:700">E</div>
-      <h1 class="fw-bold">CityRepair</h1>
-      <p class="text-muted">Sistema de Reportes EDET</p>
-    </section>
+  <!-- ============ HÉROE (círculo + título) ============ -->
+  <section class="hero bg-light border-bottom">
+    <div class="container text-center py-5">
+      <div class="mx-auto brand-circle mb-3">E</div>
+      <h1 class="fw-bold mb-1">CityRepair</h1>
+      <p class="text-muted mb-0">Sistema de Reportes EDET</p>
+    </div>
+  </section>
 
-    <div class="row g-4">
-      <!-- Tres tarjetas como en tu Figma -->
-      <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body">
-            <div class="h-12 w-12 rounded-circle bg-success-subtle text-success mb-3 d-inline-flex justify-content-center align-items-center p-3">⚠️</div>
-            <h5 class="card-title">Reportar Problema</h5>
-            <p class="text-muted">Reportá incidencias eléctricas en tu zona</p>
-            <a class="btn btn-success" href="pages/reportar.html">Crear Reporte</a>
+  <!-- ============ TARJETAS (3 acciones) ============ -->
+  <section class="py-5">
+    <div class="container">
+      <div class="row g-4">
+        <!-- 1) Reportar Problema -->
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+              <div class="feature-icon bg-success-subtle text-success mb-3">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+              </div>
+              <h5 class="fw-semibold">Reportar Problema</h5>
+              <p class="text-muted">Reporta incidencias eléctricas en tu zona</p>
+              <a class="btn btn-success" href="./pages/reportar.html">Crear Reporte</a>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body">
-            <div class="h-12 w-12 rounded-circle bg-primary text-white mb-3 d-inline-flex justify-content-center align-items-center p-3">🧾</div>
-            <h5 class="card-title">Mis Reportes</h5>
-            <p class="text-muted">Consultá el estado de tus reportes</p>
-            <a class="btn btn-outline-primary" href="pages/mis-reportes.html">Ver Reportes</a>
+        <!-- 2) Mis Reportes -->
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+              <div class="feature-icon bg-primary-subtle text-primary mb-3">
+                <i class="bi bi-clipboard-check-fill"></i>
+              </div>
+              <h5 class="fw-semibold">Mis Reportes</h5>
+              <p class="text-muted">Consulta el estado de tus reportes</p>
+              <a class="btn btn-outline-primary" href="./pages/mis-reportes.html">Ver Reportes</a>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-          <div class="card-body">
-            <div class="h-12 w-12 rounded-circle bg-primary text-white mb-3 d-inline-flex justify-content-center align-items-center p-3">📞</div>
-            <h5 class="card-title">Contacto Rápido</h5>
-            <p class="text-muted">Línea directa para emergencias</p>
-            <a class="btn btn-outline-primary" href="pages/contacto.html">Contactar</a>
+        <!-- 3) Contacto Rápido -->
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+              <div class="feature-icon bg-primary-subtle text-primary mb-3">
+                <i class="bi bi-telephone-fill"></i>
+              </div>
+              <h5 class="fw-semibold">Contacto Rápido</h5>
+              <p class="text-muted">Línea directa para emergencias</p>
+              <a class="btn btn-outline-primary" href="./pages/contacto.html">Contactar</a>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </main>
+  </section>
 
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="src/js/app.js"></script>
+
+  <!-- Script para marcar activo el item del menú según la página -->
+  <script>
+    (() => {
+      const here = location.pathname.replace(/\\/g,'/').split('/').pop() || 'index.html';
+      document.querySelectorAll('.nav-link').forEach(a => {
+        const href = a.getAttribute('href');
+        if (href && href.endsWith(here)) a.classList.add('active');
+      });
+    })();
+  </script>
 </body>
 </html>
