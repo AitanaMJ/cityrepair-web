@@ -2,52 +2,75 @@
   --blue:#0057A0;
   --green:#27AE60;
 }
+
 body{ scroll-behavior:smooth; }
 
-/* Marca circular del brand en navbar/héroe */
-.brand-badge{
-  width:2.25rem; height:2.25rem; border-radius:50%;
-  display:grid; place-items:center;
-  background:#0d6efd; color:#fff; font-weight:700;
-}
-
-
+/* Marca circular */
 .brand-circle{
   display:grid; place-items:center;
-  width:2.25rem; height:2.25rem;
+  width:5.5rem; height:5.5rem;
   border-radius:50%;
-  background:#0d6efd; color:#fff; font-weight:700;
-}
-.brand-circle{
-  width:5.5rem; height:5.5rem; font-size:2rem;
+  background:linear-gradient(135deg,var(--blue),#0d6efd);
+  color:#fff; font-weight:700; font-size:2rem;
+  box-shadow:0 4px 10px rgba(0,0,0,.15);
 }
 
-/* Nav pills look */
-.nav-pills .nav-link{
- border-radius:10px;
-  padding:.4rem .8rem;
-  display:inline-flex;            /* 👈 centra vertical */
-  align-items:center;             /* 👈 centra vertical */
-  justify-content:center;         /* 👈 centra horizontal */
-  color:#0d6efd;
+/* Hero */
+.hero{
+  padding:4rem 0 3rem;
+  background:linear-gradient(180deg,#f8f9fa,#fff);
 }
-.nav-pills .nav-link:hover{ background:rgba(13,110,253,.08); }
+.hero h1{
+  font-size:2.5rem;
+  color:var(--blue);
+}
+.hero p{
+  font-size:1.1rem;
+  color:#6c757d;
+}
+
+/* Nav pills */
+.nav-pills .nav-link{
+  border-radius:10px;
+  padding:.45rem .9rem;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--blue);
+  font-weight:500;
+  transition:.3s;
+}
+.nav-pills .nav-link:hover{ background:rgba(0,87,160,.08); }
 .nav-pills .nav-link.active{
-  background:#0d6efd;
+  background:var(--blue);
   color:#fff;
 }
 
-/* Iconitos redondos en cards */
+/* Iconos de tarjetas */
 .feature-icon{
-   width:64px; height:64px; border-radius:50%;
+  width:70px; height:70px; border-radius:50%;
   display:grid; place-items:center;
-  font-size:1.4rem;
+  font-size:1.6rem;
+  transition:.3s;
 }
 
-/* Ajuste de separaciones del héroe (podés afinarlo) */
-.hero{ padding:3.5rem 0 2rem; }
+/* Tarjetas */
+.card{
+  border:0; border-radius:1rem;
+  transition:transform .3s, box-shadow .3s;
+}
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+.card-body h5{
+  color:var(--blue);
+}
+.card-body p{
+  font-size:.95rem;
+}
 
-/* Opcional: ocultar texto de tabs en pantallas muy chicas y dejar solo iconos */
+/* Responsive nav */
 @media (max-width: 400px){
   .navbar .nav-link span{ display:none; }
 }
