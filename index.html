@@ -22,20 +22,38 @@
 <body class="bg-light">
 
   <!-- ============ NAVBAR (arriba) ============ -->
-  <nav class="navbar navbar-expand-lg border-bottom bg-white sticky-top">
-    <div class="container">
-      <!-- Marca izquierda -->
-      <a class="navbar-brand fw-semibold d-flex align-items-center gap-2" href="./index.html">
-        <span class="brand-badge">E</span>
-        <span>
-          CityRepair
-          <small class="d-block text-muted lh-1" style="font-size:.75rem;">Sistema de Reportes EDET</small>
-        </span>
-      </a>
+  <!-- NAVBAR (igual en todas las páginas) -->
+  <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
+      <span class="badge bg-primary rounded-circle me-2">E</span>
+      CityRepair
+      <small class="d-block text-muted" style="font-size:0.75rem;"> Sistema de Reportes EDET </small>
+    </a>
 
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item">
+        <a class="nav-link active" href="index.html">
+          <i class="bi bi-house-door me-1"></i>Inicio
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="contacto.html">
+          <i class="bi bi-telephone me-1"></i>Contacto
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="pages/login.html">
+          <i class="bi bi-box-arrow-in-right me-1"></i>Acceder
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+
+
+
 
       <!-- Menú centrado -->
       <div class="collapse navbar-collapse" id="navMain">
