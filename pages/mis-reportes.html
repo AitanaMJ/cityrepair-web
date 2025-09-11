@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CityRepair • Mis Reportes</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body {
+      background: #f8f9fa;
+    }
+    .brand-badge {
+      width: 2.25rem; height: 2.25rem; border-radius: 50%;
+      display: grid; place-items: center;
+      background:#0d6efd; color:#fff; font-weight:700;
+    }
+    .status-badge {
+      font-size: .8rem;
+      padding: .35rem .65rem;
+      border-radius: 20px;
+    }
+    .status-pendiente {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+    }
+    .status-proceso {
+      background: #cce5ff;
+      color: #004085;
+      border: 1px solid #b8daff;
+    }
+    .status-resuelto {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg border-bottom bg-white sticky-top">
+  <div class="container">
+    <!-- Marca izquierda -->
+    <a class="navbar-brand fw-semibold d-flex align-items-center gap-2" href="../index.html">
+      <span class="brand-badge">E</span>
+      <span>
+        CityRepair
+        <small class="d-block text-muted lh-1" style="font-size:.75rem;">Sistema de Reportes EDET</small>
+      </span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav mx-auto nav-pills gap-2">
+        <li class="nav-item"><a class="nav-link d-inline-flex align-items-center gap-2" href="../index.html"><i class="bi bi-house-door"></i><span>Inicio</span></a></li>
+        <li class="nav-item"><a class="nav-link d-inline-flex align-items-center gap-2" href="./reportar.html"><i class="bi bi-flag"></i><span>Reportar</span></a></li>
+        <li class="nav-item"><a class="nav-link d-inline-flex align-items-center gap-2 active" href="./mis-reportes.html"><i class="bi bi-clipboard-check"></i><span>Mis Reportes</span></a></li>
+        <li class="nav-item"><a class="nav-link d-inline-flex align-items-center gap-2" href="./contacto.html"><i class="bi bi-telephone"></i><span>Contacto</span></a></li>
+        <li class="nav-item"><a class="nav-link d-inline-flex align-items-center gap-2" href="./admin.html"><i class="bi bi-shield-lock"></i><span>Admin</span></a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-4">
+  <a href="../index.html" class="text-decoration-none small mb-2 d-inline-block">&larr; Volver</a>
+  <h1 class="fw-bold mb-4">Mis Reportes</h1>
+
+  <!-- Lista de reportes -->
+  <div class="row g-4">
+    <!-- Reporte 1 -->
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div class="card-body d-flex justify-content-between align-items-start">
+          <div>
+            <h5 class="fw-bold mb-1"><i class="bi bi-lightning-charge text-warning"></i> Corte de luz</h5>
+            <p class="mb-1 text-muted"><i class="bi bi-geo-alt"></i> Calle Falsa 123, San Miguel</p>
+            <p class="mb-1 small text-muted"><i class="bi bi-calendar"></i> 05/09/2025</p>
+            <span class="status-badge status-pendiente">Pendiente</span>
+          </div>
+          <a href="#" class="btn btn-sm btn-outline-primary">Ver detalle</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reporte 2 -->
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div class="card-body d-flex justify-content-between align-items-start">
+          <div>
+            <h5 class="fw-bold mb-1"><i class="bi bi-tree text-success"></i> Ramas sobre cables</h5>
+            <p class="mb-1 text-muted"><i class="bi bi-geo-alt"></i> Av. Central 456, Yerba Buena</p>
+            <p class="mb-1 small text-muted"><i class="bi bi-calendar"></i> 02/09/2025</p>
+            <span class="status-badge status-proceso">En proceso</span>
+          </div>
+          <a href="#" class="btn btn-sm btn-outline-primary">Ver detalle</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reporte 3 -->
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div class="card-body d-flex justify-content-between align-items-start">
+          <div>
+            <h5 class="fw-bold mb-1"><i class="bi bi-bolt-fill text-danger"></i> Poste caído</h5>
+            <p class="mb-1 text-muted"><i class="bi bi-geo-alt"></i> Ruta 9 km 12, Banda del Río Salí</p>
+            <p class="mb-1 small text-muted"><i class="bi bi-calendar"></i> 20/08/2025</p>
+            <span class="status-badge status-resuelto">Resuelto</span>
+          </div>
+          <a href="#" class="btn btn-sm btn-outline-primary">Ver detalle</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
