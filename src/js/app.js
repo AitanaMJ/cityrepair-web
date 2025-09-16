@@ -1,27 +1,29 @@
 console.log("CityRepair listo ✅");
 
 (function () {
+  // =====================================================================
+  //                         MAPA / FORMULARIO REPORTE
+  // =====================================================================
   const form = document.getElementById("form-reporte");
   const btnGeo = document.getElementById("btn-geo");
   const coordsBox = document.getElementById("coords");
   const mapEl = document.getElementById("map");
-  const direccionInput = document.getElementById("direccion") || document.querySelector('input[name="direccion"]');
+  const direccionInput =
+    document.getElementById("direccion") ||
+    document.querySelector('input[name="direccion"]');
   const btnBuscarDir = document.getElementById("btn-buscar-dir");
 
   let map, marker, lastFetchAbort;
-  let typing = false; // <-- flag: el usuario está escribiendo
+  let typing = false;
 
-  // Utils
   const isInputFocused = () => document.activeElement === direccionInput;
   const showCoords = (lat, lng) => {
     if (coordsBox) coordsBox.textContent = `Lat: ${lat.toFixed(5)} — Lng: ${lng.toFixed(5)}`;
   };
   const debounce = (fn, wait = 600) => {
-    let t;
-    return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
+    let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
   };
 
-  // ---- Reverse geocoding (lat,lng -> dirección) ----
   async function reverseGeocode(lat, lng, { normalizeIfPossible = true } = {}) {
     try {
       if (lastFetchAbort) lastFetchAbort.abort();
@@ -38,7 +40,6 @@ console.log("CityRepair listo ✅");
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
-      // NO sobrescribir si la persona está escribiendo o el input está enfocado
       if (!direccionInput) return;
       if (!normalizeIfPossible) return;
       if (typing || isInputFocused()) return;
@@ -49,7 +50,6 @@ console.log("CityRepair listo ✅");
     }
   }
 
-  // ---- Forward geocoding (dirección -> lat,lng) ----
   async function forwardGeocode(query, { normalize = false } = {}) {
     if (!query || query.trim().length < 4) return;
     try {
@@ -62,7 +62,6 @@ console.log("CityRepair listo ✅");
       url.searchParams.set("addressdetails", "1");
       url.searchParams.set("accept-language", "es");
       url.searchParams.set("limit", "1");
-      // url.searchParams.set("countrycodes", "ar"); // opcional
 
       const res = await fetch(url.toString(), { signal: lastFetchAbort.signal });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -78,7 +77,6 @@ console.log("CityRepair listo ✅");
       marker.setLatLng([latitude, longitude]);
       showCoords(latitude, longitude);
 
-      // Solo normalizar el input si fue una búsqueda explícita (botón/Enter)
       if (normalize && direccionInput && display_name) {
         direccionInput.value = display_name;
       }
@@ -89,7 +87,6 @@ console.log("CityRepair listo ✅");
 
   const forwardGeocodeDebounced = debounce((q) => forwardGeocode(q, { normalize: false }), 700);
 
-  // ---- Mapa ----
   function initMap(lat = -26.8285, lng = -65.2226, zoom = 12) {
     if (!mapEl || typeof L === "undefined") return;
     if (map) return;
@@ -97,7 +94,7 @@ console.log("CityRepair listo ✅");
     map = L.map("map").setView([lat, lng], zoom);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
-      attribution: '&copy; OpenStreetMap contrib.',
+      attribution: "&copy; OpenStreetMap contrib.",
     }).addTo(map);
 
     marker = L.marker([lat, lng], { draggable: true }).addTo(map);
@@ -116,18 +113,14 @@ console.log("CityRepair listo ✅");
     });
 
     showCoords(lat, lng);
-    // Solo autollenar si el input está vacío
     if (direccionInput && !direccionInput.value) {
       reverseGeocode(lat, lng, { normalizeIfPossible: true });
     }
   }
 
-  // ---- Eventos UI ----
   if (btnGeo) {
     btnGeo.addEventListener("click", () => {
-      if (!("geolocation" in navigator)) {
-        alert("Tu navegador no soporta geolocalización."); return;
-      }
+      if (!("geolocation" in navigator)) { alert("Tu navegador no soporta geolocalización."); return; }
       btnGeo.disabled = true;
       btnGeo.textContent = "Obteniendo ubicación...";
       navigator.geolocation.getCurrentPosition(
@@ -137,7 +130,6 @@ console.log("CityRepair listo ✅");
           map.setView([latitude, longitude], 16);
           marker.setLatLng([latitude, longitude]);
           showCoords(latitude, longitude);
-          // acá sí normalizamos porque es acción explícita del usuario (geo)
           reverseGeocode(latitude, longitude, { normalizeIfPossible: true });
           btnGeo.textContent = "📍 Usar mi ubicación actual";
           btnGeo.disabled = false;
@@ -151,85 +143,113 @@ console.log("CityRepair listo ✅");
     });
   }
 
-  // Botón Buscar: búsqueda explícita -> normaliza input
   if (btnBuscarDir && direccionInput) {
     btnBuscarDir.addEventListener("click", () => {
       forwardGeocode(direccionInput.value, { normalize: true });
     });
   }
 
-  // Tipeo: dispara búsqueda (NO normaliza, no pisa texto)
   if (direccionInput) {
     direccionInput.addEventListener("focus", () => { typing = true; });
     direccionInput.addEventListener("blur", () => { typing = false; });
 
     direccionInput.addEventListener("input", (e) => {
       typing = true;
-      forwardGeocodeDebounced(e.target.value); // centra mapa, NO pisa texto
+      forwardGeocodeDebounced(e.target.value);
     });
 
     direccionInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
         typing = false;
-        forwardGeocode(direccionInput.value, { normalize: true }); // Enter sí normaliza
+        forwardGeocode(direccionInput.value, { normalize: true });
       }
     });
   }
 
   if (mapEl) initMap();
 
-  if (form) {
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      // const { lat, lng } = marker.getLatLng();
-      alert("✅ Reporte enviado (demo). Luego conectamos con la API.");
-      form.reset();
-      window.location.href = "./mis-reportes.html";
-    });
-  }
-
   document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("form-reporte");
+    const formDom = document.getElementById("form-reporte");
+    if (!formDom) return;
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault(); // evita que recargue la página
+    formDom.addEventListener("submit", (e) => {
+      e.preventDefault();
 
-    const tipoProblema = document.querySelector("#tipo-problema").value.trim();
-    const direccion = document.querySelector("#direccion").value.trim();
-    const descripcion = document.querySelector("#descripcion").value.trim();
+      const tipoProblemaEl = document.querySelector("#tipo-problema");
+      const direccionEl    = document.querySelector("#direccion");
+      const descripcionEl  = document.querySelector("#descripcion");
 
-    // Validaciones simples
-    if (!tipoProblema) {
-      mostrarAlerta("Por favor selecciona un tipo de problema", "danger");
-      return;
+      const tipoProblema = tipoProblemaEl ? tipoProblemaEl.value.trim() : "";
+      const direccion    = direccionEl ? direccionEl.value.trim() : "";
+      const descripcion  = descripcionEl ? descripcionEl.value.trim() : "";
+
+      if (!tipoProblema) { mostrarAlerta("Por favor selecciona un tipo de problema", "danger"); return; }
+      if (!direccion)    { mostrarAlerta("Por favor ingresa una dirección o usa tu ubicación", "danger"); return; }
+      if (!descripcion)  { mostrarAlerta("Por favor describe el problema", "danger"); return; }
+
+      mostrarAlerta("✅ Reporte enviado con éxito", "success");
+      formDom.reset();
+
+      const isInPages = location.pathname.replace(/\\/g,'/').includes('/pages/');
+      window.location.href = isInPages ? "./mis-reportes.html" : "pages/mis-reportes.html";
+    });
+
+    function mostrarAlerta(mensaje, tipo = "info") {
+      const alerta = document.createElement("div");
+      alerta.className = `alert alert-${tipo} mt-3`;
+      alerta.textContent = mensaje;
+
+      const container = document.querySelector("main") || document.body;
+      container.prepend(alerta);
+
+      setTimeout(() => alerta.remove(), 4000);
     }
-
-    if (!direccion) {
-      mostrarAlerta("Por favor ingresa una dirección o usa tu ubicación", "danger");
-      return;
-    }
-
-    if (!descripcion) {
-      mostrarAlerta("Por favor describe el problema", "danger");
-      return;
-    }
-
-    // Si todo está bien
-    mostrarAlerta("✅ Reporte enviado con éxito", "success");
-    form.reset(); // limpia el formulario
   });
 
-  function mostrarAlerta(mensaje, tipo = "info") {
-    const alerta = document.createElement("div");
-    alerta.className = `alert alert-${tipo} mt-3`;
-    alerta.textContent = mensaje;
+  // =====================================================================
+  //                            DRAWER LATERAL
+  // =====================================================================
+  const drawer   = document.querySelector(".drawer");
+  const overlay  = document.querySelector(".drawer-overlay");
+  const btnHamb  = document.querySelector(".hamburger");
+  const btnClose = document.querySelector(".drawer-close");
 
-    const container = document.querySelector("main");
-    container.prepend(alerta);
+  if (drawer && overlay && btnHamb && btnClose) {
+    const openDrawer = () => {
+      drawer.classList.add("show");
+      overlay.hidden = false; // para que participe en el flujo
+      // fuerza reflow para animación del overlay
+      overlay.offsetHeight;
+      overlay.classList.add("show");
+      drawer.setAttribute("aria-hidden","false");
+      btnHamb.setAttribute("aria-expanded","true");
+      const first = drawer.querySelector("a,button");
+      first && first.focus();
+    };
 
-    setTimeout(() => alerta.remove(), 4000); // se borra después de 4 segundos
+    const closeDrawer = () => {
+      drawer.classList.remove("show");
+      overlay.classList.remove("show");
+      drawer.setAttribute("aria-hidden","true");
+      btnHamb.setAttribute("aria-expanded","false");
+      setTimeout(() => { overlay.hidden = true; }, 200);
+      btnHamb.focus();
+    };
+
+    btnHamb.addEventListener("click", openDrawer);
+    btnClose.addEventListener("click", closeDrawer);
+    overlay.addEventListener("click", closeDrawer);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
+
+    // cerrar al navegar por un link del drawer
+    drawer.addEventListener("click", (e) => {
+      if (e.target.closest("a")) closeDrawer();
+    });
+
+    // si agrando pantalla, cerramos
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 768 && drawer.classList.contains("show")) closeDrawer();
+    });
   }
-});
-
 })();
