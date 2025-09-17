@@ -8,81 +8,67 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 <body>
-  <!-- ======= NAVBAR ======= -->
-  <header class="navbar">
-    <div class="container">
-      <div class="brand-left">
-        <div class="avatar-sm">E</div>
-        <div class="brand-txt">
-          <span class="brand-title">CityRepair</span>
-          <span class="brand-sub">Sistema de Reportes EDET</span>
-        </div>
+ <!-- ===== NAVBAR (mismo que index) ===== -->
+<header class="navbar">
+  <div class="container">
+    <div class="brand-left">
+      
+      <div class="avatar-sm">E</div>
+      
+      <div class="brand-txt">
+        <span class="brand-title">CityRepair</span>
+        <span class="brand-sub">Sistema de Reportes EDET</span>
       </div>
+    </div>
 
-      <!-- Botón hamburguesa (visible solo en móvil) -->
-      <button class="hamburger" aria-label="Abrir menú" aria-expanded="false">☰</button>
-
-      <!-- Enlaces visibles en desktop -->
-      <nav class="nav-right" aria-label="Principal">
-        <a class="nav-item active" href="index.html">
-          <span class="icon">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.25 12 3l9 8.25v8.5a1.25 1.25 0 0 1-1.25 1.25h-5.5a.75.75 0 0 1-.75-.75v-5h-3v5a.75.75 0 0 1-.75.75h-5.5A1.25 1.25 0 0 1 3 19.75v-8.5z"/></svg>
-          </span>
-          Inicio
-        </a>
-        <a class="nav-item" href="pages/reportar.html">
+    <nav class="nav-right">
+      <a class="nav-item active" href="../index.html">
+        <span class="icon"><i class="bi bi-house"></i></span> Inicio
+      </a>
+      <a class="nav-item" href="pages/reportar.html">
         <span class="icon"><i class="bi bi-flag"></i></span> Reportar
       </a>
+      <a class="nav-item" href="pages/mis-reportes.html">
+        <span class="icon"><i class="bi bi-clipboard2-check"></i></span> Mis Reportes
+      </a>
+      <a class="nav-item" href="pages/contacto.html">
+        <span class="icon"><i class="bi bi-telephone"></i></span> Contacto
+      </a>
 
-        <a class="nav-item" href="pages/mis-reportes.html">
-          <span class="icon">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1 7h5l-5-5v5z"/></svg>
-          </span>
-          Mis Reportes
-        </a>
-        <a class="nav-item" href="pages/contacto.html">
-          <span class="icon">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79a15.91 15.91 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24 11.36 11.36 0 0 0 3.56.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 7a1 1 0 0 1 1-1h2.49a1 1 0 0 1 1 1 11.36 11.36 0 0 0 .57 3.56 1 1 0 0 1-.24 1.01l-2.2 2.22z"/></svg>
-          </span>
-          Contacto
-        </a>
-        <a class="nav-item" href="pages/login.html">
-          <span class="icon">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l1.4-1.4L8.8 13H20v-2H8.8l2.6-2.6L10 7l-5 5 5 5zM4 5h8V3H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8v-2H4V5z"/></svg>
-          </span>
-          Acceder
-        </a>
-      </nav>
+      <a class="nav-item" href="pages/login.html">
+        <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
+      </a>
+    </nav>
+      
+
+    <button class="hamburger" id="openDrawer" aria-label="Abrir menú">
+      <i class="bi bi-list"></i>
+    </button>
+  </div>
+  <div class="navbar-divider"></div>
+</header>
+
+<!-- Drawer para móvil (usa las clases que ya estiliza styles.css) -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <button class="drawer-close" id="closeDrawer" aria-label="Cerrar">×</button>
+  <div class="drawer-header">
+    <div class="avatar-sm">E</div>
+    <div class="brand-txt">
+      <span class="brand-title">CityRepair</span>
+      <span class="brand-sub">Sistema de Reportes EDET</span>
     </div>
-    <div class="navbar-divider"></div>
+  </div>
+  <nav class="drawer-nav">
+    <a class="drawer-link" href="../index.html"><i class="bi bi-house me-2"></i> Inicio</a>
+    <a class="drawer-link" href="./reportar.html"><i class="bi bi-flag me-2"></i> Reportar</a>
+    <a class="drawer-link" href="./mis-reportes.html"><i class="bi bi-clipboard2-check me-2"></i> Mis Reportes</a>
+    <a class="drawer-link" href="./contacto.html"><i class="bi bi-telephone me-2"></i> Contacto</a>
+    
+  </nav>
+</aside>
 
-    <!-- Overlay + Drawer lateral (menú móvil) -->
-    <div class="drawer-overlay" hidden></div>
-
-    <aside class="drawer" aria-hidden="true">
-      <button class="drawer-close" aria-label="Cerrar menú">✕</button>
-
-      <div class="drawer-header">
-        <div class="avatar-sm">E</div>
-        <div class="brand-txt">
-          <span class="brand-title">CityRepair</span>
-          <span class="brand-sub">Sistema de Reportes EDET</span>
-        </div>
-      </div>
-
-      <nav class="drawer-nav" aria-label="Menú móvil">
-        <a class="drawer-link" href="index.html"> Inicio</a>
-        <a class="drawer-link" href="pages/reportar.html"> Reportar</a>
-        <a class="drawer-link" href="pages/mis-reportes.html"> Mis Reportes</a>
-        <a class="drawer-link" href="pages/contacto.html"> Contacto</a>
-        <a class="drawer-link" href="pages/login.html"> Acceder</a>
-      </nav>
-
-      <div class="drawer-cta">
-        <a class="btn btn-green" href="pages/register.html">Registrarme</a>
-      </div>
-    </aside>
-  </header>
+      
 
   <!-- ======= HERO ======= -->
   <section class="hero">
