@@ -1,0 +1,76 @@
+:root{
+  --blue:#0057A0;
+  --green:#27AE60;
+  --gray:#f5f6fa;
+  --dark:#2c3e50;
+}
+
+/* Reset básico */
+*{ box-sizing:border-box; margin:0; padding:0; font-family:'Segoe UI', system-ui, sans-serif; }
+
+/* Fondo, sin flex en body */
+body{ background:var(--gray); }
+
+/* Contenedor que centra la tarjeta
+   (deja respiro bajo el navbar) */
+.register-wrap{
+  display:flex;
+  justify-content:center;
+  padding: 32px 16px 64px;
+  min-height: calc(100vh - 72px); /* aprox. alto del header */
+}
+
+/* Tarjeta */
+.card{
+  background:#fff;
+  border:1px solid #e5e7eb;      /* combina con styles.css */
+  border-radius:18px;
+  padding:24px;
+  width:min(520px, 92vw);
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+/* Título */
+.card h2{
+  display:flex; align-items:center; gap:.5rem;
+  font-size:1.4rem; color:var(--dark);
+  margin-bottom:1rem;
+}
+
+/* Campos */
+.form-group{ margin-bottom:1rem; }
+.form-group label{
+  display:block; font-weight:600; margin-bottom:.45rem; color:var(--dark);
+}
+.form-group input{
+  width:100%; padding:.7rem .85rem; font-size:.95rem;
+  border:1px solid #d9dde3; border-radius:10px;
+  transition:border .2s, box-shadow .2s;
+  background:#fff;
+}
+.form-group input:focus{
+  outline:none; border-color:var(--blue);
+  box-shadow:0 0 0 3px rgba(0,87,160,.15);
+}
+
+/* Botón */
+.btn{
+  display:block; width:100%;
+  background:var(--blue); color:#fff;
+  border:none; padding:.85rem 1rem;
+  font-size:1rem; font-weight:700;
+  border-radius:10px; cursor:pointer;
+  transition:filter .2s, transform .05s;
+}
+.btn:hover{ filter:brightness(.97); }
+.btn:active{ transform:translateY(1px); }
+
+/* Texto inferior */
+.text-center{ text-align:center; margin-top:1rem; }
+.text-center a{ color:var(--blue); text-decoration:none; font-weight:600; }
+.text-center a:hover{ text-decoration:underline; }
+
+/* Responsive pequeño */
+@media (max-width: 480px){
+  .card{ padding:18px; }
+}
