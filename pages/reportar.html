@@ -12,6 +12,17 @@
 </head>
 <body>
 
+ <script>
+  (function () {
+    const AUTH_KEY = 'cr_auth';
+    if (!localStorage.getItem(AUTH_KEY)) {
+      const next = location.pathname + location.search + location.hash;
+      location.replace(`/pages/login.html?next=${encodeURIComponent(next)}`);
+    }
+  })();
+</script>
+
+
   <!-- ======= NAVBAR (igual que inicio) ======= -->
   <header class="navbar">
     <div class="container">

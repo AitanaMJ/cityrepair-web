@@ -252,4 +252,32 @@ console.log("CityRepair listo ✅");
       if (window.innerWidth > 768 && drawer.classList.contains("show")) closeDrawer();
     });
   }
+
+// ===== Auth helpers simples con localStorage =====
+const AUTH_KEY = 'cr_auth';
+function isLoggedIn() {
+  return !!localStorage.getItem(AUTH_KEY);
+}
+function requireAuth(nextUrl) {
+  if (!isLoggedIn()) {
+    window.location.href = `/pages/login.html?next=${encodeURIComponent(nextUrl)}`;
+    return false;
+  }
+  return true;
+}
+
+// Gate para "Crear Reporte" en el inicio
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('btnCrearReporte');
+  if (!btn) return;
+
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const destino = '/pages/reportar.html'; // o "pages/reportar.html" si lo dejaste relativo
+    if (requireAuth(destino)) window.location.href = destino;
+  });
+});
+
+
+
 })();
