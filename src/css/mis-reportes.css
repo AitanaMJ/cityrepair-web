@@ -1,0 +1,52 @@
+/* En Mis Reportes, apilar tarjetas */
+.myreports .row{
+  display: grid;               /* evita el flex de .row global */
+  grid-template-columns: 1fr;  /* una sola columna */
+  gap: 24px;                   /* separaciones entre tarjetas */
+}
+
+/* (opcional) toques visuales coherentes */
+.myreports .card{
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+}
+.myreports .card-body{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* badges de estado (si no los tenías) */
+.status-badge{
+  display:inline-block; padding:4px 10px; border-radius:999px; font-weight:700; font-size:12px;
+}
+.status-pendiente{ background:#FEF3C7; color:#92400E; }
+.status-proceso{   background:#E0F2FE; color:#075985; }
+.status-resuelto{  background:#DCFCE7; color:#166534; }
+
+
+/* Título grande en tarjetas de Mis Reportes */
+.myreports .card h5{
+  font-size: 20px;        /* subilo si querés: 24–26px */
+  line-height: 1.2;
+  font-weight: 650;
+  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;              /* espacio con el ícono */
+}
+
+/* Que el ícono acompañe el tamaño del título */
+.myreports .card h5 .bi{
+  font-size: 22px;        /* mismo que el título */
+}
+
+
+
+/* Responsive: un toque más chico en móvil */
+@media (max-width: 600px){
+  .myreports .card h5{ font-size: 18px; }
+  .myreports .card h5 .bi{ font-size: 18px; }
+}

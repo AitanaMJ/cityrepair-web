@@ -3,11 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CityRepair – Reportar Problema</title>
-
-  <!-- CSS global -->
-  <link rel="stylesheet" href="../src/css/styles.css" />
-  <!-- Leaflet -->
+  <title>CityRepair – Reportar Problema</title> 
+   <link rel="stylesheet" href="../src/css/styles.css">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
@@ -22,48 +20,62 @@
   })();
 </script>
 
-
-  <!-- ======= NAVBAR (igual que inicio) ======= -->
-  <header class="navbar">
-    <div class="container">
-      <div class="brand-left">
-        <div class="avatar-sm">E</div>
-        <div class="brand-txt">
-          <span class="brand-title">CityRepair</span>
-          <span class="brand-sub">Sistema de Reportes EDET</span>
-        </div>
+<!-- ===== NAVBAR ===== -->
+<header class="navbar">
+  <div class="container">
+    <div class="brand-left">
+      <div class="avatar-sm">E</div>
+      <div class="brand-txt">
+        <span class="brand-title">CityRepair</span>
+        <span class="brand-sub">Sistema de Reportes EDET</span>
       </div>
-
-      <button class="hamburger" aria-label="Abrir menú" aria-expanded="false">☰</button>
-
-      <nav class="nav-right" aria-label="Principal">
-        <a class="nav-item" href="../index.html">Inicio</a>
-        <a class="nav-item" href="contacto.html">Contacto</a>
-        <a class="nav-item" href="login.html">Acceder</a>
-      </nav>
     </div>
-    <div class="navbar-divider"></div>
 
-    <!-- Drawer / Overlay -->
-    <div class="drawer-overlay" hidden></div>
-    <aside class="drawer" aria-hidden="true">
-      <button class="drawer-close" aria-label="Cerrar menú">✕</button>
+    <nav class="nav-right">
+      <a class="nav-item" href="../index.html">
+        <span class="icon"><i class="bi bi-house"></i></span> Inicio
+      </a>
+      <a class="nav-item active" href="./reportar.html">
+        <span class="icon"><i class="bi bi-flag"></i></span> Reportar
+      </a>
+      <a class="nav-item" href="./mis-reportes.html">
+        <span class="icon"><i class="bi bi-clipboard2-check"></i></span> Mis Reportes
+      </a>
+      <a class="nav-item" href="./contacto.html">
+        <span class="icon"><i class="bi bi-telephone"></i></span> Contacto
+      </a>
+      <a class="nav-item" href="./login.html">
+        <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
+      </a>
+    </nav>
 
-      <div class="drawer-header">
-        <div class="avatar-sm">E</div>
-        <div class="brand-txt">
-          <span class="brand-title">CityRepair</span>
-          <span class="brand-sub">Sistema de Reportes EDET</span>
-        </div>
-      </div>
+    <button class="hamburger" id="openDrawer" aria-label="Abrir menú">
+      <i class="bi bi-list"></i>
+    </button>
+  </div>
+  <div class="navbar-divider"></div>
+</header>
 
-      <nav class="drawer-nav" aria-label="Menú móvil">
-        <a class="drawer-link" href="../index.html">Inicio</a>
-        <a class="drawer-link" href="contacto.html">Contacto</a>
-        <a class="drawer-link" href="login.html">Acceder</a>
-      </nav>
-    </aside>
-  </header>
+<!-- Drawer móvil -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <button class="drawer-close" id="closeDrawer" aria-label="Cerrar">×</button>
+  <div class="drawer-header">
+    <div class="avatar-sm">E</div>
+    <div class="brand-txt">
+      <span class="brand-title">CityRepair</span>
+      <span class="brand-sub">Sistema de Reportes EDET</span>
+    </div>
+  </div>
+  <nav class="drawer-nav">
+    <a class="drawer-link" href="../index.html"><i class="bi bi-house me-2"></i> Inicio</a>
+    <a class="drawer-link" href="./reportar.html"><i class="bi bi-flag me-2"></i> Reportar</a>
+    <a class="drawer-link" href="./mis-reportes.html"><i class="bi bi-clipboard2-check me-2"></i> Mis Reportes</a>
+    <a class="drawer-link" href="./contacto.html"><i class="bi bi-telephone me-2"></i> Contacto</a>
+    <a class="drawer-link" href="./login.html"><i class="bi bi-box-arrow-in-right me-2"></i> Acceder</a>
+  </nav>
+</aside>
+ 
 
   <!-- ======= HERO ======= -->
   <section class="hero">
