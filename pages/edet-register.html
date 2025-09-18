@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro EDET • CityRepair</title>
+  <link rel="stylesheet" href="../src/css/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <style>
+    .auth-wrap{display:grid;place-items:center;padding:32px 0}
+    .auth-card{width:min(640px, 92vw); background:#fff; border:1px solid var(--stroke);
+      border-radius:18px; box-shadow:var(--shadow); padding:22px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .field{display:flex;flex-direction:column;gap:6px}
+    .btn-primary{background:#0d6efd;color:#fff;border:0;padding:10px 14px;border-radius:10px;font-weight:700}
+    @media (max-width:720px){ .grid{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="container">
+      <div class="brand-left">
+        <div class="avatar-sm">E</div>
+        <div class="brand-txt">
+          <span class="brand-title">CityRepair</span>
+          <span class="brand-sub">Sistema de Reportes EDET</span>
+        </div>
+      </div>
+      <nav class="nav-right">
+        <a class="nav-item" href="../index.html"><span class="icon"><i class="bi bi-house"></i></span> Inicio</a>
+      </nav>
+      <button class="hamburger"><i class="bi bi-list"></i></button>
+    </div><div class="navbar-divider"></div>
+  </header>
+
+  <main class="container auth-wrap">
+    <div class="auth-card">
+      <h2 class="auth-title" style="display:flex;align-items:center;gap:10px">
+        <i class="bi bi-person-plus"></i> Registro EDET
+      </h2>
+      <p class="muted" style="margin:0 0 10px">Registro para trabajadores de EDET</p>
+
+      <form id="edetRegisterForm" class="grid">
+        <label class="field">
+          <span>Nombre *</span>
+          <input id="rNombre" required/>
+        </label>
+        <label class="field">
+          <span>Apellido *</span>
+          <input id="rApellido" required/>
+        </label>
+
+        <label class="field">
+          <span>ID de Empleado *</span>
+          <input id="rEid" placeholder="EDET-001234" required/>
+        </label>
+        <label class="field">
+          <span>Departamento *</span>
+          <input id="rDepto" placeholder="Operaciones, Mantenimiento, etc." required/>
+        </label>
+
+        <label class="field">
+          <span>Teléfono</span>
+          <input id="rTel" placeholder="+54 11 1234-5678"/>
+        </label>
+        <label class="field">
+          <span>Email corporativo *</span>
+          <input id="rEmail" type="email" placeholder="nombre@edet.com.ar" required/>
+        </label>
+
+        <label class="field">
+          <span>Contraseña *</span>
+          <input id="rPass" type="password" required/>
+        </label>
+        <div></div>
+
+        <div style="grid-column:1/-1;display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
+          <a class="btn btn-outline" href="./edet-login.html">Ya tengo cuenta</a>
+          <button class="btn-primary" type="submit"><i class="bi bi-person-check"></i> Registrarse</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script src="../src/js/auth.js"></script>
+  <script src="../src/js/edet.js"></script>
+</body>
+</html>

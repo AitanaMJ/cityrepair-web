@@ -1,0 +1,149 @@
+/* Contenedor general */
+.edash { padding: 28px 0 60px; }
+.edash-title{
+  margin: 0 0 14px;
+  font-size: 32px;
+  line-height: 1.15;
+  font-weight: 900;
+  color:#111827;
+}
+
+/* ==== KPIs ==== */
+.edash-kpis{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:18px;
+  margin: 10px 0 22px;
+}
+.kpi{
+  background:#fff;
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  box-shadow:var(--shadow);
+  padding:18px;
+  text-align:center;
+}
+.kpi-num{
+  font-size:28px;
+  font-weight:900;
+  color:#111827;
+  letter-spacing:.2px;
+}
+.kpi-num--green{ color:#16a34a; }
+.kpi-num--blue { color:#0ea5e9; }
+.kpi-num--red  { color:#ef4444; }
+.kpi-sub{
+  font-size:13px;
+  margin-top:6px; color:var(--muted);
+}
+
+/* ==== Barra búsqueda + filtros ==== */
+.edash-bar{
+  display:flex; gap:12px; align-items:center;
+  background:#fff;
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  box-shadow:var(--shadow);
+  padding:12px;
+  margin-bottom:22px;
+}
+.input-icon{ position:relative; flex:1; }
+.input-icon i{
+  position:absolute; left:10px; top:50%; transform:translateY(-50%);
+  font-size:16px; color:#64748b;
+}
+.input-icon input{
+  width:100%; height:42px; padding:0 12px 0 32px;
+  border:1px solid var(--stroke); border-radius:12px; outline:none;
+  background:#fff;
+}
+.input-icon input:focus{
+  border-color:#bcd3ff; box-shadow:0 0 0 3px rgba(13,110,253,.16);
+}
+.select{
+  height:42px; padding:0 36px 0 12px; border-radius:12px;
+  border:1px solid var(--stroke); background:#fff; outline:none;
+}
+
+/* ==== Gráficos ==== */
+.edash-charts{
+  display:grid; gap:18px; grid-template-columns: repeat(2, 1fr);
+  margin-bottom:22px;
+}
+.card{
+  background:#fff; border:1px solid var(--stroke);
+  border-radius:14px; box-shadow:var(--shadow);
+  padding:16px 14px;
+}
+.card-head{
+  font-weight:800; color:#111827; margin-bottom:10px;
+}
+
+/* ==== Lista ==== */
+.edash-list .list-head,
+.edash-list .list-row{
+  display:grid; grid-template-columns: 1.1fr 1.6fr .9fr .9fr 1fr .8fr;
+  gap:14px; align-items:center; padding:12px 10px;
+}
+.edash-list .list-head{
+  color:#64748b; font-weight:700; font-size:12px;
+  border-bottom:1px solid var(--stroke);
+}
+.edash-list .list-row{
+  border-bottom:1px solid var(--stroke);
+}
+.ta-right{ text-align:right; }
+
+/* Piezas de la fila */
+.rep-code{ font-weight:800; color:#111827; }
+.rep-date{ color:#6b7280; font-size:12px; display:flex; gap:6px; align-items:center; }
+.rep-title{ font-weight:800; color:#111827; }
+.rep-loc{ color:#334155; display:flex; gap:6px; align-items:center; }
+.chip{
+  display:inline-flex; gap:6px; align-items:center;
+  background:#eef2ff; color:#3730a3; border-radius:999px;
+  padding:4px 8px; font-size:12px; font-weight:700;
+}
+.chip--pill{
+  background:#f1f5f9; color:#0f172a; border:1px solid #e5e7eb;
+}
+
+/* Tags estado/prioridad */
+.tag{
+  display:inline-flex; gap:6px; align-items:center;
+  font-size:12px; font-weight:800; padding:6px 10px; border-radius:999px;
+}
+.tag--blue  { background:#eff6ff; color:#1d4ed8; }
+.tag--green { background:#ecfdf5; color:#059669; }
+.tag--yellow{ background:#fefce8; color:#a16207; }
+.tag--red   { background:#fee2e2; color:#b91c1c; }
+.tag--gray  { background:#f3f4f6; color:#374151; }
+
+/* Botones acciones */
+.btn-resolver{
+  background:#22c55e; color:#fff; border:0; border-radius:10px;
+  height:36px; padding:0 12px; font-weight:800; cursor:pointer;
+}
+.btn-resolver:hover{ filter:brightness(.95); }
+.btn-resolver.is-disabled{ opacity:.5; cursor:not-allowed; }
+.btn-icon{
+  height:36px; width:36px; display:inline-grid; place-items:center;
+  background:#fff; border:1px solid var(--stroke); border-radius:10px; margin-left:6px;
+}
+.btn-icon:hover{ background:#f8fafc; }
+
+@media (max-width: 1024px){
+  .edash-kpis{ grid-template-columns: repeat(2, 1fr); }
+  .edash-charts{ grid-template-columns: 1fr; }
+  .edash-list .list-head,
+  .edash-list .list-row{
+    grid-template-columns: 1.2fr 1.6fr .9fr .9fr 1fr .8fr;
+  }
+}
+@media (max-width: 720px){
+  .edash-list .list-head{ display:none; }
+  .edash-list .list-row{
+    grid-template-columns: 1fr; gap:6px; align-items:flex-start;
+  }
+  .ta-right{ text-align:left; }
+}

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión EDET • CityRepair</title>
+
+  <!-- Base del sitio -->
+  <link rel="stylesheet" href="../src/css/styles.css">
+  <!-- Estilos de este dashboard -->
+  <link rel="stylesheet" href="../src/css/edet-dashboard.css">
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+<body>
+
+  <!-- NAVBAR igual al index -->
+  <header class="navbar">
+    <div class="container">
+      <div class="brand-left">
+        <div class="avatar-sm">E</div>
+        <div class="brand-txt">
+          <span class="brand-title">CityRepair</span>
+          <span class="brand-sub">Sistema de Reportes EDET</span>
+        </div>
+      </div>
+
+      <nav class="nav-right">
+        <a class="nav-item active" href="#">
+          <span class="icon"><i class="bi bi-clipboard2-check"></i></span> Gestión
+        </a>
+        <a class="nav-item" href="./edet-login.html">
+          <span class="icon"><i class="bi bi-box-arrow-right"></i></span> Salir
+        </a>
+      </nav>
+      <button class="hamburger" aria-label="Abrir menú"><i class="bi bi-list"></i></button>
+    </div>
+    <div class="navbar-divider"></div>
+  </header>
+
+  <!-- ===== DASHBOARD ===== -->
+  <main class="container edash">
+    <h1 class="edash-title">Panel de Gestión EDET</h1>
+
+    <!-- KPIs -->
+    <section class="edash-kpis">
+      <article class="kpi">
+        <div class="kpi-num" id="kpiTotal">0</div>
+        <div class="kpi-sub">Total Reportes</div>
+      </article>
+      <article class="kpi">
+        <div class="kpi-num kpi-num--green" id="kpiOk">0</div>
+        <div class="kpi-sub">Resueltos</div>
+      </article>
+      <article class="kpi">
+        <div class="kpi-num kpi-num--blue" id="kpiReview">0</div>
+        <div class="kpi-sub">En Revisión</div>
+      </article>
+      <article class="kpi">
+        <div class="kpi-num kpi-num--red" id="kpiHigh">0</div>
+        <div class="kpi-sub">Alta Prioridad</div>
+      </article>
+    </section>
+
+    <!-- Barra de búsqueda + filtros -->
+    <section class="edash-bar">
+      <div class="input-icon">
+        <i class="bi bi-search"></i>
+        <input type="text" placeholder="Buscar reportes..." />
+      </div>
+      <select class="select">
+        <option>Todos los estados</option>
+        <option>Pendiente</option>
+        <option>En Revisión</option>
+        <option>Resuelto</option>
+      </select>
+      <select class="select">
+        <option>Todas las prioridades</option>
+        <option>Baja</option>
+        <option>Media</option>
+        <option>Alta</option>
+      </select>
+    </section>
+
+    <!-- Gráficos -->
+    <section class="edash-charts">
+      <article class="card">
+        <header class="card-head">Estado de Reportes</header>
+        <canvas id="chartStatus" height="180"></canvas>
+      </article>
+      <article class="card">
+        <header class="card-head">Reportes por Zona</header>
+        <canvas id="chartZones" height="180"></canvas>
+      </article>
+    </section>
+
+    <!-- Tabla / lista -->
+    <section class="edash-list card">
+      <header class="card-head">Listado de Reportes</header>
+
+      <div class="list-head">
+        <span>REPORTE</span>
+        <span>TIPO / UBICACIÓN</span>
+        <span>ESTADO</span>
+        <span>PRIORIDAD</span>
+        <span>ASIGNADO A</span>
+        <span class="ta-right">ACCIONES</span>
+      </div>
+
+      <!-- Fila 1 -->
+      <div class="list-row">
+        <div>
+          <div class="rep-code">#8742</div>
+          <div class="rep-date"><i class="bi bi-calendar"></i> 14/1/2024 • Juan Pérez</div>
+        </div>
+        <div>
+          <div class="rep-title">Corte de luz</div>
+          <div class="rep-loc"><i class="bi bi-geo-alt"></i> Av. Libertador 1234 <span class="chip">Centro</span></div>
+        </div>
+        <div><span class="tag tag--blue"><i class="bi bi-hourglass-split"></i> En Revisión</span></div>
+        <div><span class="tag tag--red"><i class="bi bi-exclamation-triangle"></i> Alta</span></div>
+        <div><span class="chip chip--pill"><i class="bi bi-person-badge"></i> Cuadrilla B</span></div>
+        <div class="ta-right">
+          <button class="btn-resolver"><i class="bi bi-check2"></i> Resolver</button>
+          <button class="btn-icon" title="Ver"><i class="bi bi-eye"></i></button>
+        </div>
+      </div>
+
+      <!-- Fila 2 -->
+      <div class="list-row">
+        <div>
+          <div class="rep-code">#8739</div>
+          <div class="rep-date"><i class="bi bi-calendar"></i> 11/1/2024 • Ana Martínez</div>
+        </div>
+        <div>
+          <div class="rep-title">Alumbrado Público</div>
+          <div class="rep-loc"><i class="bi bi-geo-alt"></i> Plaza Central <span class="chip">Centro</span></div>
+        </div>
+        <div><span class="tag tag--green"><i class="bi bi-check2-circle"></i> Resuelto</span></div>
+        <div><span class="tag tag--yellow"><i class="bi bi-exclamation-diamond"></i> Media</span></div>
+        <div><span class="chip chip--pill"><i class="bi bi-person-badge"></i> Cuadrilla C</span></div>
+        <div class="ta-right">
+          <button class="btn-resolver is-disabled" disabled>Resolver</button>
+          <button class="btn-icon" title="Ver"><i class="bi bi-eye"></i></button>
+        </div>
+      </div>
+
+      <!-- … agrega más filas según necesites … -->
+    </section>
+  </main>
+
+  <!-- (Opcional) Charts de demo con Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script>
+    // KPIs demo
+    document.getElementById('kpiTotal').textContent  = 6;
+    document.getElementById('kpiOk').textContent     = 2;
+    document.getElementById('kpiReview').textContent = 2;
+    document.getElementById('kpiHigh').textContent   = 3;
+
+    // Donut Estado
+    const donut = new Chart(document.getElementById('chartStatus'),{
+      type:'doughnut',
+      data:{ labels:['Pendiente','En Revisión','Resuelto'],
+        datasets:[{ data:[2,2,2] }]},
+      options:{ plugins:{ legend:{ position:'bottom' }}, cutout:'60%' }
+    });
+
+    // Barras Zonas
+    const bars = new Chart(document.getElementById('chartZones'),{
+      type:'bar',
+      data:{ labels:['Centro','Norte','Sur','Este','Oeste'],
+        datasets:[{ label:'Reportes', data:[2,2,1,1,0] }]},
+      options:{ plugins:{ legend:{ display:false }}, scales:{ y:{ beginAtZero:true } } }
+    });
+  </script>
+</body>
+</html>
+
