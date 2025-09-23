@@ -1,6 +1,59 @@
+// src/js/app.js
 console.log("CityRepair listo ✅");
 
 (function () {
+  // =====================================================================
+  //                    Helpers de autenticación (simple)
+  // =====================================================================
+  const AUTH_KEY = "cr_auth";
+
+  function getAuth() {
+    try { return JSON.parse(localStorage.getItem(AUTH_KEY)) || null; }
+    catch { return null; }
+  }
+  function isLoggedIn() {
+    return !!getAuth();
+  }
+  function hasRole(role) {
+    const u = getAuth();
+    return !!u && u.role === role;
+  }
+  function redirectToLogin(nextPath) {
+    const url = `/pages/login.html?next=${encodeURIComponent(nextPath)}`;
+    window.location.replace(url);
+  }
+
+  // Guard genérico para páginas que requieren ciudadano
+  function guardCitizenPage() {
+    const p = location.pathname;
+    const needsCitizen =
+      p.endsWith("/pages/reportar.html") || p.endsWith("/pages/mis-reportes.html");
+    if (needsCitizen && !hasRole("citizen")) {
+      // Conservamos query/hash si los hubiera
+      const next = location.pathname + location.search + location.hash;
+      redirectToLogin(next);
+    }
+  }
+  guardCitizenPage();
+
+  // Gate para links de tarjetas en el INICIO (por si no pusiste data-auth)
+  document.addEventListener("DOMContentLoaded", () => {
+    const protectHrefs = ["/pages/reportar.html", "/pages/mis-reportes.html"];
+
+    document.querySelectorAll('main a[href^="/pages/"]').forEach((a) => {
+      const href = a.getAttribute("href");
+      if (!protectHrefs.includes(href)) return;
+
+      a.addEventListener("click", (e) => {
+        // Exigimos rol citizen para Reportar y Mis Reportes
+        if (!hasRole("citizen")) {
+          e.preventDefault();
+          redirectToLogin(href);
+        }
+      });
+    });
+  });
+
   // =====================================================================
   //                         MAPA / FORMULARIO REPORTE
   // =====================================================================
@@ -169,12 +222,21 @@ console.log("CityRepair listo ✅");
 
   if (mapEl) initMap();
 
+  // =====================================================================
+  //                     Envío del formulario de Reporte
+  // =====================================================================
   document.addEventListener("DOMContentLoaded", () => {
     const formDom = document.getElementById("form-reporte");
     if (!formDom) return;
 
     formDom.addEventListener("submit", (e) => {
       e.preventDefault();
+
+      // Si por algún motivo llegaste sin login, te pido login ahora
+      if (!hasRole("citizen")) {
+        redirectToLogin("/pages/reportar.html");
+        return;
+      }
 
       const tipoProblemaEl = document.querySelector("#tipo-problema");
       const direccionEl    = document.querySelector("#direccion");
@@ -191,8 +253,8 @@ console.log("CityRepair listo ✅");
       mostrarAlerta("✅ Reporte enviado con éxito", "success");
       formDom.reset();
 
-      const isInPages = location.pathname.replace(/\\/g,'/').includes('/pages/');
-      window.location.href = isInPages ? "./mis-reportes.html" : "pages/mis-reportes.html";
+      // Ir a Mis Reportes (ruta absoluta)
+      window.location.href = "/pages/mis-reportes.html";
     });
 
     function mostrarAlerta(mensaje, tipo = "info") {
@@ -218,9 +280,8 @@ console.log("CityRepair listo ✅");
   if (drawer && overlay && btnHamb && btnClose) {
     const openDrawer = () => {
       drawer.classList.add("show");
-      overlay.hidden = false; // para que participe en el flujo
-      // fuerza reflow para animación del overlay
-      overlay.offsetHeight;
+      overlay.hidden = false;
+      overlay.offsetHeight; // reflow
       overlay.classList.add("show");
       drawer.setAttribute("aria-hidden","false");
       btnHamb.setAttribute("aria-expanded","true");
@@ -242,42 +303,12 @@ console.log("CityRepair listo ✅");
     overlay.addEventListener("click", closeDrawer);
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
 
-    // cerrar al navegar por un link del drawer
     drawer.addEventListener("click", (e) => {
       if (e.target.closest("a")) closeDrawer();
     });
 
-    // si agrando pantalla, cerramos
     window.addEventListener("resize", () => {
       if (window.innerWidth > 768 && drawer.classList.contains("show")) closeDrawer();
     });
   }
-
-// ===== Auth helpers simples con localStorage =====
-const AUTH_KEY = 'cr_auth';
-function isLoggedIn() {
-  return !!localStorage.getItem(AUTH_KEY);
-}
-function requireAuth(nextUrl) {
-  if (!isLoggedIn()) {
-    window.location.href = `/pages/login.html?next=${encodeURIComponent(nextUrl)}`;
-    return false;
-  }
-  return true;
-}
-
-// Gate para "Crear Reporte" en el inicio
-document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('btnCrearReporte');
-  if (!btn) return;
-
-  btn.addEventListener('click', (e) => {
-    e.preventDefault();
-    const destino = '/pages/reportar.html'; // o "pages/reportar.html" si lo dejaste relativo
-    if (requireAuth(destino)) window.location.href = destino;
-  });
-});
-
-
-
 })();
