@@ -313,3 +313,29 @@ body{
   }
   .cta-txt h3{ font-size:18px; }
 }
+
+/* ===== Toasts CityRepair (global) ===== */
+#toast-root{
+  position: fixed; top: 16px; right: 16px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+}
+.toast-cr{
+  pointer-events: auto;
+  display:flex; align-items: flex-start; gap:10px;
+  min-width: 280px; max-width: 360px;
+  padding:12px 14px; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.12);
+  background:#fff; border:1px solid rgba(0,0,0,.06);
+}
+.toast-cr .ico{font-size:18px; line-height:1.2}
+.toast-cr .body{flex:1}
+.toast-cr .title{margin:0 0 2px; font-weight:700}
+.toast-cr .msg{margin:0; opacity:.9}
+.toast-cr .close{background:transparent; border:0; font-size:18px; line-height:1; cursor:pointer}
+.toast-cr .bar{height:3px; width:100%; background:rgba(0,0,0,.06); border-radius:99px; overflow:hidden; margin-top:6px}
+.toast-cr .bar i{display:block; height:100%; width:100%; background:currentColor; opacity:.25; animation:toastbar linear forwards}
+@keyframes toastbar{from{transform:translateX(-100%)} to{transform:translateX(0)}}
+
+.toast-success{ color:#166534; background:#f0fdf4; border-color:#bbf7d0}
+.toast-info   { color:#075985; background:#eff6ff; border-color:#bfdbfe}
+.toast-warn   { color:#92400e; background:#fffbeb; border-color:#fde68a}
+.toast-error  { color:#991b1b; background:#fef2f2; border-color:#fecaca}

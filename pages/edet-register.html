@@ -1,22 +1,116 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Registro EDET • CityRepair</title>
+
+  <!-- estilos globales que ya tenés -->
   <link rel="stylesheet" href="../src/css/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
   <style>
-    .auth-wrap{display:grid;place-items:center;padding:32px 0}
-    .auth-card{width:min(640px, 92vw); background:#fff; border:1px solid var(--stroke);
-      border-radius:18px; box-shadow:var(--shadow); padding:22px}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .field{display:flex;flex-direction:column;gap:6px}
-    .btn-primary{background:#0d6efd;color:#fff;border:0;padding:10px 14px;border-radius:10px;font-weight:700}
-    @media (max-width:720px){ .grid{grid-template-columns:1fr} }
+    body{ background:#f3f5f9; }
+
+    .auth-shell{
+      display:flex;
+      justify-content:center;
+      padding:34px 12px 54px;
+    }
+    .auth-card{
+      width:min(950px, 100%);
+      background:#fff;
+      border:1px solid var(--stroke, #e5e7eb);
+      border-radius:18px;
+      box-shadow:0 8px 25px rgba(15,23,42,.04);
+      padding:26px 26px 22px;
+    }
+    .auth-card .head{
+      margin-bottom:18px;
+    }
+    .auth-card h1{
+      font-size:26px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      margin-bottom:4px;
+    }
+    .auth-card p.sub{
+      margin:0;
+      color:#6b7280;
+    }
+
+    /* el form que vos ya tenías */
+    .auth-form{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px 16px;
+    }
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .field input{
+      height:42px;
+      border:1px solid #d1d5db;
+      border-radius:10px;
+      padding:0 12px;
+      font-size:14px;
+      background:#f9fafb;
+    }
+    .field input:focus{
+      outline:none;
+      border-color:#0f62fe;
+      background:#fff;
+      box-shadow:0 0 0 2px rgba(15,98,254,.12);
+    }
+
+    .row-between{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      align-items:center;
+    }
+
+    .btn-primary-auth{
+      background:#0f62fe;
+      color:#fff;
+      border:0;
+      border-radius:12px;
+      padding:10px 16px;
+      font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      cursor:pointer;
+      transition:transform .05s ease;
+    }
+    .btn-primary-auth:active{ transform:translateY(1px); }
+
+    .btn.btn-outline{
+      border:1px solid #d1d5db;
+      border-radius:12px;
+      background:#fff;
+      padding:9px 16px;
+      font-weight:500;
+      color:#111827;
+    }
+
+    @media (max-width:768px){
+      .grid-2{ grid-template-columns:1fr; }
+      .row-between{ flex-direction:column; align-items:stretch; }
+      .auth-card{ padding:20px 16px; }
+    }
   </style>
 </head>
 <body>
+  <!-- navbar igual que el login -->
   <header class="navbar">
     <div class="container">
       <div class="brand-left">
@@ -27,62 +121,81 @@
         </div>
       </div>
       <nav class="nav-right">
-        <a class="nav-item" href="../index.html"><span class="icon"><i class="bi bi-house"></i></span> Inicio</a>
+        <a class="nav-item" href="../index.html">
+          <span class="icon"><i class="bi bi-house"></i></span> Inicio
+        </a>
+        <a class="nav-item" href="./edet-login.html">
+          <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceso EDET
+        </a>
       </nav>
-      <button class="hamburger"><i class="bi bi-list"></i></button>
-    </div><div class="navbar-divider"></div>
+      <button class="hamburger" aria-label="Abrir menú">
+        <i class="bi bi-list"></i>
+      </button>
+    </div>
+    <div class="navbar-divider"></div>
   </header>
 
-  <main class="container auth-wrap">
+  <main class="container auth-shell">
     <div class="auth-card">
-      <h2 class="auth-title" style="display:flex;align-items:center;gap:10px">
-        <i class="bi bi-person-plus"></i> Registro EDET
-      </h2>
-      <p class="muted" style="margin:0 0 10px">Registro para trabajadores de EDET</p>
+      <div class="head">
+        <h1><i class="bi bi-person-plus"></i> Registro EDET</h1>
+        <p class="sub">Registro para trabajadores de EDET</p>
+      </div>
 
-      <form id="edetRegisterForm" class="grid">
-        <label class="field">
-          <span>Nombre *</span>
-          <input id="rNombre" required/>
-        </label>
-        <label class="field">
-          <span>Apellido *</span>
-          <input id="rApellido" required/>
-        </label>
+      <!-- 👇 tu formulario que sí funciona -->
+      <form id="edetRegisterForm" class="auth-form" novalidate>
+        <div class="grid-2">
+          <label class="field">
+            <span>Nombre *</span>
+            <input id="rNombre" type="text" required>
+          </label>
+          <label class="field">
+            <span>Apellido *</span>
+            <input id="rApellido" type="text" required>
+          </label>
+        </div>
 
-        <label class="field">
-          <span>ID de Empleado *</span>
-          <input id="rEid" placeholder="EDET-001234" required/>
-        </label>
-        <label class="field">
-          <span>Departamento *</span>
-          <input id="rDepto" placeholder="Operaciones, Mantenimiento, etc." required/>
-        </label>
+        <div class="grid-2">
+          <label class="field">
+            <span>ID de Empleado *</span>
+            <input id="rEid" type="text" placeholder="EDET-001234" required>
+          </label>
+          <label class="field">
+            <span>Departamento *</span>
+            <input id="rDepto" type="text" placeholder="Operaciones..." required>
+          </label>
+        </div>
 
-        <label class="field">
-          <span>Teléfono</span>
-          <input id="rTel" placeholder="+54 11 1234-5678"/>
-        </label>
-        <label class="field">
-          <span>Email corporativo *</span>
-          <input id="rEmail" type="email" placeholder="nombre@edet.com.ar" required/>
-        </label>
+        <div class="grid-2">
+          <label class="field">
+            <span>Teléfono</span>
+            <input id="rTel" type="text" placeholder="+54 ...">
+          </label>
+          <label class="field">
+            <span>Email corporativo *</span>
+            <input id="rEmail" type="email" placeholder="nombre@edet.com.ar" required>
+          </label>
+        </div>
 
         <label class="field">
           <span>Contraseña *</span>
-          <input id="rPass" type="password" required/>
+          <input id="rPass" type="password" required>
         </label>
-        <div></div>
 
-        <div style="grid-column:1/-1;display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
-          <a class="btn btn-outline" href="./edet-login.html">Ya tengo cuenta</a>
-          <button class="btn-primary" type="submit"><i class="bi bi-person-check"></i> Registrarse</button>
+        <div class="row-between" style="margin-top:1rem;">
+          <a href="./edet-login.html" class="btn btn-outline">Ya tengo cuenta</a>
+          <button type="submit" class="btn-primary-auth">
+            <i class="bi bi-person-check"></i> Registrarse
+          </button>
         </div>
       </form>
     </div>
   </main>
 
-  <script src="../src/js/auth.js"></script>
-  <script src="../src/js/edet.js"></script>
+  <!-- tus scripts -->
+  <script src="../src/js/app.js"></script>
+  <script type="module" src="../src/js/firebase.js"></script>
+  <!-- este es el que hace el saveUser / setAuth -->
+  <script type="module" src="../src/js/edet-register.js"></script>
 </body>
 </html>

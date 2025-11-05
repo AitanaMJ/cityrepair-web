@@ -71,12 +71,12 @@
   <a class="nav-item" href="/pages/login.html">
     <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
   </a>
+
+  <a href="#" class="nav-item" data-logout hidden>
+    <span class="icon"><i class="bi bi-box-arrow-right"></i></span> Cerrar sesión
+  </a>
+
 </nav>
-
-
-
-
-      
 
     <button class="hamburger" id="openDrawer" aria-label="Abrir menú">
       <i class="bi bi-list"></i>
@@ -103,6 +103,7 @@
   <a class="drawer-link" href="/pages/contacto.html">Contacto</a>
   <a class="drawer-link" href="/pages/login.html">Acceder</a>
   <a class="drawer-link" href="/pages/edet-login.html">Acceso EDET</a>
+  <button id="btn-logout" hidden>Cerrar sesión</button>
 </nav>
 </aside>
 
@@ -172,5 +173,7 @@
 
 
   <script src="src/js/app.js"></script>
+  <script type="module" src="../src/js/firebase.js"></script>
+  <script type="module" src="../src/js/logout.js"></script>
 </body>
 </html>

@@ -2,23 +2,20 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Acceso EDET • CityRepair</title>
 
-  <!-- Tus estilos base -->
+  <!-- mismos estilos globales que usa el login normal -->
   <link rel="stylesheet" href="../src/css/styles.css" />
-  <!-- Estilos específicos de esta pantalla -->
-  <link rel="stylesheet" href="../src/css/edet-auth.css" />
-  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="../src/css/login.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 <body>
-
-  <!-- ===== NAVBAR (el mismo que index) ===== -->
+  <!-- NAVBAR igual que el resto -->
   <header class="navbar">
     <div class="container">
       <div class="brand-left">
-        <div class="avatar-sm">E</div> 
+        <div class="avatar-sm">E</div>
         <div class="brand-txt">
           <span class="brand-title">CityRepair</span>
           <span class="brand-sub">Sistema de Reportes EDET</span>
@@ -26,79 +23,106 @@
       </div>
 
       <nav class="nav-right">
-        <a class="nav-item" href="../index.html"><span class="icon"><i class="bi bi-house"></i></span> Inicio</a>
-        <a class="nav-item" href="./contacto.html"><span class="icon"><i class="bi bi-telephone"></i></span> Contacto</a>
+        <a class="nav-item" href="../index.html">
+          <span class="icon"><i class="bi bi-house"></i></span> Inicio
+        </a>
+        <a class="nav-item" href="./contacto.html">
+          <span class="icon"><i class="bi bi-telephone"></i></span> Contacto
+        </a>
       </nav>
 
-      <button class="hamburger" aria-label="Abrir menú"><i class="bi bi-list"></i></button>
+      <button class="hamburger" id="openDrawer" aria-label="Abrir menú">
+        <i class="bi bi-list"></i>
+      </button>
     </div>
     <div class="navbar-divider"></div>
   </header>
 
-  <!-- ===== CONTENIDO ===== -->
-  <main class="container edet-auth">
-    <section class="edet-card">
+  <!-- Drawer móvil (si lo usás en el resto) -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <button class="drawer-close" id="closeDrawer" aria-label="Cerrar">×</button>
+    <div class="drawer-header">
+      <div class="avatar-sm">E</div>
+      <div class="brand-txt">
+        <span class="brand-title">CityRepair</span>
+        <span class="brand-sub">Sistema de Reportes EDET</span>
+      </div>
+    </div>
+    <nav class="drawer-nav">
+      <a class="drawer-link" href="../index.html">Inicio</a>
+      <a class="drawer-link" href="./contacto.html">Contacto</a>
+    </nav>
+  </aside>
 
-      <!-- Título con icono como en Figma -->
-      <header class="edet-head">
-        <span class="edet-badge"><i class="bi bi-shield-lock"></i></span>
-        <div class="edet-head-txt">
-          <h1>Iniciar Sesión (EDET)</h1>
-          <p>Usa tus credenciales de empleado EDET</p>
-        </div>
-      </header>
+  <!-- CONTENIDO -->
+  <main class="container">
+    <section class="auth-wrap" style="max-width: 560px; margin: 3rem auto;">
+      <div class="auth-card">
+        <h2 class="auth-title">Iniciar Sesión (EDET)</h2>
+        <p class="auth-sub">Usa tus credenciales de empleado EDET</p>
 
-      <!-- Formulario -->
-      <form id="edetLoginForm" class="edet-form" novalidate>
-        <label class="edet-field">
-          <span class="edet-label">Email corporativo <b>*</b></span>
-          <input class="edet-input" type="email" placeholder="nombre@edet.com.ar" required />
-        </label>
+        <form id="edet-login-form" class="auth-form" novalidate>
+          <!-- email -->
+          <label class="field">
+            <span>Email corporativo *</span>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="nombre@edet.com.ar"
+              autocomplete="email"
+              required
+            />
+          </label>
 
-        <label class="edet-field">
-          <span class="edet-label">Contraseña <b>*</b></span>
-          <input class="edet-input" type="password" placeholder="••••••••" required />
-        </label>
+          <!-- password -->
+          <label class="field">
+            <span>Contraseña *</span>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              required
+            />
+          </label>
 
-        <label class="edet-check">
-          <input type="checkbox" />
-          <span>Recordar sesión</span>
-        </label>
+          <!-- recordar -->
+          <label class="checkbox">
+            <input type="checkbox" name="remember" />
+            <span>Recordar sesión</span>
+          </label>
 
-        <button class="btn-edet" type="submit">
-          <i class="bi bi-box-arrow-in-right"></i>
-          Iniciar Sesión
-        </button>
+          <!-- botón -->
+          <button type="submit" class="btn btn-primary-auth">
+            <i class="bi bi-box-arrow-in-right"></i>
+            Iniciar Sesión
+          </button>
 
-        <p class="edet-alt">¿Nuevo en EDET? <a href="./edet-register.html">Registrarse aquí</a></p>
-      </form>
+          <!-- link registro -->
+          <p class="auth-foot" style="margin-top: 1rem;">
+            ¿Nuevo en EDET?
+            <a class="link" href="./edet-register.html">Registrarse aquí</a>
+          </p>
 
-      <!-- Caja de validaciones como en Figma -->
-      <aside class="edet-hint">
-        <h3>Validaciones de Seguridad:</h3>
-        <ul>
-          <li><i class="bi bi-check2-circle"></i> Email corporativo (dominio <code>@edet.com.ar</code>)</li>
-          <li><i class="bi bi-check2-circle"></i> ID de empleado (formato EDET-XXXXXX)</li>
-        </ul>
-      </aside>
+          <!-- recuadro de validaciones -->
+          <div class="panel-muted" style="margin-top: 1.2rem;">
+            <p class="muted-title" style="font-weight:600; margin-bottom:.5rem;">Validaciones de Seguridad:</p>
+            <p class="muted"><i class="bi bi-check2-circle text-success"></i> Email corporativo (dominio @edet.com.ar)</p>
+            <p class="muted"><i class="bi bi-check2-circle text-success"></i> ID de empleado (formato EDET-XXXXXX)</p>
+          </div>
+        </form>
+      </div>
     </section>
   </main>
 
-  <!-- (Opcional) lógica de demo para navegar al panel -->
-  <script>
-    document.getElementById('edetLoginForm')?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const email = e.currentTarget.querySelector('input[type="email"]').value.trim();
-      const pass  = e.currentTarget.querySelector('input[type="password"]').value.trim();
-
-      if (!email || !pass) { alert('Completa email y contraseña'); return; }
-      if (!/@edet\.com\.ar$/i.test(email)) { alert('Solo correos @edet.com.ar'); return; }
-
-      // Guardamos la sesión como empleado EDET (demo)
-      localStorage.setItem('cr_auth', JSON.stringify({ role: 'edet', email, ts: Date.now() }));
-      // Redirige al panel de gestión
-      window.location.href = './edet-dashboard.html';
-    });
-  </script>
+  <!-- scripts globales -->
+  <script src="../src/js/app.js"></script>
+  <!-- firebase base -->
+  <script type="module" src="../src/js/firebase.js"></script>
+  <!-- login EDET con firebase -->
+  <script type="module" src="../src/js/edet-login.js"></script>
 </body>
 </html>

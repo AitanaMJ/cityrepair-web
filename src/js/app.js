@@ -29,7 +29,6 @@ console.log("CityRepair listo ✅");
     const needsCitizen =
       p.endsWith("/pages/reportar.html") || p.endsWith("/pages/mis-reportes.html");
     if (needsCitizen && !hasRole("citizen")) {
-      // Conservamos query/hash si los hubiera
       const next = location.pathname + location.search + location.hash;
       redirectToLogin(next);
     }
@@ -45,7 +44,6 @@ console.log("CityRepair listo ✅");
       if (!protectHrefs.includes(href)) return;
 
       a.addEventListener("click", (e) => {
-        // Exigimos rol citizen para Reportar y Mis Reportes
         if (!hasRole("citizen")) {
           e.preventDefault();
           redirectToLogin(href);
@@ -53,6 +51,69 @@ console.log("CityRepair listo ✅");
       });
     });
   });
+
+  // =====================================================================
+  //                           TOASTS CITYREPAIR
+  // =====================================================================
+  (function setupToastRoot(){
+    if (!document.getElementById('toast-root')) {
+      const r = document.createElement('div');
+      r.id = 'toast-root';
+      document.body.appendChild(r);
+    }
+  })();
+
+  function mostrarAlerta(mensaje, tipo = "info", {titulo} = {}) {
+    const root = document.getElementById('toast-root');
+    if (!root) return;
+
+    const map = {
+      success: { cls: "toast-success", icon: "✅", title: titulo || "Listo" },
+      info:    { cls: "toast-info",    icon: "ℹ️", title: titulo || "Info" },
+      warn:    { cls: "toast-warn",    icon: "⚠️", title: titulo || "Atención" },
+      danger:  { cls: "toast-error",   icon: "⛔", title: titulo || "Error" },
+      error:   { cls: "toast-error",   icon: "⛔", title: titulo || "Error" },
+    };
+    const v = map[tipo] || map.info;
+
+    const wrap = document.createElement('div');
+    wrap.className = `toast-cr ${v.cls}`;
+    wrap.setAttribute('role','status');
+    wrap.setAttribute('aria-live','polite');
+
+    wrap.innerHTML = `
+      <div class="ico">${v.icon}</div>
+      <div class="body">
+        <p class="title">${v.title}</p>
+        <p class="msg">${mensaje}</p>
+      </div>
+      <button class="close" aria-label="Cerrar">×</button>
+      <div class="bar"><i></i></div>
+    `;
+
+    const LIFETIME = 4000;
+    const bar = wrap.querySelector('.bar > i');
+    bar.style.animationDuration = LIFETIME + 'ms';
+
+    let timeoutId = setTimeout(() => close(), LIFETIME);
+    const pause  = () => { bar.style.animationPlayState = 'paused'; clearTimeout(timeoutId); };
+    const resume = () => { bar.style.animationPlayState = 'running'; timeoutId = setTimeout(() => close(), LIFETIME); };
+
+    wrap.addEventListener('mouseenter', pause);
+    wrap.addEventListener('mouseleave', resume);
+
+    const close = () => {
+      wrap.style.transition = 'transform .2s ease, opacity .2s ease';
+      wrap.style.transform = 'translateY(-6px)';
+      wrap.style.opacity = '0';
+      setTimeout(() => wrap.remove(), 180);
+    };
+    wrap.querySelector('.close').addEventListener('click', close);
+
+    while (root.children.length >= 4) root.firstChild.remove();
+    root.prepend(wrap);
+  }
+  window.mostrarAlerta = mostrarAlerta;  // <<--- agregar
 
   // =====================================================================
   //                         MAPA / FORMULARIO REPORTE
@@ -229,16 +290,18 @@ console.log("CityRepair listo ✅");
     const formDom = document.getElementById("form-reporte");
     if (!formDom) return;
 
+    if (formDom.dataset.firebase === "1") return;
+
     formDom.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      // Si por algún motivo llegaste sin login, te pido login ahora
       if (!hasRole("citizen")) {
         redirectToLogin("/pages/reportar.html");
         return;
       }
 
-      const tipoProblemaEl = document.querySelector("#tipo-problema");
+      // Después
+      const tipoProblemaEl = document.querySelector("#tipo");
       const direccionEl    = document.querySelector("#direccion");
       const descripcionEl  = document.querySelector("#descripcion");
 
@@ -253,20 +316,8 @@ console.log("CityRepair listo ✅");
       mostrarAlerta("✅ Reporte enviado con éxito", "success");
       formDom.reset();
 
-      // Ir a Mis Reportes (ruta absoluta)
       window.location.href = "/pages/mis-reportes.html";
     });
-
-    function mostrarAlerta(mensaje, tipo = "info") {
-      const alerta = document.createElement("div");
-      alerta.className = `alert alert-${tipo} mt-3`;
-      alerta.textContent = mensaje;
-
-      const container = document.querySelector("main") || document.body;
-      container.prepend(alerta);
-
-      setTimeout(() => alerta.remove(), 4000);
-    }
   });
 
   // =====================================================================

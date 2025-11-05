@@ -7,14 +7,13 @@
 
   <!-- Base del sitio -->
   <link rel="stylesheet" href="../src/css/styles.css">
-  <!-- Estilos de este dashboard -->
+  <!-- Estilos del dashboard -->
   <link rel="stylesheet" href="../src/css/edet-dashboard.css">
-  <!-- Icons -->
+  <!-- Íconos -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 <body>
-
-  <!-- NAVBAR igual al index -->
+  <!-- NAVBAR -->
   <header class="navbar">
     <div class="container">
       <div class="brand-left">
@@ -35,7 +34,6 @@
       </nav>
       <button class="hamburger" aria-label="Abrir menú"><i class="bi bi-list"></i></button>
     </div>
-    <div class="navbar-divider"></div>
   </header>
 
   <!-- ===== DASHBOARD ===== -->
@@ -66,19 +64,19 @@
     <section class="edash-bar">
       <div class="input-icon">
         <i class="bi bi-search"></i>
-        <input type="text" placeholder="Buscar reportes..." />
+        <input type="text" id="buscarInput" placeholder="Buscar reportes..." />
       </div>
-      <select class="select">
-        <option>Todos los estados</option>
-        <option>Pendiente</option>
-        <option>En Revisión</option>
-        <option>Resuelto</option>
+      <select class="select" id="filtroEstado">
+        <option value="todos">Todos los estados</option>
+        <option value="pendiente">Pendiente</option>
+        <option value="en revisión">En Revisión</option>
+        <option value="resuelto">Resuelto</option>
       </select>
-      <select class="select">
-        <option>Todas las prioridades</option>
-        <option>Baja</option>
-        <option>Media</option>
-        <option>Alta</option>
+      <select class="select" id="filtroPrioridad">
+        <option value="todas">Todas las prioridades</option>
+        <option value="baja">Baja</option>
+        <option value="media">Media</option>
+        <option value="alta">Alta</option>
       </select>
     </section>
 
@@ -94,7 +92,7 @@
       </article>
     </section>
 
-    <!-- Tabla / lista -->
+    <!-- Listado dinámico -->
     <section class="edash-list card">
       <header class="card-head">Listado de Reportes</header>
 
@@ -107,73 +105,21 @@
         <span class="ta-right">ACCIONES</span>
       </div>
 
-      <!-- Fila 1 -->
-      <div class="list-row">
-        <div>
-          <div class="rep-code">#8742</div>
-          <div class="rep-date"><i class="bi bi-calendar"></i> 14/1/2024 • Juan Pérez</div>
-        </div>
-        <div>
-          <div class="rep-title">Corte de luz</div>
-          <div class="rep-loc"><i class="bi bi-geo-alt"></i> Av. Libertador 1234 <span class="chip">Centro</span></div>
-        </div>
-        <div><span class="tag tag--blue"><i class="bi bi-hourglass-split"></i> En Revisión</span></div>
-        <div><span class="tag tag--red"><i class="bi bi-exclamation-triangle"></i> Alta</span></div>
-        <div><span class="chip chip--pill"><i class="bi bi-person-badge"></i> Cuadrilla B</span></div>
-        <div class="ta-right">
-          <button class="btn-resolver"><i class="bi bi-check2"></i> Resolver</button>
-          <button class="btn-icon" title="Ver"><i class="bi bi-eye"></i></button>
-        </div>
+      <!-- Contenedor dinámico -->
+      <div id="edet-reportes-container">
+        <p class="muted" style="padding:12px 16px;">Cargando reportes...</p>
       </div>
-
-      <!-- Fila 2 -->
-      <div class="list-row">
-        <div>
-          <div class="rep-code">#8739</div>
-          <div class="rep-date"><i class="bi bi-calendar"></i> 11/1/2024 • Ana Martínez</div>
-        </div>
-        <div>
-          <div class="rep-title">Alumbrado Público</div>
-          <div class="rep-loc"><i class="bi bi-geo-alt"></i> Plaza Central <span class="chip">Centro</span></div>
-        </div>
-        <div><span class="tag tag--green"><i class="bi bi-check2-circle"></i> Resuelto</span></div>
-        <div><span class="tag tag--yellow"><i class="bi bi-exclamation-diamond"></i> Media</span></div>
-        <div><span class="chip chip--pill"><i class="bi bi-person-badge"></i> Cuadrilla C</span></div>
-        <div class="ta-right">
-          <button class="btn-resolver is-disabled" disabled>Resolver</button>
-          <button class="btn-icon" title="Ver"><i class="bi bi-eye"></i></button>
-        </div>
-      </div>
-
-      <!-- … agrega más filas según necesites … -->
     </section>
   </main>
 
-  <!-- (Opcional) Charts de demo con Chart.js -->
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script>
-    // KPIs demo
-    document.getElementById('kpiTotal').textContent  = 6;
-    document.getElementById('kpiOk').textContent     = 2;
-    document.getElementById('kpiReview').textContent = 2;
-    document.getElementById('kpiHigh').textContent   = 3;
 
-    // Donut Estado
-    const donut = new Chart(document.getElementById('chartStatus'),{
-      type:'doughnut',
-      data:{ labels:['Pendiente','En Revisión','Resuelto'],
-        datasets:[{ data:[2,2,2] }]},
-      options:{ plugins:{ legend:{ position:'bottom' }}, cutout:'60%' }
-    });
+  <!-- JS global (drawer, toasts, etc.) -->
+  <script src="../src/js/app.js"></script>
 
-    // Barras Zonas
-    const bars = new Chart(document.getElementById('chartZones'),{
-      type:'bar',
-      data:{ labels:['Centro','Norte','Sur','Este','Oeste'],
-        datasets:[{ label:'Reportes', data:[2,2,1,1,0] }]},
-      options:{ plugins:{ legend:{ display:false }}, scales:{ y:{ beginAtZero:true } } }
-    });
-  </script>
+  <!-- Firebase y dashboard -->
+  <script type="module" src="../src/js/firebase.js"></script>
+  <script type="module" src="../src/js/edet-dashboard.js"></script>
 </body>
 </html>
-

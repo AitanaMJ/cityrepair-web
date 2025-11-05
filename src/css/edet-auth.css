@@ -1,150 +1,110 @@
-
-
-/* contenedor general */
-.edet-auth{
-  padding: 40px 0 60px;
-}
-
-/* tarjeta principal */
-.edet-card{
-  width: min(760px, 94vw);
-  margin: 24px auto 0;
+/* ---- layout general ---- */
+.auth-form {
   background: #fff;
-  border: 1px solid var(--stroke);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow);
-  padding: 26px 24px 22px;
+  border: 1px solid #e4e7ec;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+  padding: 32px 36px;
+  width: min(880px, 94%);
+  margin: 40px auto;
 }
 
-/* cabecera con icono y textos */
-.edet-head{
+/* ---- grilla de 2 columnas ---- */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+}
+
+@media (max-width: 768px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- campos del formulario ---- */
+.field {
   display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 16px;
-}
-
-.edet-badge{
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: #e8f0ff;     /* fondo suave */
-  color: #0b5ed7;          /* azul primario */
-  font-size: 22px;
-}
-
-.edet-head-txt h1{
-  margin: 0;
-  font-weight: 800;
-  font-size: 22px;          /* tamaño como Figma */
-  color: #111827;
-}
-.edet-head-txt p{
-  margin: 2px 0 0;
-  color: var(--muted);
-}
-
-/* formulario */
-.edet-form{
-  display: grid;
-  gap: 14px;
-  margin-top: 6px;
-}
-
-.edet-field{ display: grid; gap: 6px; }
-
-.edet-label{
-  font-weight: 700;
-  color: #111827;
-}
-.edet-label b{ color: #ef4444; }
-
-.edet-input{
-  height: 44px;
-  padding: 0 12px;
-  border: 1px solid var(--stroke);
-  border-radius: 12px;
-  outline: none;
-  background: #fff;
-  font-size: 15px;
-}
-.edet-input:focus{
-  border-color: #bcd3ff;
-  box-shadow: 0 0 0 3px rgba(13,110,253,.16);
-}
-
-.edet-check{
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: #374151;
-  margin: 2px 0 4px;
-}
-
-/* botón primario */
-.btn-edet{
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 2px;
-  background: #0b5ed7;
-  color: #fff;
-  border: none;
-  height: 44px;
-  padding: 0 16px;
-  border-radius: 12px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: filter .15s ease, transform .02s ease;
-}
-.btn-edet:hover{ filter: brightness(.97); }
-.btn-edet:active{ transform: translateY(1px); }
-
-/* enlace inferior */
-.edet-alt{
-  margin: 10px 0 0;
-  color: var(--muted);
-}
-.edet-alt a{
-  color: #0b5ed7;
-  font-weight: 700;
-  text-decoration: none;
-}
-.edet-alt a:hover{ text-decoration: underline; }
-
-/* caja de validaciones */
-.edet-hint{
-  margin-top: 16px;
-  background: #f1f5f9;
-  border: 1px solid var(--stroke);
-  border-radius: 12px;
-  padding: 12px 14px;
-}
-.edet-hint h3{
-  margin: 0 0 6px;
-  font-size: 14px;
-  color: #111827;
-}
-.edet-hint ul{
-  margin: 0;
-  padding-left: 0;
-  list-style: none;
-  display: grid;
+  flex-direction: column;
   gap: 6px;
 }
-.edet-hint li{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #374151;
-  font-size: 14px;
-}
-.edet-hint li i{ color: #16a34a; }
 
-/* responsive */
-@media (max-width: 480px){
-  .edet-badge{ width: 42px; height: 42px; font-size: 20px; }
-  .edet-head-txt h1{ font-size: 20px; }
+.field span {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+.field input {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.field input:focus {
+  border-color: #0f62fe;
+  box-shadow: 0 0 0 2px rgba(15, 98, 254, 0.2);
+}
+
+/* ---- fila inferior ---- */
+.row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ---- botones ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+/* botón primario (azul) */
+.btn-primary-auth {
+  background: #0f62fe;
+  color: #fff;
+  border: none;
+}
+
+.btn-primary-auth:hover {
+  background: #0954d1;
+}
+
+/* botón contorno */
+.btn-outline {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #111827;
+}
+
+.btn-outline:hover {
+  background: #f9fafb;
+}
+
+/* ---- ajustes generales ---- */
+body {
+  background: #f3f5f9;
+}
+
+.auth-form a {
+  text-decoration: none;
+}
+
+.auth-form a:hover {
+  text-decoration: underline;
 }

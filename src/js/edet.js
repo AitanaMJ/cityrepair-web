@@ -1,56 +1,55 @@
 // src/js/edet.js
-import { setAuth, getAuth, findUserByEmail, saveUser, requireRole, logoutTo } from './auth.js';
+import { auth } from './firebase.js';
+import {
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
-/* ---------- Utils validación corporativa ---------- */
-const emailOK = (email) => /@edet\.com\.ar$/i.test(email);
-const eidOK   = (eid)   => /^EDET-\d{5,6}$/i.test(eid);
+/* ------------------------------------------------------------------
+   1. Configuración: quiénes son admins EDET
+   ------------------------------------------------------------------ */
+const ADMIN_EMAILS = [
+  "edet@cityrepair.com",
+  "admin@edet.com"
+  // agregá acá los que quieras habilitar
+];
 
-/* ---------- LOGIN ---------- */
-document.getElementById('edetLoginForm')?.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const email = document.getElementById('edetEmail').value.trim();
-  const pass  = document.getElementById('edetPass').value.trim();
+/* ------------------------------------------------------------------
+   2. Función de guardia: sólo admins pueden ver el dashboard
+   ------------------------------------------------------------------ */
+function protectDashboard() {
+  onAuthStateChanged(auth, (user) => {
+    // no logueado
+    if (!user) {
+      window.location.replace("./edet-login.html");
+      return;
+    }
 
-  if (!emailOK(email)) { alert('Usá tu email corporativo @edet.com.ar'); return; }
-  if (pass.length < 6) { alert('La contraseña debe tener al menos 6 caracteres'); return; }
+    // logueado pero NO está en la lista de admins
+    if (!ADMIN_EMAILS.includes(user.email)) {
+      // opcional: mostrar un toast si tenés window.mostrarAlerta
+      window.mostrarAlerta?.("No tienes permiso para este panel", "danger", { titulo: "Acceso denegado" });
+      // cerrar sesión para no dejarlo con la sesión de admin
+      signOut(auth);
+      window.location.replace("./edet-login.html");
+      return;
+    }
 
-  const u = findUserByEmail(email) || { name: 'Empleado', surname: '', eid: 'EDET-00000', depto: '—' };
-  // (en demo no validamos pass contra “BD”, sólo formato)
-  setAuth({ role:'edet', email, name: u.name, surname: u.surname, eid: u.eid, depto: u.depto });
-  window.location.replace('./edet-dashboard.html');
-});
+    // si llegó acá, es admin ✔
+    initDashboard(user);
+  });
+}
 
-/* ---------- REGISTRO ---------- */
-document.getElementById('edetRegisterForm')?.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const data = {
-    name:    document.getElementById('rNombre').value.trim(),
-    surname: document.getElementById('rApellido').value.trim(),
-    eid:     document.getElementById('rEid').value.trim(),
-    depto:   document.getElementById('rDepto').value.trim(),
-    tel:     document.getElementById('rTel').value.trim(),
-    email:   document.getElementById('rEmail').value.trim(),
-    pass:    document.getElementById('rPass').value.trim(),
-  };
+/* ------------------------------------------------------------------
+   3. Lógica del dashboard (lo que ya tenías)
+   ------------------------------------------------------------------ */
 
-  if (!data.name || !data.surname || !data.depto) { alert('Completá todos los datos obligatorios'); return; }
-  if (!emailOK(data.email)) { alert('Email corporativo inválido'); return; }
-  if (!eidOK(data.eid))     { alert('ID de empleado inválido. Usa formato EDET-001234'); return; }
-  if (data.pass.length < 6) { alert('Contraseña mínima: 6 caracteres'); return; }
-
-  if (findUserByEmail(data.email)) { alert('Ya existe un usuario con ese email'); return; }
-
-  saveUser(data);
-  setAuth({ role:'edet', email:data.email, name:data.name, surname:data.surname, eid:data.eid, depto:data.depto });
-  window.location.replace('./edet-dashboard.html');
-});
-
-/* ---------- DASHBOARD (datos DEMO) ---------- */
+// datos demo, los dejé igual que en tu archivo
 const DEMO = [
-  { id:8742, titulo:'Corte de luz', lugar:'Av. Libertador 1234', estado:'revision', prioridad:'alta',  fecha:'14/1/2024', zona:'Centro' },
-  { id:8739, titulo:'Alumbrado público', lugar:'Plaza Central',     estado:'resuelto', prioridad:'baja', fecha:'11/1/2024', zona:'Centro' },
-  { id:8738, titulo:'Transformador',   lugar:'Barrio Sur, Calle 12',estado:'revision', prioridad:'alta', fecha:'10/1/2024', zona:'Sur' },
-  { id:8737, titulo:'Medidor dañado',  lugar:'Av. Rivadavia 890',   estado:'pendiente',prioridad:'media',fecha:'9/1/2024',  zona:'Este' },
+  { id:8742, titulo:'Corte de luz',       lugar:'Av. Libertador 1234',     estado:'revision',  prioridad:'alta',  fecha:'14/1/2024', zona:'Centro' },
+  { id:8739, titulo:'Alumbrado público',  lugar:'Plaza Central',           estado:'resuelto',  prioridad:'baja',  fecha:'11/1/2024', zona:'Centro' },
+  { id:8738, titulo:'Transformador',      lugar:'Barrio Sur, Calle 12',    estado:'revision',  prioridad:'alta',  fecha:'10/1/2024', zona:'Sur' },
+  { id:8737, titulo:'Medidor dañado',     lugar:'Av. Rivadavia 890',       estado:'pendiente', prioridad:'media', fecha:'9/1/2024',  zona:'Este' },
 ];
 
 function pintarKPIs(list){
@@ -59,10 +58,30 @@ function pintarKPIs(list){
   const rev   = list.filter(x=>x.estado==='revision').length;
   const alta  = list.filter(x=>x.prioridad==='alta').length;
   const $ = (id)=>document.getElementById(id);
-  $('#kTotal')    && ($('#kTotal').textContent = total);
-  $('#kResueltos')&& ($('#kResueltos').textContent = res);
-  $('#kRevision') && ($('#kRevision').textContent = rev);
-  $('#kAlta')     && ($('#kAlta').textContent = alta);
+  $('#kTotal')     && ($('#kTotal').textContent     = total);
+  $('#kResueltos') && ($('#kResueltos').textContent = res);
+  $('#kRevision')  && ($('#kRevision').textContent  = rev);
+  $('#kAlta')      && ($('#kAlta').textContent      = alta);
+}
+
+function badgeEstado(e){
+  const map = {
+    pendiente:['Pendiente','#f59e0b'],
+    revision:['En Revisión','#3b82f6'],
+    resuelto:['Resuelto','#10b981']
+  };
+  const [txt,col] = map[e] || ['-','#9ca3af'];
+  return `<span style="display:inline-block;padding:4px 8px;border-radius:999px;background:${col}20;color:${col}">${txt}</span>`;
+}
+
+function badgePrio(p){
+  const map = {
+    alta:['Alta','#ef4444'],
+    media:['Media','#f59e0b'],
+    baja:['Baja','#64748b']
+  };
+  const [txt,col] = map[p] || ['-','#9ca3af'];
+  return `<span style="display:inline-block;padding:4px 8px;border-radius:999px;background:${col}20;color:${col}">${txt}</span>`;
 }
 
 function pintarTabla(list){
@@ -84,16 +103,6 @@ function pintarTabla(list){
     <tbody>${rows}</tbody>
   `;
 }
-function badgeEstado(e){
-  const map = { pendiente:['Pendiente','#f59e0b'], revision:['En Revisión','#3b82f6'], resuelto:['Resuelto','#10b981'] };
-  const [txt,col] = map[e] || ['-','#9ca3af'];
-  return `<span style="display:inline-block;padding:4px 8px;border-radius:999px;background:${col}20;color:${col}">${txt}</span>`;
-}
-function badgePrio(p){
-  const map = { alta:['Alta','#ef4444'], media:['Media','#f59e0b'], baja:['Baja','#64748b'] };
-  const [txt,col] = map[p] || ['-','#9ca3af'];
-  return `<span style="display:inline-block;padding:4px 8px;border-radius:999px;background:${col}20;color:${col}">${txt}</span>`;
-}
 
 function filtrar(){
   const q = (document.getElementById('q')?.value || '').toLowerCase();
@@ -108,16 +117,39 @@ function filtrar(){
   pintarTabla(list);
 }
 
-/* bootstrap del dashboard */
-window.addEventListener('DOMContentLoaded', () => {
-  if (document.getElementById('welcome')) {
-    requireRole('edet', './edet-login.html');
-    const u = getAuth();
-    document.getElementById('welcome').textContent =
-      `Bienvenido/a ${u?.name || 'Empleado'} (${u?.eid || ''} · ${u?.depto || ''})`;
-    pintarKPIs(DEMO);
-    pintarTabla(DEMO);
-    ['q','fEstado','fPrioridad'].forEach(id => document.getElementById(id)?.addEventListener('input', filtrar));
-    document.getElementById('btnSalir')?.addEventListener('click', (e)=>{ e.preventDefault(); logoutTo('../index.html'); });
+/* ------------------------------------------------------------------
+   4. Inicio real del dashboard una vez que sabemos que es admin
+   ------------------------------------------------------------------ */
+function initDashboard(user){
+  // mostrar “Bienvenido …” si existe el elemento
+  const welcome = document.getElementById('welcome');
+  if (welcome) {
+    welcome.textContent = `Bienvenido/a ${user.email}`;
+  }
+
+  // pintar datos demo
+  pintarKPIs(DEMO);
+  pintarTabla(DEMO);
+
+  // filtros
+  ['q','fEstado','fPrioridad'].forEach(id =>
+    document.getElementById(id)?.addEventListener('input', filtrar)
+  );
+
+  // botón cerrar sesión
+  document.getElementById('btnSalir')?.addEventListener('click', async (e) => {
+    e.preventDefault();
+    await signOut(auth);
+    window.location.replace("./edet-login.html");
+  });
+}
+
+/* ------------------------------------------------------------------
+   5. Arrancar cuando cargue la página
+   ------------------------------------------------------------------ */
+document.addEventListener("DOMContentLoaded", () => {
+  // sólo tiene sentido en el dashboard
+  if (location.pathname.endsWith("edet-dashboard.html")) {
+    protectDashboard();
   }
 });

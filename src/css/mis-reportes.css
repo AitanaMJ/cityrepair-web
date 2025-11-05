@@ -46,7 +46,7 @@
 
 
 /* Responsive: un toque más chico en móvil */
-@media (max-width: 600px){
-  .myreports .card h5{ font-size: 18px; }
-  .myreports .card h5 .bi{ font-size: 18px; }
+@media (min-width: 900px){
+  .myreports .row { grid-template-columns: 1fr 1fr; }
 }
+
