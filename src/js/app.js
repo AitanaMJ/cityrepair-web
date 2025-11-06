@@ -23,6 +23,27 @@ console.log("CityRepair listo ✅");
     window.location.replace(url);
   }
 
+  // 🔴 NUEVO: mostrar/ocultar botón de cerrar sesión del navbar
+  document.addEventListener("DOMContentLoaded", () => {
+    const btnLogout = document.getElementById("btnLogout");
+    if (!btnLogout) return;
+
+    const user = getAuth();
+    if (user) {
+      // mostrar
+      btnLogout.style.display = "inline-flex";
+      btnLogout.addEventListener("click", (e) => {
+        e.preventDefault();
+        // si también usás firebase signOut, lo hacés en el login.js o logout.js
+        localStorage.removeItem("cr_auth");
+        window.location.href = "/pages/login.html";
+      });
+    } else {
+      // ocultar
+      btnLogout.style.display = "none";
+    }
+  });
+
   // Guard genérico para páginas que requieren ciudadano
   function guardCitizenPage() {
     const p = location.pathname;
@@ -113,7 +134,7 @@ console.log("CityRepair listo ✅");
     while (root.children.length >= 4) root.firstChild.remove();
     root.prepend(wrap);
   }
-  window.mostrarAlerta = mostrarAlerta;  // <<--- agregar
+  window.mostrarAlerta = mostrarAlerta;
 
   // =====================================================================
   //                         MAPA / FORMULARIO REPORTE
@@ -300,7 +321,6 @@ console.log("CityRepair listo ✅");
         return;
       }
 
-      // Después
       const tipoProblemaEl = document.querySelector("#tipo");
       const direccionEl    = document.querySelector("#direccion");
       const descripcionEl  = document.querySelector("#descripcion");
@@ -332,7 +352,7 @@ console.log("CityRepair listo ✅");
     const openDrawer = () => {
       drawer.classList.add("show");
       overlay.hidden = false;
-      overlay.offsetHeight; // reflow
+      overlay.offsetHeight;
       overlay.classList.add("show");
       drawer.setAttribute("aria-hidden","false");
       btnHamb.setAttribute("aria-expanded","true");
@@ -362,4 +382,70 @@ console.log("CityRepair listo ✅");
       if (window.innerWidth > 768 && drawer.classList.contains("show")) closeDrawer();
     });
   }
+
+
+  
+// ===== Mostrar / ocultar botones de sesión =====
+document.addEventListener("DOMContentLoaded", () => {
+  const user = (function(){
+    try { return JSON.parse(localStorage.getItem('cr_auth')) || null; }
+    catch { return null; }
+  })();
+
+  const btnLogin     = document.getElementById('btnLogin');
+  const btnLogout    = document.getElementById('btnLogout');
+  const drawerLogin  = document.getElementById('drawerLogin');
+  const drawerLogout = document.getElementById('drawerLogout');
+
+  const showLoggedUI = !!user;
+
+  if (btnLogin)  btnLogin.hidden  = showLoggedUI;
+  if (btnLogout) btnLogout.hidden = !showLoggedUI;
+
+  if (drawerLogin)  drawerLogin.hidden  = showLoggedUI;
+  if (drawerLogout) drawerLogout.hidden = !showLoggedUI;
+
+  const doLogout = () => {
+    localStorage.removeItem('cr_auth');
+    window.location.href = '/index.html';
+  };
+
+  if (btnLogout)    btnLogout.addEventListener('click', (e) => { e.preventDefault(); doLogout(); });
+  if (drawerLogout) drawerLogout.addEventListener('click', (e) => { e.preventDefault(); doLogout(); });
+});
+
+// --- manejar cierre de sesión (Firebase + localStorage) ---
+document.addEventListener('DOMContentLoaded', () => {
+  const logoutBtns = document.querySelectorAll('[data-logout]');
+  if (!logoutBtns.length) return;
+
+  logoutBtns.forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+
+      try {
+        // usamos import dinámico porque app.js no es módulo
+        const { getAuth, signOut } = await import("https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js");
+        const auth = getAuth();
+        await signOut(auth);
+      } catch (err) {
+        console.warn('No se pudo cerrar en Firebase (o no estaba logueado):', err);
+      }
+
+      // limpiar storage de la app
+      localStorage.removeItem('cr_auth');
+
+      // feedback
+      if (window.mostrarAlerta) {
+        window.mostrarAlerta('Sesión cerrada', 'success', { titulo: 'Listo' });
+      }
+
+      // redirigir
+      window.location.href = '/index.html';
+    });
+  });
+});
+
+
+
 })();
