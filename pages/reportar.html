@@ -109,6 +109,25 @@
         </div>
       </section>
 
+      <!-- Zona / Localidad -->
+<section class="card form-card">
+  <h3 class="card-title">Zona / Localidad <span class="req">*</span></h3>
+  <label class="field">
+    <select id="zona" required>
+      <option value="">Selecciona la zona</option>
+      <option value="San Miguel de Tucumán">San Miguel de Tucumán</option>
+      <option value="Tafí Viejo">Tafí Viejo</option>
+      <option value="Yerba Buena">Yerba Buena</option>
+      <option value="Lules">Lules</option>
+      <option value="Banda del Río Salí">Banda del Río Salí</option>
+      <option value="Otra">Otra</option>
+    </select>
+  </label>
+</section>
+
+
+
+
       <!-- Mapa -->
       <section class="card form-card form-span-2">
         <h3 class="card-title">Ubicación en el Mapa</h3>
@@ -121,7 +140,7 @@
       <section class="card form-card form-span-2">
         <h3 class="card-title">Fotografías <span class="muted">(Opcional)</span></h3>
         <label class="dropzone">
-          <input type="file" accept="image/*" multiple hidden />
+          <input id="fotos" type="file" accept="image/*" multiple hidden />
           <div class="dz-inner">
             <div class="dz-icon">📷</div>
             <div class="dz-title">Haz clic para subir</div>

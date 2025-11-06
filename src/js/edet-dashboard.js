@@ -22,7 +22,6 @@ const inputBusqueda   = document.getElementById('buscarInput');
 const selectEstado    = document.getElementById('filtroEstado');
 const selectPrioridad = document.getElementById('filtroPrioridad');
 
-// acá vamos a guardar lo que viene de Firestore
 let REPORTES_ORIGINALES = [];
 let CHART_ESTADOS = null;
 let CHART_ZONA    = null;
@@ -30,8 +29,6 @@ let CHART_ZONA    = null;
 /* =======================================================
    Helpers
 ======================================================= */
-
-// prioridad deducida por tipo
 function inferirPrioridad(tipo = '') {
   const t = (tipo || '').toLowerCase();
   if (t.includes('corte')) return 'alta';
@@ -78,10 +75,8 @@ onSnapshot(q, (snap) => {
     reportes.push({ id: docSnap.id, ...docSnap.data() });
   });
 
-  // guardo en memoria
   REPORTES_ORIGINALES = reportes;
 
-  // Aplico filtros actuales (si hay)
   const filtrados = filtrarReportes();
   renderTabla(filtrados);
   actualizarKPIs(filtrados);
@@ -97,7 +92,6 @@ function filtrarReportes() {
   const prSel  = (selectPrioridad?.value || 'todas').toLowerCase();
 
   return REPORTES_ORIGINALES.filter(r => {
-    // texto
     const texto = (
       (r.tipo || '') + ' ' +
       (r.descripcion || '') + ' ' +
@@ -106,11 +100,9 @@ function filtrarReportes() {
     ).toLowerCase();
     const coincideTxt = !qTxt || texto.includes(qTxt);
 
-    // estado
     const estRep = (r.estado || 'pendiente').toLowerCase();
     const coincideEstado = estSel === 'todos' || estRep === estSel;
 
-    // prioridad deducida
     const prRep = inferirPrioridad(r.tipo).toLowerCase();
     const coincidePrio = prSel === 'todas' || prRep === prSel;
 
@@ -118,7 +110,6 @@ function filtrarReportes() {
   });
 }
 
-// engancho inputs a filtros
 [inputBusqueda, selectEstado, selectPrioridad].forEach(el => {
   el?.addEventListener('input', () => {
     const filtrados = filtrarReportes();
@@ -137,7 +128,6 @@ function filtrarReportes() {
 /* =======================================================
    Render tabla
 ======================================================= */
-
 function renderTabla(reportes = []) {
   if (!contenedor) return;
 
@@ -153,32 +143,21 @@ function renderTabla(reportes = []) {
 
     return `
       <div class="list-row" data-id="${r.id}">
-        <!-- Col 1 -->
         <div>
           <div class="rep-code">#${r.id.slice(0,6)}</div>
           <div class="rep-date"><i class="bi bi-calendar"></i> ${fecha || 'Sin fecha'}</div>
         </div>
-
-        <!-- Col 2 -->
         <div>
           <div class="rep-title">${r.tipo || 'Reporte'}</div>
           <div class="rep-loc"><i class="bi bi-geo-alt"></i> ${r.ubicacion || 'Sin dirección'}</div>
         </div>
-
-        <!-- Col 3 -->
         <div>${badgeEstado(estado)}</div>
-
-        <!-- Col 4 -->
         <div>${badgePrioridad(prioridad)}</div>
-
-        <!-- Col 5 -->
         <div>
           <span class="chip chip--pill">
             <i class="bi bi-person-badge"></i> ${r.asignadoA || 'Sin asignar'}
           </span>
         </div>
-
-        <!-- Col 6 -->
         <div class="ta-right">
           <button class="btn-resolver" data-id="${r.id}">
             <i class="bi bi-check2"></i> Resolver
@@ -193,7 +172,6 @@ function renderTabla(reportes = []) {
 
   contenedor.innerHTML = filas;
 
-  // listeners
   contenedor.querySelectorAll('.btn-resolver').forEach(btn => {
     btn.addEventListener('click', onResolverClick);
   });
@@ -205,7 +183,6 @@ function renderTabla(reportes = []) {
 /* =======================================================
    Acciones de administrador
 ======================================================= */
-
 async function onResolverClick(e) {
   const id = e.currentTarget.dataset.id;
   try {
@@ -255,7 +232,7 @@ function actualizarKPIs(reportes = []) {
 function actualizarCharts(reportes = []) {
   if (typeof Chart === 'undefined') return;
 
-  // ---- Estados ----
+  // ---------- Estados ----------
   const estados = { pendiente:0, revision:0, resuelto:0 };
   reportes.forEach(r => {
     const e = (r.estado || 'pendiente').toLowerCase();
@@ -288,25 +265,38 @@ function actualizarCharts(reportes = []) {
     }
   }
 
-  // ---- Zonas (placeholder) ----
+  // ---------- Zonas ----------
   const zonas = {};
-reportes.forEach(r => {
-  const z = r.zona || 'Sin zona';
-  zonas[z] = (zonas[z] || 0) + 1;
-});
-
-const ctx2 = document.getElementById('chartZones');
-if (ctx2) {
-  new Chart(ctx2, {
-    type: 'bar',
-    data: {
-      labels: Object.keys(zonas),
-      datasets: [{
-        label: 'Reportes',
-        data: Object.values(zonas)
-      }]
-    },
-    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+  reportes.forEach(r => {
+    const z = r.zona || 'Sin zona';
+    zonas[z] = (zonas[z] || 0) + 1;
   });
-}
+
+  const ctx2 = document.getElementById('chartZones');
+  if (ctx2) {
+    const labels = Object.keys(zonas);
+    const data   = Object.values(zonas);
+
+    if (CHART_ZONA) {
+      CHART_ZONA.data.labels = labels;
+      CHART_ZONA.data.datasets[0].data = data;
+      CHART_ZONA.update();
+    } else {
+      CHART_ZONA = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Reportes',
+            data,
+            backgroundColor: '#3b82f6'
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    }
+  }
 }

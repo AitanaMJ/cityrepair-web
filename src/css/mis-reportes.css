@@ -50,3 +50,23 @@
   .myreports .row { grid-template-columns: 1fr 1fr; }
 }
 
+.reporte-fotos-grid{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:6px;
+}
+.reporte-thumb{
+  width:90px;
+  height:90px;
+  border-radius:10px;
+  overflow:hidden;
+  display:block;
+  border:1px solid rgba(0,0,0,.05);
+}
+.reporte-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}

@@ -1,8 +1,10 @@
-import { auth, db } from './firebase.js';
+import { auth, db, storage } from './firebase.js';
 import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
 
 const form = document.getElementById('form-reporte');
+const inputFotos = document.getElementById('fotos'); // 👈 input de imágenes
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -12,8 +14,9 @@ onAuthStateChanged(auth, async (user) => {
       const tipo = document.getElementById('tipo').value.trim();
       const ubicacion = document.getElementById('ubicacion') 
         ? document.getElementById('ubicacion').value.trim()
-        : document.getElementById('direccion')?.value.trim() || ""; // por si el input se llama "direccion"
+        : document.getElementById('direccion')?.value.trim() || "";
       const descripcion = document.getElementById('descripcion').value.trim();
+      const zona = document.getElementById('zona')?.value.trim() || "";
 
       if (!tipo || !ubicacion || !descripcion) {
         alert("Por favor completa todos los campos obligatorios.");
@@ -21,20 +24,31 @@ onAuthStateChanged(auth, async (user) => {
       }
 
       try {
+        // ===== Subir fotos a Firebase Storage =====
+        const archivos = inputFotos?.files || [];
+        const urlsFotos = [];
+
+        for (const file of archivos) {
+          const storageRef = ref(storage, `reportes/${user.uid}/${Date.now()}-${file.name}`);
+          const snap = await uploadBytes(storageRef, file);
+          const url = await getDownloadURL(snap.ref);
+          urlsFotos.push(url);
+        }
+
+        // ===== Guardar reporte en Firestore =====
         await addDoc(collection(db, 'reportes'), {
           usuarioId: user.uid,
-          tipo: tipo,
-          ubicacion: ubicacion,
-          descripcion: descripcion,
+          tipo,
+          ubicacion,
+          descripcion,
+          zona,
           estado: 'pendiente',
-          fecha: serverTimestamp()
+          fecha: serverTimestamp(),
+          fotos: urlsFotos // 👈 se guarda el array de URLs
         });
 
-        // flash opcional para mostrar en mis-reportes
         sessionStorage.setItem('flash', '✅ Reporte enviado con éxito');
-
         form.reset();
-        // redirige a Mis Reportes
         window.location.href = "./mis-reportes.html";
       } catch (error) {
         console.error('Error al enviar reporte:', error);
