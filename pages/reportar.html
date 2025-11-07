@@ -154,15 +154,25 @@
 
   <footer class="footer"></footer>
 
-  <!-- Scripts -->
+    <!-- Scripts de terceros -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="../src/js/app.js"></script>
-  <script src="../src/js/navbar-auth.js"></script>
-  <!-- Firebase core -->
+
+  <!-- 🔥 Firebase primero -->
   <script type="module" src="../src/js/firebase.js"></script>
-  <!-- Guard que exige rol citizen -->
+
+  <!-- 👤 Control de navbar (oculta Acceder / muestra Cerrar sesión) -->
+  <script type="module" src="../src/js/navbar-auth.js"></script>
+
+  <!-- 🚪 Cerrar sesión -->
+  <script type="module" src="../src/js/logout.js"></script>
+
+  <!-- (opcional) si tuvieras un guard de rol -->
   <script type="module" src="../src/js/auth-guard.js"></script>
-  <!-- Lógica específica del formulario (guardar en Firestore, map, etc.) -->
+
+  <!-- Lógica específica del formulario -->
   <script type="module" src="../src/js/reportar.js"></script>
+</body>
+</html>
 </body>
 </html>

@@ -1,4 +1,3 @@
-// src/js/navbar-auth.js
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 import { auth } from "./firebase.js";
 
@@ -9,17 +8,15 @@ const drawerLogout = document.getElementById("drawerLogout");
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    // usuario logueado
+    console.log("✅ Usuario logueado:", user.email);
     if (loginLink) loginLink.hidden = true;
     if (drawerLogin) drawerLogin.hidden = true;
-
     if (logoutLink) logoutLink.hidden = false;
     if (drawerLogout) drawerLogout.hidden = false;
   } else {
-    // no logueado
+    console.log("🚫 No hay usuario logueado");
     if (loginLink) loginLink.hidden = false;
     if (drawerLogin) drawerLogin.hidden = false;
-
     if (logoutLink) logoutLink.hidden = true;
     if (drawerLogout) drawerLogout.hidden = true;
   }

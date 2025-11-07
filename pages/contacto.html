@@ -40,10 +40,14 @@
           <span class="icon"><i class="bi bi-telephone"></i></span> Contacto
         </a>
 
-        <a class="nav-item" href="./login.html">
-        <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
-      </a>
-    </nav>
+        
+  <!-- estos dos los controla navbar-auth.js -->
+  <a class="nav-item" href="./login.html" data-login-link>
+    <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
+  </a>
+  <a class="nav-item" href="#" data-logout hidden>
+    <span class="icon"><i class="bi bi-box-arrow-right"></i></span> Cerrar sesión
+  </a>
         
 
       <button class="hamburger" id="openDrawer" aria-label="Abrir menú"><i class="bi bi-list"></i></button>
@@ -67,7 +71,8 @@
        <a class="drawer-link" href="pages/mis-reportes.html">Reportar</a>
       <a class="drawer-link" href="pages/mis-reportes.html">Mis Reportes</a>
       <a class="drawer-link" href="./contacto.html"></i> Contacto</a>
-      <a class="drawer-link" href="./login.html"></i> Acceder</a>
+       <a class="drawer-link" href="./login.html" id="drawerLogin" data-login-link>Acceder</a>
+    <button class="drawer-link" id="drawerLogout" data-logout hidden>Cerrar sesión</button>
     </nav>
   </aside>
 
@@ -105,12 +110,23 @@
     </div>
   </section>
 
-  <!-- Scripts -->
+   <!-- Scripts base -->
   <script src="../src/js/app.js"></script>
-  <script src="../src/js/navbar-auth.js"></script>
+
+  <!-- Firebase primero -->
+  <script type="module" src="../src/js/firebase.js"></script>
+
+  <!-- Mostrar/ocultar Acceder / Cerrar sesión -->
+  <script type="module" src="../src/js/navbar-auth.js"></script>
+
+  <!-- Cerrar sesión -->
+  <script type="module" src="../src/js/logout.js"></script>
+
+  <!-- Lógica de la página de contacto -->
   <script src="../src/js/contacto.js"></script>
+
+  <!-- Toggle del drawer (si querés mantenerlo) -->
   <script>
-    // Toggle del drawer (por si app.js no lo maneja)
     const openBtn = document.getElementById('openDrawer');
     const closeBtn = document.getElementById('closeDrawer');
     const drawer = document.getElementById('drawer');
@@ -120,5 +136,7 @@
     if (closeBtn) closeBtn.onclick = () => toggleDrawer(false);
     if (overlay) overlay.onclick = () => toggleDrawer(false);
   </script>
+</body>
+</html>
 </body>
 </html>
