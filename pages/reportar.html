@@ -35,14 +35,20 @@
         <a class="nav-item" href="./contacto.html">
           <span class="icon"><i class="bi bi-telephone"></i></span> Contacto
         </a>
-        <!-- este lo va a ocultar/mostrar app.js según esté logueado -->
+
+        <!-- botón de acceder -->
         <a class="nav-item" href="./login.html" data-login-link>
           <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
         </a>
-        <a href="#" class="nav-item" data-logout hidden>
-          <span class="icon"><i class="bi bi-box-arrow-right"></i></span> Cerrar sesión
-        </a>
-      </nav>
+
+        <!-- perfil del usuario (oculto por defecto) -->
+        <div class="nav-item user-pill" data-user-panel hidden id="userMenuBtn">
+  <img src="" alt="avatar" class="user-avatar" data-user-avatar>
+  <span data-user-name></span>
+  <div class="user-dropdown" id="userDropdown" hidden>
+    <button id="logoutFromMenu">Cerrar sesión</button>
+  </div>
+</div>
 
       <button class="hamburger" id="openDrawer" aria-label="Abrir menú">
         <i class="bi bi-list"></i>
@@ -67,8 +73,13 @@
       <a class="drawer-link" href="./reportar.html">Reportar</a>
       <a class="drawer-link" href="./mis-reportes.html">Mis Reportes</a>
       <a class="drawer-link" href="./contacto.html">Contacto</a>
-      <a class="drawer-link" href="./login.html" data-login-link>Acceder</a>
-      <a class="drawer-link" href="#" data-logout hidden>Cerrar sesión</a>
+
+      <!-- igual que arriba -->
+      <a class="drawer-link" href="./login.html" id="drawerLogin" data-login-link>Acceder</a>
+      <div class="drawer-link" data-user-panel hidden>
+        <span data-user-name></span>
+      </div>
+      <button class="drawer-link" id="drawerLogout" data-logout hidden>Cerrar sesión</button>
     </nav>
   </aside>
 
@@ -110,23 +121,20 @@
       </section>
 
       <!-- Zona / Localidad -->
-<section class="card form-card">
-  <h3 class="card-title">Zona / Localidad <span class="req">*</span></h3>
-  <label class="field">
-    <select id="zona" required>
-      <option value="">Selecciona la zona</option>
-      <option value="San Miguel de Tucumán">San Miguel de Tucumán</option>
-      <option value="Tafí Viejo">Tafí Viejo</option>
-      <option value="Yerba Buena">Yerba Buena</option>
-      <option value="Lules">Lules</option>
-      <option value="Banda del Río Salí">Banda del Río Salí</option>
-      <option value="Otra">Otra</option>
-    </select>
-  </label>
-</section>
-
-
-
+      <section class="card form-card">
+        <h3 class="card-title">Zona / Localidad <span class="req">*</span></h3>
+        <label class="field">
+          <select id="zona" required>
+            <option value="">Selecciona la zona</option>
+            <option value="San Miguel de Tucumán">San Miguel de Tucumán</option>
+            <option value="Tafí Viejo">Tafí Viejo</option>
+            <option value="Yerba Buena">Yerba Buena</option>
+            <option value="Lules">Lules</option>
+            <option value="Banda del Río Salí">Banda del Río Salí</option>
+            <option value="Otra">Otra</option>
+          </select>
+        </label>
+      </section>
 
       <!-- Mapa -->
       <section class="card form-card form-span-2">
@@ -135,8 +143,6 @@
         <div id="map" class="map-box"></div>
         <p class="map-hint muted">Haz clic para marcar la ubicación exacta</p>
       </section>
-
-      
 
       <!-- Descripción -->
       <section class="card form-card form-span-2">
@@ -154,25 +160,23 @@
 
   <footer class="footer"></footer>
 
-    <!-- Scripts de terceros -->
+  <!-- Scripts de terceros -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="../src/js/app.js"></script>
 
   <!-- 🔥 Firebase primero -->
   <script type="module" src="../src/js/firebase.js"></script>
 
-  <!-- 👤 Control de navbar (oculta Acceder / muestra Cerrar sesión) -->
+  <!-- 👤 Control de navbar (oculta Acceder / muestra perfil / muestra Cerrar sesión) -->
   <script type="module" src="../src/js/navbar-auth.js"></script>
 
   <!-- 🚪 Cerrar sesión -->
   <script type="module" src="../src/js/logout.js"></script>
 
-  <!-- (opcional) si tuvieras un guard de rol -->
-  <script type="module" src="../src/js/auth-guard.js"></script>
+  <!-- (opcional) guard de rol -->
+  <script type="module" src="../src/js/profile-menu.js"></script>
 
   <!-- Lógica específica del formulario -->
   <script type="module" src="../src/js/reportar.js"></script>
-</body>
-</html>
 </body>
 </html>

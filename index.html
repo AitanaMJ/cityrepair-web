@@ -36,14 +36,20 @@
           <span class="icon"><i class="bi bi-telephone"></i></span> Contacto
         </a>
 
-   <a class="nav-item" href="/pages/login.html" data-login-link>
-  <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
-</a>
+        <!-- botón de acceder -->
+        <a class="nav-item" href="/pages/login.html" data-login-link>
+          <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
+        </a>
 
-<a href="#" class="nav-item" data-logout hidden>
-  <span class="icon"><i class="bi bi-box-arrow-right"></i></span> Cerrar sesión
-</a>
-      </nav>
+        <!-- perfil del usuario (oculto por defecto) -->
+        <div class="nav-item user-pill" data-user-panel hidden id="userMenuBtn">
+  <img src="" alt="avatar" class="user-avatar" data-user-avatar>
+  <span data-user-name></span>
+  <div class="user-dropdown" id="userDropdown" hidden>
+    <button id="logoutFromMenu">Cerrar sesión</button>
+  </div>
+</div>
+
 
       <button class="hamburger" id="openDrawer" aria-label="Abrir menú">
         <i class="bi bi-list"></i>
@@ -68,8 +74,14 @@
       <a class="drawer-link" href="/pages/reportar.html" data-auth="citizen">Reportar</a>
       <a class="drawer-link" href="/pages/mis-reportes.html" data-auth="citizen">Mis Reportes</a>
       <a class="drawer-link" href="/pages/contacto.html">Contacto</a>
-      <a class="drawer-link" href="/pages/login.html" id="drawerLogin">Acceder</a>
-      <button id="drawerLogout" class="drawer-link" hidden>Cerrar sesión</button>
+
+      <!-- igual que en el navbar -->
+      <a class="drawer-link" href="/pages/login.html" id="drawerLogin" data-login-link>Acceder</a>
+      <div class="drawer-link" data-user-panel hidden>
+        <span data-user-name></span>
+      </div>
+      <button id="drawerLogout" class="drawer-link" data-logout hidden>Cerrar sesión</button>
+
       <a class="drawer-link" href="/pages/edet-login.html">Acceso EDET</a>
     </nav>
   </aside>
@@ -101,7 +113,7 @@
         </div>
         <h3>Mis Reportes</h3>
         <p class="muted">Consulta el estado de tus<br/>reportes</p>
-        <a class="btn btn-outline" href="pages/mis-reportes.html">Ver Reportes</a>
+        <a class="btn btn-outline" href="/pages/mis-reportes.html">Ver Reportes</a>
       </article>
 
       <article class="card">
@@ -110,7 +122,7 @@
         </div>
         <h3>Contacto Rápido</h3>
         <p class="muted">Línea directa para emergencias</p>
-        <a class="btn btn-outline" href="pages/contacto.html">Contactar</a>
+        <a class="btn btn-outline" href="/pages/contacto.html">Contactar</a>
       </article>
     </section>
 
@@ -122,7 +134,7 @@
           <p>Accede al panel de gestión para administrar reportes</p>
         </div>
 
-        <a class="btn btn-outline cta-btn" href="pages/edet-login.html">
+        <a class="btn btn-outline cta-btn" href="/pages/edet-login.html">
           <i class="bi bi-briefcase"></i>
           Acceso EDET
         </a>
@@ -132,10 +144,15 @@
 
   <footer class="footer"></footer>
 
-  <!-- scripts -->
+  
+
+<!-- scripts -->
 <script type="module" src="./src/js/firebase.js"></script>
 <script type="module" src="./src/js/navbar-auth.js"></script>
 <script type="module" src="./src/js/logout.js"></script>
+<script type="module" src="./src/js/profile-menu.js"></script>
 <script src="./src/js/app.js"></script>
+
+</body>
 </body>
 </html>

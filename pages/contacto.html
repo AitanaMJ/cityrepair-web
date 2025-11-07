@@ -45,9 +45,15 @@
   <a class="nav-item" href="./login.html" data-login-link>
     <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
   </a>
-  <a class="nav-item" href="#" data-logout hidden>
-    <span class="icon"><i class="bi bi-box-arrow-right"></i></span> Cerrar sesión
-  </a>
+  <!-- perfil del usuario (oculto por defecto) -->
+        <div class="nav-item user-pill" data-user-panel hidden id="userMenuBtn">
+  <img src="" alt="avatar" class="user-avatar" data-user-avatar>
+  <span data-user-name></span>
+  <div class="user-dropdown" id="userDropdown" hidden>
+    <button id="logoutFromMenu">Cerrar sesión</button>
+  </div>
+</div>
+
         
 
       <button class="hamburger" id="openDrawer" aria-label="Abrir menú"><i class="bi bi-list"></i></button>
@@ -121,6 +127,9 @@
 
   <!-- Cerrar sesión -->
   <script type="module" src="../src/js/logout.js"></script>
+
+    <!-- Cerrar sesión -->
+  <script type="module" src="../src/js/profile-menu.js"></script>
 
   <!-- Lógica de la página de contacto -->
   <script src="../src/js/contacto.js"></script>

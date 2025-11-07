@@ -25,15 +25,28 @@
       </div>
 
       <nav class="nav-right">
-        <a class="nav-item active" href="#">
-          <span class="icon"><i class="bi bi-clipboard2-check"></i></span> Gestión
-        </a>
-       <a class="nav-item" href="#" id="edet-logout">
-  <span class="icon"><i class="bi bi-box-arrow-right"></i></span> Salir
-</a>
-      </nav>
+  <a class="nav-item active" href="./edet-dashboard.html">
+    <span class="icon"><i class="bi bi-clipboard2-check"></i></span> Gestión
+  </a>
+
+  <!-- botón de acceder (se oculta al iniciar sesión) -->
+  <a class="nav-item" href="./edet-login.html" data-login-link>
+    <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
+  </a>
+
+  <!-- perfil del usuario -->
+  <div class="nav-item user-pill" id="userMenuBtn" data-user-panel hidden>
+    <img src="" alt="avatar" class="user-avatar" data-user-avatar>
+    <span data-user-name></span>
+    <div class="user-dropdown" id="userDropdown" hidden>
+      <button id="logoutFromMenu">Cerrar sesión</button>
+    </div>
+  </div>
+
+
       <button class="hamburger" aria-label="Abrir menú"><i class="bi bi-list"></i></button>
     </div>
+    <div class="navbar-divider"></div>
   </header>
 
   <!-- ===== DASHBOARD ===== -->
@@ -117,11 +130,20 @@
 
   <!-- JS global (drawer, toasts, etc.) -->
   <script src="../src/js/app.js"></script>
-  <script src="../src/js/navbar-auth.js"></script>
-  
-  <script type="module" src="../src/js/edet-logout.js"></script> 
-  <!-- Firebase y dashboard -->
+
+  <!-- Firebase primero -->
   <script type="module" src="../src/js/firebase.js"></script>
+
+  <!-- Navbar: muestra perfil / oculta acceder -->
+  <script type="module" src="../src/js/navbar-auth.js"></script>
+
+    <!-- Logout genérico -->
+  <script type="module" src="../src/js/profile-menu.js"></script>
+
+  <!-- Logout genérico -->
+  <script type="module" src="../src/js/logout.js"></script>
+
+  <!-- Lógica del dashboard EDET -->
   <script type="module" src="../src/js/edet-dashboard.js"></script>
 </body>
 </html>

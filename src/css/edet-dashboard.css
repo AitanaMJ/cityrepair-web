@@ -147,3 +147,77 @@
   }
   .ta-right{ text-align:left; }
 }
+
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  padding: 8px 0;
+  min-width: 160px;
+  z-index: 1000;
+}
+
+.user-dropdown button {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 10px 16px;
+  font-size: 15px;
+  color: #111827;
+  cursor: pointer;
+}
+
+.user-dropdown button:hover {
+  background: #f3f4f6;
+}
+
+/* ===== Ajuste general de los botones en la tabla ===== */
+.list-row .ta-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px; /* ← aumenta el espacio entre los botones */
+}
+
+/* ===== Botón verde (resolver) ===== */
+.btn-resolver {
+  background: #22c55e;
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  height: 30px; /* ← más chico */
+  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: 0.2s ease;
+}
+.btn-resolver:hover { filter: brightness(.95); }
+
+/* ===== Botón azul (asignar) ===== */
+.btn-asignar {
+  background: #0d6efd;
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  height: 30px; /* ← más chico */
+  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: 0.2s ease;
+}
+.btn-asignar:hover {
+  background: #0b5ed7;
+}
