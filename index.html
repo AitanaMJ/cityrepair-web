@@ -36,15 +36,13 @@
           <span class="icon"><i class="bi bi-telephone"></i></span> Contacto
         </a>
 
-        <!-- botón que se muestra solo si NO hay sesión -->
-        <a class="nav-item" href="/pages/login.html" id="btnLogin">
-          <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
-        </a>
+   <a class="nav-item" href="/pages/login.html" data-login-link>
+  <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
+</a>
 
-        <!-- botón que se muestra solo si SÍ hay sesión -->
-        <a href="#" class="nav-item" id="btnLogout" hidden>
-          <span class="icon"><i class="bi bi-box-arrow-right"></i></span> Cerrar sesión
-        </a>
+<a href="#" class="nav-item" data-logout hidden>
+  <span class="icon"><i class="bi bi-box-arrow-right"></i></span> Cerrar sesión
+</a>
       </nav>
 
       <button class="hamburger" id="openDrawer" aria-label="Abrir menú">
@@ -135,9 +133,9 @@
   <footer class="footer"></footer>
 
   <!-- scripts -->
-  <script src="/src/js/app.js"></script>
-  <script src="../src/js/navbar-auth.js"></script>
-  <script type="module" src="/src/js/firebase.js"></script>
-  <script type="module" src="/src/js/logout.js"></script>
+<script type="module" src="./src/js/firebase.js"></script>
+<script type="module" src="./src/js/navbar-auth.js"></script>
+<script type="module" src="./src/js/logout.js"></script>
+<script src="./src/js/app.js"></script>
 </body>
 </html>

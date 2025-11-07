@@ -339,3 +339,9 @@ body{
 .toast-info   { color:#075985; background:#eff6ff; border-color:#bfdbfe}
 .toast-warn   { color:#92400e; background:#fffbeb; border-color:#fde68a}
 .toast-error  { color:#991b1b; background:#fef2f2; border-color:#fecaca}
+
+
+/* para que cualquier elemento con hidden se oculte de verdad */
+[hidden] {
+  display: none !important;
+}

@@ -1,19 +1,26 @@
-(function () {
-  let raw = null;
-  try {
-    raw = localStorage.getItem('cr_auth');
-  } catch (e) {}
+// src/js/navbar-auth.js
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+import { auth } from "./firebase.js";
 
-  const isLogged = !!raw && raw !== 'null';
+const loginLink = document.querySelector("[data-login-link]");
+const logoutLink = document.querySelector("[data-logout]");
+const drawerLogin = document.getElementById("drawerLogin");
+const drawerLogout = document.getElementById("drawerLogout");
 
-  const loginLinks  = document.querySelectorAll('[data-login-link]');
-  const logoutLinks = document.querySelectorAll('[data-logout]');
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // usuario logueado
+    if (loginLink) loginLink.hidden = true;
+    if (drawerLogin) drawerLogin.hidden = true;
 
-  if (isLogged) {
-    loginLinks.forEach(el => el.style.display = 'none');
-    logoutLinks.forEach(el => el.style.display = 'flex');
+    if (logoutLink) logoutLink.hidden = false;
+    if (drawerLogout) drawerLogout.hidden = false;
   } else {
-    loginLinks.forEach(el => el.style.display = 'flex');
-    logoutLinks.forEach(el => el.style.display = 'none');
+    // no logueado
+    if (loginLink) loginLink.hidden = false;
+    if (drawerLogin) drawerLogin.hidden = false;
+
+    if (logoutLink) logoutLink.hidden = true;
+    if (drawerLogout) drawerLogout.hidden = true;
   }
-})();
+});
