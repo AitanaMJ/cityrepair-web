@@ -172,6 +172,7 @@ function renderTabla(reportes = []) {
 
   contenedor.innerHTML = filas;
 
+  // listeners
   contenedor.querySelectorAll('.btn-resolver').forEach(btn => {
     btn.addEventListener('click', onResolverClick);
   });
@@ -183,18 +184,24 @@ function renderTabla(reportes = []) {
 /* =======================================================
    Acciones de administrador
 ======================================================= */
-async function onResolverClick(e) {
+async function onAsignarClick(e) {
   const id = e.currentTarget.dataset.id;
+  const asignadoA = prompt("Asignar a (cuadrilla / responsable):");
+  if (!asignadoA) return;
   try {
     await updateDoc(doc(db, "reportes", id), {
-      estado: "resuelto"
+      asignadoA,
+      estado: "en revisión",
+      ultimaActualizacion: new Date(),
+      notaResolucion: ""   // por si después querés pisar con la resolución
     });
-    window.mostrarAlerta?.("Reporte marcado como resuelto", "success", { titulo: "Listo" });
+    window.mostrarAlerta?.("Reporte asignado correctamente", "success", { titulo: "Asignado" });
   } catch (err) {
     console.error(err);
-    window.mostrarAlerta?.("No se pudo actualizar el reporte", "danger", { titulo: "Error" });
+    window.mostrarAlerta?.("No se pudo asignar el reporte", "danger", { titulo: "Error" });
   }
 }
+
 
 async function onAsignarClick(e) {
   const id = e.currentTarget.dataset.id;
@@ -203,7 +210,8 @@ async function onAsignarClick(e) {
   try {
     await updateDoc(doc(db, "reportes", id), {
       asignadoA,
-      estado: "en revisión"
+      estado: "en revisión",
+      ultimaActualizacion: new Date()
     });
     window.mostrarAlerta?.("Reporte asignado correctamente", "success", { titulo: "Asignado" });
   } catch (err) {

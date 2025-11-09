@@ -1,72 +1,122 @@
-/* En Mis Reportes, apilar tarjetas */
-.myreports .row{
+/* ==========================
+   Diseño general de "Mis Reportes"
+========================== */
+.myreports .row {
   display: grid;               /* evita el flex de .row global */
   grid-template-columns: 1fr;  /* una sola columna */
-  gap: 24px;                   /* separaciones entre tarjetas */
+  gap: 24px;                   /* separación entre tarjetas */
 }
 
-/* (opcional) toques visuales coherentes */
-.myreports .card{
+/* Tarjetas */
+.myreports .card {
   border: 1px solid var(--stroke);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow);
+  background: #fff;
+  overflow: hidden;
 }
-.myreports .card-body{
+
+.myreports .card-body {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
   gap: 12px;
+  padding: 16px 20px;
 }
 
-/* badges de estado (si no los tenías) */
-.status-badge{
-  display:inline-block; padding:4px 10px; border-radius:999px; font-weight:700; font-size:12px;
+/* ==========================
+   Badges de estado
+========================== */
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 12px;
 }
-.status-pendiente{ background:#FEF3C7; color:#92400E; }
-.status-proceso{   background:#E0F2FE; color:#075985; }
-.status-resuelto{  background:#DCFCE7; color:#166534; }
 
+.status-pendiente { background: #FEF3C7; color: #92400E; }
+.status-proceso   { background: #E0F2FE; color: #075985; }
+.status-resuelto  { background: #DCFCE7; color: #166534; }
 
-/* Título grande en tarjetas de Mis Reportes */
-.myreports .card h5{
-  font-size: 20px;        /* subilo si querés: 24–26px */
+/* ==========================
+   Título y encabezado
+========================== */
+.myreports .card h5 {
+  font-size: 20px;
   line-height: 1.2;
   font-weight: 650;
   margin: 0 0 8px;
   display: flex;
   align-items: center;
-  gap: 10px;              /* espacio con el ícono */
+  gap: 10px;              /* espacio entre ícono y texto */
 }
 
-/* Que el ícono acompañe el tamaño del título */
-.myreports .card h5 .bi{
-  font-size: 22px;        /* mismo que el título */
+.myreports .card h5 .bi {
+  font-size: 22px;
 }
 
-
-
-/* Responsive: un toque más chico en móvil */
-@media (min-width: 900px){
-  .myreports .row { grid-template-columns: 1fr 1fr; }
+/* ==========================
+   Fotos de reporte
+========================== */
+.reporte-fotos-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 6px;
 }
 
-.reporte-fotos-grid{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:6px;
+.reporte-thumb {
+  width: 90px;
+  height: 90px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,.05);
 }
-.reporte-thumb{
-  width:90px;
-  height:90px;
-  border-radius:10px;
-  overflow:hidden;
-  display:block;
-  border:1px solid rgba(0,0,0,.05);
+
+.reporte-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
-.reporte-thumb img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
+
+/* ==========================
+   Caja de resolución (cuando el admin marca como resuelto)
+========================== */
+.reporte-resuelto {
+  background: #ecfdf3;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-top: 8px;
+  color: #166534;
+  font-size: 14px;
+  width: 100%;
+}
+
+.reporte-resuelto strong {
+  display: block;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.reporte-resuelto small {
+  color: #15803d;
+  font-size: 12px;
+}
+
+.reporte-resuelto p {
+  margin: 4px 0 0;
+  line-height: 1.4;
+}
+
+/* ==========================
+   Responsive
+========================== */
+@media (min-width: 900px) {
+  .myreports .row {
+    grid-template-columns: 1fr 1fr;
+  }
 }

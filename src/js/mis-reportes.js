@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     sessionStorage.removeItem("flash");
   }
 
-  // ✅ helpers para badges / iconos
+  // ✅ Helpers para badges / iconos
   const estadoBadge = (estadoRaw) => {
     const e = (estadoRaw || "").toLowerCase();
     if (e === "resuelto") return ["status-badge status-resuelto", "Resuelto"];
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return "bi-flag";
   };
 
-  // ✅ escuchar estado de auth
+  // ✅ Escuchar estado de sesión
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
       cont.innerHTML = `<p class="text-center text-muted mt-5">Inicia sesión para ver tus reportes.</p>`;
@@ -64,15 +64,15 @@ document.addEventListener("DOMContentLoaded", () => {
       cont.innerHTML = ""; // limpiar contenedor
 
       snap.forEach((docSnap) => {
-        const d = docSnap.data();
-        const fechaTxt = d.fecha?.toDate?.().toLocaleString() || "Sin fecha";
-        const [badgeCls, badgeTxt] = estadoBadge(d.estado);
-        const icon = tipoIcon(d.tipo);
+        const reporte = docSnap.data();
+        const fechaTxt = reporte.fecha?.toDate?.().toLocaleString("es-AR") || "Sin fecha";
+        const [badgeCls, badgeTxt] = estadoBadge(reporte.estado);
+        const icon = tipoIcon(reporte.tipo);
 
-        // 👇 si existen fotos, armamos la grilla
+        // 👇 Si existen fotos, armamos la grilla
         let fotosHtml = "";
-        if (Array.isArray(d.fotos) && d.fotos.length > 0) {
-          const thumbs = d.fotos
+        if (Array.isArray(reporte.fotos) && reporte.fotos.length > 0) {
+          const thumbs = reporte.fotos
             .map(
               (url) => `
               <a href="${url}" target="_blank" class="reporte-thumb">
@@ -91,21 +91,39 @@ document.addEventListener("DOMContentLoaded", () => {
           `;
         }
 
-        // zona opcional
-        const zonaHtml = d.zona
-          ? `<p><b>Zona:</b> ${d.zona}</p>`
-          : "";
+        // 🟢 Mostrar detalle si el reporte está resuelto
+        let resolucionHtml = "";
+        if (reporte.estado === "resuelto") {
+          const fechaResuelto = reporte.fechaResuelto
+            ? new Date(reporte.fechaResuelto.seconds * 1000).toLocaleString("es-AR")
+            : "Fecha no disponible";
 
+          const nota = reporte.notaResolucion || "El reporte fue marcado como resuelto por EDET.";
+
+          resolucionHtml = `
+            <div class="reporte-resuelto">
+              <strong>✅ Problema resuelto</strong>
+              <small>Fecha: ${fechaResuelto}</small>
+              <p>${nota}</p>
+            </div>
+          `;
+        }
+
+        // Zona opcional
+        const zonaHtml = reporte.zona ? `<p><b>Zona:</b> ${reporte.zona}</p>` : "";
+
+        // 🔹 Render final
         cont.innerHTML += `
           <div class="card card-reporte">
             <div class="card-body">
               <div class="info">
-                <h5><i class="bi ${icon}"></i> ${d.tipo || "Reporte"}</h5>
-                <p><b>Ubicación:</b> ${d.ubicacion || d.direccion || "-"}</p>
+                <h5><i class="bi ${icon}"></i> ${reporte.tipo || "Reporte"}</h5>
+                <p><b>Ubicación:</b> ${reporte.ubicacion || reporte.direccion || "-"}</p>
                 ${zonaHtml}
-                <p><b>Descripción:</b> ${d.descripcion || "-"}</p>
+                <p><b>Descripción:</b> ${reporte.descripcion || "-"}</p>
                 <small class="muted"><b>Fecha:</b> ${fechaTxt}</small>
                 ${fotosHtml}
+                ${resolucionHtml}
               </div>
               <div class="status">
                 <span class="${badgeCls}">${badgeTxt}</span>
