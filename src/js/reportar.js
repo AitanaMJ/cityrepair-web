@@ -1,3 +1,4 @@
+// src/js/reportar.js
 import { auth, db } from "./firebase.js";
 import {
   collection,
@@ -8,12 +9,38 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/fi
 
 const form = document.getElementById("form-reporte");
 
+// bandera solo en memoria (no localStorage)
+let firstAuthCheck = true;
+
 onAuthStateChanged(auth, (user) => {
+  // ⛔ no hay usuario
   if (!user) {
-    alert("Debes iniciar sesión para enviar reportes.");
-    window.location.href = "./login.html";
+    // primera vez que Firebase avisa: no molestamos
+    if (firstAuthCheck) {
+      firstAuthCheck = false;
+      return;
+    }
+
+    // ya no está logueado → avisamos bonito y mandamos al login
+    if (typeof window.mostrarAlerta === "function") {
+      window.mostrarAlerta(
+        "Debes iniciar sesión para enviar reportes.",
+        "warn",
+        { titulo: "Sesión requerida" }
+      );
+      // damos un pelín de tiempo para que se vea el toast
+      setTimeout(() => (window.location.href = "./login.html"), 800);
+    } else {
+      alert("Debes iniciar sesión para enviar reportes.");
+      window.location.href = "./login.html";
+    }
     return;
   }
+
+  // ✅ hay usuario
+  firstAuthCheck = false;
+
+  if (!form) return;
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -27,7 +54,15 @@ onAuthStateChanged(auth, (user) => {
     const zona = document.getElementById("zona")?.value.trim() || "";
 
     if (!tipo || !ubicacion || !descripcion) {
-      alert("Por favor completa todos los campos obligatorios.");
+      if (typeof window.mostrarAlerta === "function") {
+        window.mostrarAlerta(
+          "Completá los campos obligatorios.",
+          "warn",
+          { titulo: "Falta info" }
+        );
+      } else {
+        alert("Por favor completa todos los campos obligatorios.");
+      }
       return;
     }
 
@@ -42,12 +77,32 @@ onAuthStateChanged(auth, (user) => {
         fecha: serverTimestamp()
       });
 
-      sessionStorage.setItem("flash", "✅ Reporte enviado con éxito");
-      form.reset();
-      window.location.href = "./mis-reportes.html";
+      // ✅ toast lindo
+      if (typeof window.mostrarAlerta === "function") {
+        window.mostrarAlerta(
+          "Reporte enviado con éxito.",
+          "success",
+          { titulo: "Listo" }
+        );
+        // después de mostrarlo, ir a Mis reportes
+        setTimeout(() => {
+          window.location.href = "./mis-reportes.html";
+        }, 900);
+      } else {
+        alert("✅ Reporte enviado con éxito");
+        window.location.href = "./mis-reportes.html";
+      }
     } catch (error) {
       console.error("Error al enviar reporte:", error);
-      alert("❌ Error al enviar reporte.");
+      if (typeof window.mostrarAlerta === "function") {
+        window.mostrarAlerta(
+          "No se pudo enviar el reporte.",
+          "danger",
+          { titulo: "Error" }
+        );
+      } else {
+        alert("❌ Error al enviar reporte.");
+      }
     }
   });
 });

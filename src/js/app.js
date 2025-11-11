@@ -449,3 +449,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 })();
+
+document.addEventListener("DOMContentLoaded", () => {
+  const avatars = document.querySelectorAll(".avatar-sm, .avatar-lg");
+  avatars.forEach(av => {
+    av.innerHTML = `<img src="../src/img/favicon.png" alt="CityRepair logo" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+    av.style.background = "none";
+  });
+});
+

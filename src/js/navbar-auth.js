@@ -1,3 +1,4 @@
+// src/js/navbar-auth.js
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 import { auth, db } from "./firebase.js";
@@ -14,42 +15,47 @@ const userAvatar   = document.querySelector("[data-user-avatar]");
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    // 🔒 Usuario logueado
+    // mostrar cosas de logueado
     if (loginLink) loginLink.hidden = true;
     if (drawerLogin) drawerLogin.hidden = true;
     if (logoutLink) logoutLink.hidden = false;
     if (drawerLogout) drawerLogout.hidden = false;
 
-    // Mostrar perfil del usuario
     if (userPanel) {
       userPanel.hidden = false;
 
-      // Intentar obtener datos extra desde Firestore
+      // nombre/foto por defecto
       let nombre = user.displayName || user.email?.split("@")[0] || "Usuario";
-      let foto = user.photoURL || "";
+      let foto   = user.photoURL || "";
 
-      try {
-        const snap = await getDoc(doc(db, "users", user.uid));
-        if (snap.exists()) {
-          const datos = snap.data();
-          if (datos.nombre) nombre = datos.nombre;
-          if (datos.foto) foto = datos.foto;
+      // 👉 solo si es correo EDET intentamos leer Firestore
+      const esEdet = /@edet\.com\.ar$/i.test(user.email || "");
+
+      if (esEdet) {
+        try {
+          const snap = await getDoc(doc(db, "usuarios", user.uid));
+          if (snap.exists()) {
+            const datos = snap.data();
+            if (datos.nombre) nombre = datos.nombre;
+            if (datos.foto)   foto   = datos.foto;
+          }
+        } catch (err) {
+          // ya no te molesta en consola
+          console.warn("No se pudo leer datos del perfil EDET (esperable para reglas):", err.code);
         }
-      } catch (err) {
-        console.warn("No se pudo leer datos del perfil:", err);
       }
 
-      // Si no hay foto en Firestore ni en Firebase, generar una por nombre
+      // avatar de fallback
       if (!foto) {
-        foto = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombre)}&background=ff4747&color=fff`;
+        foto = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombre)}&background=0f62fe&color=fff`;
       }
 
       if (userNameSpan) userNameSpan.textContent = nombre;
-      if (userAvatar) userAvatar.src = foto;
+      if (userAvatar)   userAvatar.src = foto;
     }
 
   } else {
-    // 🚫 No logueado
+    // estado no logueado
     if (loginLink) loginLink.hidden = false;
     if (drawerLogin) drawerLogin.hidden = false;
     if (logoutLink) logoutLink.hidden = true;

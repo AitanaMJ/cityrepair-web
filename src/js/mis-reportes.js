@@ -13,39 +13,43 @@ document.addEventListener("DOMContentLoaded", () => {
   const cont = document.getElementById("lista-reportes");
   if (!cont) return;
 
-  // ---- Flash opcional (cuando venís de reportar) ----
+  // flash opcional
   const flash = sessionStorage.getItem("flash");
-  if (flash) {
-    if (typeof window.mostrarAlerta === "function") {
-      window.mostrarAlerta(flash, "success", { titulo: "Reporte enviado" });
-    }
+  if (flash && typeof window.mostrarAlerta === "function") {
+    window.mostrarAlerta(flash, "success", { titulo: "Reporte enviado" });
     sessionStorage.removeItem("flash");
   }
 
-  // ✅ Helpers para badges / iconos
-  const estadoBadge = (estadoRaw) => {
-    const e = (estadoRaw || "").toLowerCase();
-    if (e === "resuelto") return ["status-badge status-resuelto", "Resuelto"];
-    if (e.includes("rev")) return ["status-badge status-proceso", "En revisión"];
-    if (e === "en proceso" || e === "proceso") return ["status-badge status-proceso", "En proceso"];
-    return ["status-badge status-pendiente", "Pendiente"];
-  };
+  // 👇 bandera en memoria
+  let firstAuthCheck = true;
 
-  const tipoIcon = (tipoRaw) => {
-    const t = (tipoRaw || "").toLowerCase();
-    if (t.includes("corte")) return "bi-lightning";
-    if (t.includes("poste")) return "bi-lightning-charge";
-    if (t.includes("cable")) return "bi-plug";
-    return "bi-flag";
-  };
-
-  // ✅ Escuchar estado de sesión
   onAuthStateChanged(auth, async (user) => {
+    // si NO hay usuario
     if (!user) {
-      cont.innerHTML = `<p class="text-center text-muted mt-5">Inicia sesión para ver tus reportes.</p>`;
+      if (firstAuthCheck) {
+        firstAuthCheck = false;
+        // mostramos algo neutro en el contenedor
+        cont.innerHTML = `<p class="text-center text-muted mt-5">Inicia sesión para ver tus reportes.</p>`;
+        return;
+      }
+
+      // segunda vez o posteriores → ya sabemos que se deslogueó
+      if (typeof window.mostrarAlerta === "function") {
+        window.mostrarAlerta(
+          "Debes iniciar sesión para ver tus reportes.",
+          "warn",
+          { titulo: "Sesión requerida" }
+        );
+        setTimeout(() => (window.location.href = "./login.html"), 800);
+      } else {
+        alert("Debes iniciar sesión para ver tus reportes.");
+        window.location.href = "./login.html";
+      }
       return;
     }
 
+    // hay usuario
+    firstAuthCheck = false;
     cont.innerHTML = `<p class="text-center text-muted mt-5">Cargando reportes...</p>`;
 
     try {
@@ -61,45 +65,60 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      cont.innerHTML = ""; // limpiar contenedor
+      cont.innerHTML = "";
 
       snap.forEach((docSnap) => {
-        const reporte = docSnap.data();
-        const fechaTxt = reporte.fecha?.toDate?.().toLocaleString("es-AR") || "Sin fecha";
-        const [badgeCls, badgeTxt] = estadoBadge(reporte.estado);
-        const icon = tipoIcon(reporte.tipo);
+        const d = docSnap.data();
+        const fechaTxt =
+          d.fecha?.toDate?.().toLocaleString("es-AR") || "Sin fecha";
 
-        // 👇 Si existen fotos, armamos la grilla
+        // badges / iconos igual que tenías
+        const estadoBadge = (estadoRaw) => {
+          const e = (estadoRaw || "").toLowerCase();
+          if (e === "resuelto") return ["status-badge status-resuelto", "Resuelto"];
+          if (e.includes("rev")) return ["status-badge status-proceso", "En revisión"];
+          if (e === "en proceso" || e === "proceso")
+            return ["status-badge status-proceso", "En proceso"];
+          return ["status-badge status-pendiente", "Pendiente"];
+        };
+        const [badgeCls, badgeTxt] = estadoBadge(d.estado);
+
+        const tipoIcon = (tipoRaw) => {
+          const t = (tipoRaw || "").toLowerCase();
+          if (t.includes("corte")) return "bi-lightning";
+          if (t.includes("poste")) return "bi-lightning-charge";
+          if (t.includes("cable")) return "bi-plug";
+          return "bi-flag";
+        };
+        const icon = tipoIcon(d.tipo);
+
+        // fotos
         let fotosHtml = "";
-        if (Array.isArray(reporte.fotos) && reporte.fotos.length > 0) {
-          const thumbs = reporte.fotos
-            .map(
-              (url) => `
-              <a href="${url}" target="_blank" class="reporte-thumb">
-                <img src="${url}" alt="foto reporte">
-              </a>
-            `
-            )
-            .join("");
+        if (Array.isArray(d.fotos) && d.fotos.length > 0) {
           fotosHtml = `
             <div class="reporte-fotos">
               <p class="muted" style="margin-bottom:4px;">Fotos del reporte:</p>
               <div class="reporte-fotos-grid">
-                ${thumbs}
+                ${d.fotos
+                  .map(
+                    (url) => `
+                  <a href="${url}" target="_blank" class="reporte-thumb">
+                    <img src="${url}" alt="foto reporte">
+                  </a>`
+                  )
+                  .join("")}
               </div>
             </div>
           `;
         }
 
-        // 🟢 Mostrar detalle si el reporte está resuelto
+        // resolución
         let resolucionHtml = "";
-        if (reporte.estado === "resuelto") {
-          const fechaResuelto = reporte.fechaResuelto
-            ? new Date(reporte.fechaResuelto.seconds * 1000).toLocaleString("es-AR")
+        if (d.estado?.toLowerCase() === "resuelto") {
+          const fechaResuelto = d.fechaResuelto
+            ? new Date(d.fechaResuelto.seconds * 1000).toLocaleString("es-AR")
             : "Fecha no disponible";
-
-          const nota = reporte.notaResolucion || "El reporte fue marcado como resuelto por EDET.";
-
+          const nota = d.notaResolucion || "El reporte fue marcado como resuelto por EDET.";
           resolucionHtml = `
             <div class="reporte-resuelto">
               <strong>✅ Problema resuelto</strong>
@@ -109,18 +128,16 @@ document.addEventListener("DOMContentLoaded", () => {
           `;
         }
 
-        // Zona opcional
-        const zonaHtml = reporte.zona ? `<p><b>Zona:</b> ${reporte.zona}</p>` : "";
+        const zonaHtml = d.zona ? `<p><b>Zona:</b> ${d.zona}</p>` : "";
 
-        // 🔹 Render final
         cont.innerHTML += `
           <div class="card card-reporte">
             <div class="card-body">
               <div class="info">
-                <h5><i class="bi ${icon}"></i> ${reporte.tipo || "Reporte"}</h5>
-                <p><b>Ubicación:</b> ${reporte.ubicacion || reporte.direccion || "-"}</p>
+                <h5><i class="bi ${icon}"></i> ${d.tipo || "Reporte"}</h5>
+                <p><b>Ubicación:</b> ${d.ubicacion || d.direccion || "-"}</p>
                 ${zonaHtml}
-                <p><b>Descripción:</b> ${reporte.descripcion || "-"}</p>
+                <p><b>Descripción:</b> ${d.descripcion || "-"}</p>
                 <small class="muted"><b>Fecha:</b> ${fechaTxt}</small>
                 ${fotosHtml}
                 ${resolucionHtml}
