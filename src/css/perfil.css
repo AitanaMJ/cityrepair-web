@@ -1,0 +1,80 @@
+/* ===== Contenedor general ===== */
+.perfil-container {
+  max-width: 1100px;
+  margin: 40px auto;
+  display: flex;
+  gap: 30px;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+/* ===== Card principal ===== */
+.perfil-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  text-align: center;
+  flex: 1 1 280px;
+}
+
+.perfil-foto {
+  width: 130px;
+  height: 130px;
+  border-radius: 100%;
+  object-fit: cover;
+  margin-bottom: 12px;
+  border: 3px solid #ddd;
+}
+
+.perfil-nombre {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.perfil-email {
+  color: #555;
+  margin-bottom: 14px;
+}
+
+/* Botón */
+.btn-primary {
+  background: #0d6efd;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.btn-primary:hover {
+  background: #0b5ed7;
+}
+
+/* ===== Card info ===== */
+.perfil-info {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  flex: 2 1 500px;
+}
+
+.perfil-info h3 {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.perfil-info p {
+  font-size: 0.9rem;
+  padding: 4px 0;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .perfil-container {
+    flex-direction: column;
+  }
+}

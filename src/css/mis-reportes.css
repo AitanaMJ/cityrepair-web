@@ -1,122 +1,250 @@
-/* ==========================
-   Diseño general de "Mis Reportes"
-========================== */
-.myreports .row {
-  display: grid;               /* evita el flex de .row global */
-  grid-template-columns: 1fr;  /* una sola columna */
-  gap: 24px;                   /* separación entre tarjetas */
+/* ============================
+   MIS REPORTES – CityRepair
+   Archivo: src/css/mis-reportes.css
+   ============================ */
+
+/* Espaciado general de la página de "Mis reportes" */
+.myreports {
+  padding-top: 24px;
+  padding-bottom: 32px;
 }
 
-/* Tarjetas */
-.myreports .card {
-  border: 1px solid var(--stroke);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow);
-  background: #fff;
-  overflow: hidden;
-}
+/* ===== Tarjeta de reporte ===== */
 
-.myreports .card-body {
+.reporte-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 12px;
-  padding: 16px 20px;
+  gap: 6px;
 }
 
-/* ==========================
-   Badges de estado
-========================== */
-.status-badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 12px;
-}
-
-.status-pendiente { background: #FEF3C7; color: #92400E; }
-.status-proceso   { background: #E0F2FE; color: #075985; }
-.status-resuelto  { background: #DCFCE7; color: #166534; }
-
-/* ==========================
-   Título y encabezado
-========================== */
-.myreports .card h5 {
-  font-size: 20px;
-  line-height: 1.2;
-  font-weight: 650;
-  margin: 0 0 8px;
+/* Header de la tarjeta: tipo + estado */
+.reporte-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;              /* espacio entre ícono y texto */
+  gap: 8px;
 }
 
-.myreports .card h5 .bi {
-  font-size: 22px;
+/* Tipo de problema (título corto) */
+.reporte-tipo {
+  font-weight: 600;
+  font-size: 0.95rem;
 }
 
-/* ==========================
-   Fotos de reporte
-========================== */
-.reporte-fotos-grid {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 6px;
+/* Etiqueta de estado del reporte */
+.reporte-estado {
+  font-size: 0.8rem;
+  padding: 2px 10px;
+  border-radius: 999px;
+  text-transform: capitalize;
+  white-space: nowrap;
 }
 
-.reporte-thumb {
-  width: 90px;
-  height: 90px;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid rgba(0,0,0,.05);
+/* Estados por color */
+.reporte-estado.pendiente {
+  background: #fff3cd;
+  color: #856404;
 }
 
-.reporte-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+.reporte-estado.en-proceso,
+.reporte-estado.en_proceso {
+  background: #cfe2ff;
+  color: #084298;
 }
 
-/* ==========================
-   Caja de resolución (cuando el admin marca como resuelto)
-========================== */
-.reporte-resuelto {
-  background: #ecfdf3;
-  border: 1px solid #bbf7d0;
-  border-radius: 10px;
-  padding: 10px 12px;
-  margin-top: 8px;
-  color: #166534;
-  font-size: 14px;
-  width: 100%;
+.reporte-estado.resuelto {
+  background: #d1e7dd;
+  color: #0f5132;
 }
 
-.reporte-resuelto strong {
-  display: block;
-  font-weight: 800;
-  margin-bottom: 4px;
-}
-
-.reporte-resuelto small {
-  color: #15803d;
-  font-size: 12px;
-}
-
-.reporte-resuelto p {
-  margin: 4px 0 0;
+/* Descripción del problema */
+.reporte-descripcion {
+  margin: 4px 0;
+  font-size: 0.9rem;
   line-height: 1.4;
 }
 
-/* ==========================
-   Responsive
-========================== */
-@media (min-width: 900px) {
-  .myreports .row {
-    grid-template-columns: 1fr 1fr;
+/* Meta: ubicación · zona · fecha */
+.reporte-meta {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.reporte-codigo {
+  font-size: 0.8rem;
+  color: #444;
+  cursor: pointer;
+}
+
+/* ===== Imágenes del reporte ===== */
+
+.reporte-imgs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+/* Miniaturas */
+.reporte-imgs img {
+  max-width: 110px;
+  max-height: 110px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+/* Hover sobre imagen */
+.reporte-imgs img:hover {
+  transform: scale(1.03);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  opacity: 0.95;
+}
+
+/* ===== Mensajes de estado (sin reportes, cargando, etc.) ===== */
+
+#sin-reportes {
+  font-size: 0.9rem;
+}
+
+/* Ajustes responsivos ligeros */
+@media (max-width: 768px) {
+  .reporte-card {
+    padding: 10px 12px;
   }
+
+  .reporte-tipo {
+    font-size: 0.9rem;
+  }
+
+  .reporte-meta {
+    font-size: 0.78rem;
+  }
+
+  .reporte-imgs img {
+    max-width: 95px;
+    max-height: 95px;
+  }
+}
+
+.myreports-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.myreports-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.summary-pill {
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f4f4f4;
+  color: #333;
+}
+
+/* Colores por estado */
+.summary-pendiente {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.summary-enproceso {
+  background: #cfe2ff;
+  color: #084298;
+}
+
+.summary-resuelto {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+@media (max-width: 768px) {
+  .myreports-summary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
+.myreports-header .page-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.myreports-filters label {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.myreports-filters select {
+  margin-left: 4px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+}
+
+/* En mobile, título arriba y filtro abajo */
+@media (max-width: 768px) {
+  .myreports-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
+/* Contenedor de los botones (Editar / Eliminar) */
+.report-actions {
+  margin-top: 10px;
+  text-align: left;   /* 👈 los alinea a la izquierda */
+}
+
+/* Botón Editar */
+.btn-edit {
+  display: inline-block;
+  padding: 6px 14px;
+  background: #0d6efd;
+  color: #fff;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  border: none;
+  margin-right: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-edit:hover {
+  background: #0b5ed7;
+}
+
+/* Botón Eliminar */
+.btn-delete {
+  display: inline-block;
+  padding: 6px 14px;
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  transition: background 0.15s ease;
+}
+
+.btn-delete:hover {
+  background: #bb2d3b;
 }

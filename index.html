@@ -36,55 +36,68 @@
           <span class="icon"><i class="bi bi-telephone"></i></span> Contacto
         </a>
 
-        <!-- botón de acceder -->
+        <!-- botón de acceder (solo sin sesión) -->
         <a class="nav-item" href="/pages/login.html" data-login-link>
           <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
         </a>
 
         <!-- perfil del usuario (oculto por defecto) -->
         <div class="nav-item user-pill" data-user-panel hidden id="userMenuBtn">
-  <img src="" alt="avatar" class="user-avatar" data-user-avatar>
-  <span data-user-name></span>
-  <div class="user-dropdown" id="userDropdown" hidden>
-    <button id="logoutFromMenu">Cerrar sesión</button>
-  </div>
-</div>
+          <img src="" alt="avatar" class="user-avatar" data-user-avatar>
+          <span data-user-name></span>
+          <div class="user-dropdown" id="userDropdown" hidden>
+            <button id="goProfile">Mi perfil</button>
+            <button id="logoutFromMenu">Cerrar sesión</button>
+          </div>
+        </div>
 
-
-      <button class="hamburger" id="openDrawer" aria-label="Abrir menú">
-        <i class="bi bi-list"></i>
-      </button>
+        <button class="hamburger" id="openDrawer" aria-label="Abrir menú">
+          <i class="bi bi-list"></i>
+        </button>
+      </nav>
     </div>
     <div class="navbar-divider"></div>
   </header>
 
-  <!-- Drawer para móvil -->
+  <!-- ===== DRAWER MÓVIL ===== -->
   <div class="drawer-overlay" id="drawerOverlay"></div>
-  <aside class="drawer" id="drawer" aria-hidden="true">
-    <button class="drawer-close" id="closeDrawer" aria-label="Cerrar">×</button>
-    <div class="drawer-header">
-      <div class="avatar-sm">E</div>
-      <div class="brand-txt">
-        <span class="brand-title">CityRepair</span>
-        <span class="brand-sub">Sistema de Reportes EDET</span>
-      </div>
+
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <button class="drawer-close" id="closeDrawer" aria-label="Cerrar">×</button>
+
+  <div class="drawer-header">
+    <div class="avatar-sm">E</div>
+    <div class="brand-txt">
+      <span class="brand-title">CityRepair</span>
+      <span class="brand-sub">Sistema de Reportes EDET</span>
     </div>
-    <nav class="drawer-nav">
-      <a class="drawer-link" href="/index.html">Inicio</a>
-      <a class="drawer-link" href="/pages/reportar.html" data-auth="citizen">Reportar</a>
-      <a class="drawer-link" href="/pages/mis-reportes.html" data-auth="citizen">Mis Reportes</a>
-      <a class="drawer-link" href="/pages/contacto.html">Contacto</a>
+  </div>
 
-      <!-- igual que en el navbar -->
-      <a class="drawer-link" href="/pages/login.html" id="drawerLogin" data-login-link>Acceder</a>
-      <div class="drawer-link" data-user-panel hidden>
-        <span data-user-name></span>
-      </div>
-      <button id="drawerLogout" class="drawer-link" data-logout hidden>Cerrar sesión</button>
+  <nav class="drawer-nav">
+    <a class="drawer-link" href="../index.html">Inicio</a>
+    <a class="drawer-link" href="./reportar.html" data-auth="citizen">Reportar</a>
+    <a class="drawer-link active" href="./mis-reportes.html" data-auth="citizen">Mis Reportes</a>
+    <a class="drawer-link" href="./contacto.html">Contacto</a>
 
-      <a class="drawer-link" href="/pages/edet-login.html">Acceso EDET</a>
-    </nav>
-  </aside>
+    <!-- ACCEDER (solo cuando NO hay sesión) -->
+    <a class="drawer-link" href="./login.html" data-login-link id="drawerLogin">Acceder</a>
+
+    <!-- DATOS DEL USUARIO (solo cuando hay sesión) -->
+    <div class="drawer-link" data-user-panel hidden>
+      <span data-user-name></span>
+    </div>
+
+    <!-- MI PERFIL (solo cuando hay sesión) -->
+    <a class="drawer-link" href="./perfil.html" data-user-panel hidden>
+      Mi perfil
+    </a>
+
+    <!-- CERRAR SESIÓN (solo cuando hay sesión) -->
+    <button class="drawer-link" id="drawerLogout" data-logout hidden>
+      Cerrar sesión
+    </button>
+  </nav>
+</aside>
 
   <!-- ======= HERO ======= -->
   <section class="hero">
@@ -100,7 +113,9 @@
     <section class="cards">
       <article class="card">
         <div class="card-icon card-icon--green">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+          </svg>
         </div>
         <h3>Reportar Problema</h3>
         <p class="muted">Reporta incidencias eléctricas<br/>en tu zona</p>
@@ -109,7 +124,9 @@
 
       <article class="card">
         <div class="card-icon card-icon--blue">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1 7h5l-5-5v5z"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1 7h5l-5-5v5z"/>
+          </svg>
         </div>
         <h3>Mis Reportes</h3>
         <p class="muted">Consulta el estado de tus<br/>reportes</p>
@@ -118,7 +135,9 @@
 
       <article class="card">
         <div class="card-icon card-icon--blue">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a16 16 0 0 0 6.6 6.6l2.2-2.2a1.2 1.2 0 0 1 1.2-.3 12 12 0 0 0 3.9.6 1.2 1.2 0 0 1 1.2 1.2V20a1.2 1.2 0 0 1-1.2 1.2A18 18 0 0 1 2.8 6.2 1.2 1.2 0 0 1 4 5h3.3a1.2 1.2 0 0 1 1.2 1.2 12 12 0 0 0 .6 3.9 1.2 1.2 0 0 1-.3 1.2l-2.2 2.5z"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6.6 10.8a16 16 0 0 0 6.6 6.6l2.2-2.2a1.2 1.2 0 0 1 1.2-.3 12 12 0 0 0 3.9.6 1.2 1.2 0 0 1 1.2 1.2V20a1.2 1.2 0 0 1-1.2 1.2A18 18 0 0 1 2.8 6.2 1.2 1.2 0 0 1 4 5h3.3a1.2 1.2 0 0 1 1.2 1.2 12 12 0 0 0 .6 3.9 1.2 1.2 0 0 1-.3 1.2l-2.2 2.5z"/>
+          </svg>
         </div>
         <h3>Contacto Rápido</h3>
         <p class="muted">Línea directa para emergencias</p>
@@ -144,15 +163,11 @@
 
   <footer class="footer"></footer>
 
-  
-
-<!-- scripts -->
-<script type="module" src="./src/js/firebase.js"></script>
-<script type="module" src="./src/js/navbar-auth.js"></script>
-<script type="module" src="./src/js/logout.js"></script>
-<script type="module" src="./src/js/profile-menu.js"></script>
-<script src="./src/js/app.js"></script>
-
-</body>
+  <!-- scripts -->
+  <script type="module" src="./src/js/firebase.js"></script>
+  <script type="module" src="./src/js/navbar-auth.js"></script>
+  <script type="module" src="./src/js/logout.js"></script>
+  <script type="module" src="./src/js/profile-menu.js"></script>
+  <script src="./src/js/app.js"></script>
 </body>
 </html>

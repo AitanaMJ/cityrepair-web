@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CityRepair • Mis Reportes</title>
+
+  <!-- Estilos -->
   <link rel="stylesheet" href="../src/css/styles.css">
   <link rel="stylesheet" href="../src/css/mis-reportes.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
@@ -34,86 +36,132 @@
           <span class="icon"><i class="bi bi-telephone"></i></span> Contacto
         </a>
 
-        <!-- botón Acceder (se oculta al loguear) -->
-        <a class="nav-item" href="./login.html" data-login-link>
+<!-- botón de acceder (solo sin sesión) -->
+        <a class="nav-item" href="/pages/login.html" data-login-link>
           <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
         </a>
 
-        <!-- perfil del usuario -->
+        <!-- perfil del usuario (oculto por defecto) -->
         <div class="nav-item user-pill" data-user-panel hidden id="userMenuBtn">
           <img src="" alt="avatar" class="user-avatar" data-user-avatar>
           <span data-user-name></span>
           <div class="user-dropdown" id="userDropdown" hidden>
+            <button id="goProfile">Mi perfil</button>
             <button id="logoutFromMenu">Cerrar sesión</button>
           </div>
         </div>
 
-      <button class="hamburger" id="openDrawer" aria-label="Abrir menú">
-        <i class="bi bi-list"></i>
-      </button>
+        <button class="hamburger" id="openDrawer" aria-label="Abrir menú">
+          <i class="bi bi-list"></i>
+        </button>
+      </nav>
     </div>
     <div class="navbar-divider"></div>
   </header>
 
   <!-- ===== DRAWER MÓVIL ===== -->
   <div class="drawer-overlay" id="drawerOverlay"></div>
-  <aside class="drawer" id="drawer" aria-hidden="true">
-    <button class="drawer-close" id="closeDrawer" aria-label="Cerrar">×</button>
-    <div class="drawer-header">
-      <div class="avatar-sm">E</div>
-      <div class="brand-txt">
-        <span class="brand-title">CityRepair</span>
-        <span class="brand-sub">Sistema de Reportes EDET</span>
-      </div>
-    </div>
-    <nav class="drawer-nav">
-      <a class="drawer-link" href="../index.html">Inicio</a>
-      <a class="drawer-link" href="./reportar.html">Reportar</a>
-      <a class="drawer-link active" href="./mis-reportes.html">Mis Reportes</a>
-      <a class="drawer-link" href="./contacto.html">Contacto</a>
 
-      <!-- igual que en navbar -->
-      <a class="drawer-link" href="./login.html" data-login-link id="drawerLogin">Acceder</a>
-       <div class="drawer-link" data-user-panel hidden>
-        <span data-user-name></span>
-      </div>
-      <button class="drawer-link" id="drawerLogout" data-logout hidden>Cerrar sesión</button>
-    </nav>
-  </aside>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <button class="drawer-close" id="closeDrawer" aria-label="Cerrar">×</button>
+
+  <div class="drawer-header">
+    <div class="avatar-sm">E</div>
+    <div class="brand-txt">
+      <span class="brand-title">CityRepair</span>
+      <span class="brand-sub">Sistema de Reportes EDET</span>
+    </div>
+  </div>
+
+  <nav class="drawer-nav">
+    <a class="drawer-link" href="../index.html">Inicio</a>
+    <a class="drawer-link" href="./reportar.html" data-auth="citizen">Reportar</a>
+    <a class="drawer-link active" href="./mis-reportes.html" data-auth="citizen">Mis Reportes</a>
+    <a class="drawer-link" href="./contacto.html">Contacto</a>
+
+    <!-- ACCEDER (solo cuando NO hay sesión) -->
+    <a class="drawer-link" href="./login.html" data-login-link id="drawerLogin">Acceder</a>
+
+    <!-- DATOS DEL USUARIO (solo cuando hay sesión) -->
+    <div class="drawer-link" data-user-panel hidden>
+      <span data-user-name></span>
+    </div>
+
+    <!-- MI PERFIL (solo cuando hay sesión) -->
+    <a class="drawer-link" href="./perfil.html" data-user-panel hidden>
+      Mi perfil
+    </a>
+
+    <!-- CERRAR SESIÓN (solo cuando hay sesión) -->
+    <button class="drawer-link" id="drawerLogout" data-logout hidden>
+      Cerrar sesión
+    </button>
+  </nav>
+</aside>
 
   <!-- ===== CONTENIDO ===== -->
   <main class="container myreports">
+    <!-- Cabecera + filtros -->
+    <div class="myreports-header">
+      <h1 class="page-title">Mis reportes</h1>
+
+      <div class="myreports-filters">
+        <label for="filtro-estado">
+          Filtrar por estado:
+          <select id="filtro-estado">
+            <option value="todos">Todos</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="en-proceso">En proceso</option>
+            <option value="resuelto">Resuelto</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <!-- Resumen de estados -->
+    <div class="myreports-summary">
+      <span class="summary-pill summary-pendiente" id="resumen-pendiente">
+        Pendientes: 0
+      </span>
+      <span class="summary-pill summary-enproceso" id="resumen-enproceso">
+        En proceso: 0
+      </span>
+      <span class="summary-pill summary-resuelto" id="resumen-resuelto">
+        Resueltos: 0
+      </span>
+    </div>
+
+    <!-- Lista de reportes -->
     <div class="row g-4" id="lista-reportes">
       <div class="col-12">
         <p class="text-center text-muted mt-5">Cargando reportes...</p>
       </div>
     </div>
+
+    <!-- mensaje cuando no haya reportes -->
+    <p id="sin-reportes" class="text-center text-muted mt-5" style="display:none;">
+      Aún no realizaste ningún reporte.
+    </p>
   </main>
 
   <!-- ===== SCRIPTS ===== -->
 
-  <!-- base (drawer, etc) -->
-  <script src="../src/js/app.js"></script>
+  <!-- Scripts base (drawer, etc.) -->
+<script src="../src/js/app.js"></script>
 
-  <!-- 1. Firebase primero -->
-  <script type="module" src="../src/js/firebase.js"></script>
+<!-- Firebase primero -->
+<script type="module" src="../src/js/firebase.js"></script>
 
-  <!-- 2. Navbar (muestra/oculta acceder, perfil, logout) -->
-  <script type="module" src="../src/js/navbar-auth.js"></script>
+<!-- Navbar: muestra/oculta Acceder / perfil / logout -->
+<script type="module" src="../src/js/navbar-auth.js"></script>
 
-  <!-- 3. Logout real -->
-  <script type="module" src="../src/js/logout.js"></script>
+<!-- Cerrar sesión -->
+<script type="module" src="../src/js/logout.js"></script>
 
-  <!-- 4. (opcional) sincronizar auth con localStorage -->
-  <script type="module" src="../src/js/firebase-auth-sync.js"></script>
+<!-- Menú del perfil (Mi perfil + Cerrar sesión en el avatar) -->
+<script type="module" src="../src/js/profile-menu.js"></script>
 
-  <!-- 5. exigir login para ver mis reportes -->
-  <script type="module" src="../src/js/auth-guard.js"></script>
-
-  <!-- 6. menú del perfil (si lo separaste) -->
-  <script type="module" src="../src/js/profile-menu.js"></script>
-
-  <!-- 7. lógica propia de esta página -->
-  <script type="module" src="../src/js/mis-reportes.js"></script>
+<!-- Lógica específica de esta página -->
+<script type="module" src="../src/js/mis-reportes.js"></script>
 </body>
 </html>

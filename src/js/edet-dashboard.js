@@ -29,12 +29,44 @@ let CHART_ZONA = null;
 /* =======================================================
    Helpers
 ======================================================= */
+/**
+ * Prioridad de respaldo por tipo de problema.
+ * Se usa SOLO si el reporte no tiene campo "prioridad" en Firestore
+ * (reportes viejos).
+ */
 function inferirPrioridad(tipo = "") {
-  const t = (tipo || "").toLowerCase();
-  if (t.includes("corte")) return "alta";
-  if (t.includes("poste")) return "media";
-  if (t.includes("cable")) return "media";
-  return "baja";
+  switch (tipo) {
+    // ⚠️ MÁS PELIGROSOS
+    case "poste-danado":
+    case "cable-caido":
+    case "medidor-quemado":
+    case "transformador-riesgo":
+      return "alta";
+
+    // ⚡ CORTES Y RIESGO MODERADO
+    case "corte-total":
+    case "baja-tension":
+    case "obra-cercana":
+      return "media";
+
+    // 💡 COSAS MENOS URGENTES
+    case "luminaria-publica":
+    case "otros":
+    default:
+      return "baja";
+  }
+}
+
+/**
+ * Devuelve la prioridad REAL del reporte:
+ * 1) Usa r.prioridad si existe
+ * 2) Si no, infiere por tipo (para reportes viejos)
+ */
+function obtenerPrioridadReporte(r) {
+  if (r.prioridad) {
+    return String(r.prioridad).toLowerCase();
+  }
+  return inferirPrioridad(r.tipo || "").toLowerCase();
 }
 
 function badgeEstado(estado = "pendiente") {
@@ -106,7 +138,8 @@ function filtrarReportes() {
     const estRep = (r.estado || "pendiente").toLowerCase();
     const coincideEstado = estSel === "todos" || estRep === estSel;
 
-    const prRep = inferirPrioridad(r.tipo).toLowerCase();
+    // 👇 AHORA USAMOS LA PRIORIDAD REAL DEL REPORTE
+    const prRep = obtenerPrioridadReporte(r);
     const coincidePrio = prSel === "todas" || prRep === prSel;
 
     return coincideTxt && coincideEstado && coincidePrio;
@@ -141,7 +174,7 @@ function renderTabla(reportes = []) {
 
   const filas = reportes
     .map((r) => {
-      const prioridad = inferirPrioridad(r.tipo);
+      const prioridad = obtenerPrioridadReporte(r); // 👈 usa prioridad guardada
       const estado = r.estado || "pendiente";
       const fecha = formatearFecha(r.fecha);
 
@@ -204,8 +237,6 @@ async function onAsignarClick(e) {
       asignadoA,
       estado: "en revisión",
       ultimaActualizacion: new Date(),
-      // notaResolucion la dejamos vacía para que luego, si lo resuelven,
-      // puedan escribirla y el usuario la vea en Mis reportes
       notaResolucion: "",
     });
     window.mostrarAlerta?.("Reporte asignado correctamente", "success", {
@@ -253,7 +284,12 @@ function actualizarKPIs(reportes = []) {
   const enRev = reportes.filter((r) =>
     (r.estado || "").toLowerCase().includes("rev")
   ).length;
-  const alta = reportes.filter((r) => inferirPrioridad(r.tipo) === "alta").length;
+
+  // 👇 usa prioridad REAL (campo + fallback)
+  const alta = reportes.filter(
+    (r) => obtenerPrioridadReporte(r) === "alta"
+  ).length;
+
   if (kpiTotal) kpiTotal.textContent = total;
   if (kpiOk) kpiOk.textContent = resueltos;
   if (kpiReview) kpiReview.textContent = enRev;
