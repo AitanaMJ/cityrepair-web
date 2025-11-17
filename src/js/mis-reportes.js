@@ -223,6 +223,7 @@ function crearTarjetaReporte(id, data) {
     btnEditar.textContent = "Editar";
     btnEditar.classList.add("btn-edit");
     btnEditar.addEventListener("click", () => {
+       localStorage.setItem("reporteId", id);
       window.location.href = `./editar-reporte.html?id=${id}`;
     });
 
