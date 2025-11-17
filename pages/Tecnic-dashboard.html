@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CityRepair – Panel del Técnico</title>
+
+  <link rel="stylesheet" href="../src/css/styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+<body class="edet-body">
+  <!-- ===== NAVBAR EDET ===== -->
+  <header class="navbar">
+    <div class="container">
+      <div class="brand-left">
+        <div class="avatar-sm">E</div>
+        <div class="brand-txt">
+          <span class="brand-title">CityRepair</span>
+          <span class="brand-sub">Panel del Técnico</span>
+        </div>
+      </div>
+
+      <nav class="nav-right">
+        <span class="nav-item active">
+          <span class="icon"><i class="bi bi-tools"></i></span> Mis trabajos
+        </span>
+
+        <!-- Perfil/usuario EDET (simple) -->
+        <div class="nav-item user-pill" id="userMenuBtn">
+          <span data-user-name> Técnico </span>
+          <div class="user-dropdown" id="userDropdown" hidden>
+            <button id="logoutFromMenu">Cerrar sesión</button>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="navbar-divider"></div>
+  </header>
+
+  <!-- ===== CONTENIDO ===== -->
+  <main class="container edet-main">
+    <section class="kpi-row">
+      <article class="kpi-card">
+        <h3>Asignados</h3>
+        <p id="kpiAsignados" class="kpi-number">0</p>
+      </article>
+      <article class="kpi-card">
+        <h3>En revisión</h3>
+        <p id="kpiRevision" class="kpi-number">0</p>
+      </article>
+      <article class="kpi-card">
+        <h3>Resueltos hoy</h3>
+        <p id="kpiResueltos" class="kpi-number">0</p>
+      </article>
+    </section>
+
+    <section class="card edet-table-card">
+      <div class="edet-table-header">
+        <h2>Mis reportes asignados</h2>
+      </div>
+
+      <div id="lista-tecnico" class="edet-list">
+        <!-- aquí se pintan los reportes -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"></footer>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script type="module" src="../src/js/firebase.js"></script>
+  <!-- si ya tenés un auth para EDET, lo podés reutilizar -->
+  <script type="module" src="../src/js/tecnico-dashboard.js"></script>
+</body>
+</html>

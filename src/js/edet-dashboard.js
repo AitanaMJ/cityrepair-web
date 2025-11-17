@@ -70,7 +70,7 @@ function obtenerPrioridadReporte(r) {
 }
 
 function badgeEstado(estado = "pendiente") {
-  const e = estado.toLowerCase();
+  const e = (estado || "").toLowerCase();
   if (e === "resuelto")
     return `<span class="tag tag--green"><i class="bi bi-check2-circle"></i> Resuelto</span>`;
   if (e.includes("rev"))
@@ -79,7 +79,7 @@ function badgeEstado(estado = "pendiente") {
 }
 
 function badgePrioridad(p = "baja") {
-  const pp = p.toLowerCase();
+  const pp = (p || "").toLowerCase();
   if (pp === "alta")
     return `<span class="tag tag--red"><i class="bi bi-exclamation-triangle"></i> Alta</span>`;
   if (pp === "media")
@@ -174,7 +174,7 @@ function renderTabla(reportes = []) {
 
   const filas = reportes
     .map((r) => {
-      const prioridad = obtenerPrioridadReporte(r); // 👈 usa prioridad guardada
+      const prioridad = obtenerPrioridadReporte(r); // 👈 usa prioridad guardada o inferida
       const estado = r.estado || "pendiente";
       const fecha = formatearFecha(r.fecha);
 
@@ -230,15 +230,26 @@ function renderTabla(reportes = []) {
 ======================================================= */
 async function onAsignarClick(e) {
   const id = e.currentTarget.dataset.id;
-  const asignadoA = prompt("Asignar a (cuadrilla / responsable):");
-  if (!asignadoA) return;
+
+  // NUEVO: pedimos nombre y correo del técnico
+  const nombre = prompt("Nombre del técnico / cuadrilla:");
+  if (!nombre) return;
+
+  const email = prompt(
+    "Correo del técnico (el mismo con el que inicia sesión en EDET):"
+  );
+  if (!email) return;
+
   try {
     await updateDoc(doc(db, "reportes", id), {
-      asignadoA,
+      asignadoA: nombre,
+      tecnicoEmail: email.toLowerCase(), // 👈 esto usará el panel del técnico
       estado: "en revisión",
       ultimaActualizacion: new Date(),
+      // nota vacía por ahora, se completa cuando el técnico resuelve
       notaResolucion: "",
     });
+
     window.mostrarAlerta?.("Reporte asignado correctamente", "success", {
       titulo: "Asignado",
     });
