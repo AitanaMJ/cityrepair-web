@@ -9,7 +9,10 @@ import {
   updateDoc,
   getDoc
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+import {
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 const listaEl       = document.getElementById("lista-tecnico");
 const kpiAsignados  = document.getElementById("kpiAsignados");
@@ -92,18 +95,21 @@ function renderReportes(reportes = []) {
     return;
   }
 
-  listaEl.innerHTML = reportes.map((r) => {
-    const fecha       = formatearFecha(r.fecha);
-    const codigo      = r.codigoSeguimiento || ("CR-" + r.id.slice(0, 6).toUpperCase());
-    const descripcion = r.descripcion || "";
-    const nota        = r.notaResolucion || "";
-    const prioridad   = r.prioridad || "baja";
+  listaEl.innerHTML = reportes
+    .map((r) => {
+      const fecha       = formatearFecha(r.fecha);
+      const codigo      =
+        r.codigoSeguimiento || "CR-" + r.id.slice(0, 6).toUpperCase();
+      const descripcion = r.descripcion || "";
+      const nota        = r.notaResolucion || "";
+      const prioridad   = r.prioridad || "baja";
 
-    // imágenes (si hay)
-    const imagenes    = Array.isArray(r.imagenes) ? r.imagenes : [];
+      // imágenes (si hay)
+      const imagenes = Array.isArray(r.imagenes) ? r.imagenes : [];
 
-    const htmlImagenes = imagenes.length
-      ? `
+      const htmlImagenes =
+        imagenes.length > 0
+          ? `
         <div class="reporte-imgs-tec">
           ${imagenes
             .map((url) => {
@@ -118,55 +124,56 @@ function renderReportes(reportes = []) {
             .join("")}
         </div>
       `
-      : "";
+          : "";
 
-    const htmlNota = nota
-      ? `
+      const htmlNota = nota
+        ? `
         <p class="tec-nota">
           <strong>Nota actual:</strong> ${nota}
         </p>
       `
-      : "";
+        : "";
 
-    return `
-      <div class="list-row card-reporte-tec" data-id="${r.id}">
-        <div>
-          <div class="rep-code" data-code="${codigo}">
-            #${codigo}
+      return `
+        <div class="list-row card-reporte-tec" data-id="${r.id}">
+          <div>
+            <div class="rep-code" data-code="${codigo}">
+              #${codigo}
+            </div>
+            <div class="rep-date">
+              <i class="bi bi-calendar"></i> ${fecha || "Sin fecha"}
+            </div>
           </div>
-          <div class="rep-date">
-            <i class="bi bi-calendar"></i> ${fecha || "Sin fecha"}
+
+          <div>
+            <div class="rep-title">${r.tipo || "Reporte"}</div>
+            <div class="rep-loc">
+              <i class="bi bi-geo-alt"></i>
+              ${r.ubicacion || "Sin dirección"}
+            </div>
+            <p class="rep-desc-tec">${descripcion}</p>
+            ${htmlNota}
+          </div>
+
+          <div>${badgeEstado(r.estado || "pendiente")}</div>
+          <div>${badgePrioridad(prioridad)}</div>
+
+          <div class="tec-imgs-wrapper">
+            ${htmlImagenes}
+          </div>
+
+          <div class="acciones-tec">
+            <button class="btn-resolver-estado" data-estado="en revisión">
+              <i class="bi bi-hourglass-split"></i> En revisión
+            </button>
+            <button class="btn-resolver-estado" data-estado="resuelto">
+              <i class="bi bi-check2"></i> Marcar resuelto
+            </button>
           </div>
         </div>
-
-        <div>
-          <div class="rep-title">${r.tipo || "Reporte"}</div>
-          <div class="rep-loc">
-            <i class="bi bi-geo-alt"></i>
-            ${r.ubicacion || "Sin dirección"}
-          </div>
-          <p class="rep-desc-tec">${descripcion}</p>
-          ${htmlNota}
-        </div>
-
-        <div>${badgeEstado(r.estado || "pendiente")}</div>
-        <div>${badgePrioridad(prioridad)}</div>
-
-        <div class="tec-imgs-wrapper">
-          ${htmlImagenes}
-        </div>
-
-                <div class="acciones-tec">
-          <button class="btn-resolver-estado" data-estado="en revisión">
-            <i class="bi bi-hourglass-split"></i> En revisión
-          </button>
-          <button class="btn-resolver-estado" data-estado="resuelto">
-            <i class="bi bi-check2"></i> Marcar resuelto
-          </button>
-        </div>
-
-    `;
-  }).join("");
+      `;
+    })
+    .join("");
 
   // Eventos para cambiar estado
   listaEl.querySelectorAll(".btn-resolver-estado").forEach((btn) => {
@@ -215,9 +222,11 @@ async function onCambiarEstadoClick(e) {
   try {
     await updateDoc(doc(db, "reportes", id), {
       estado: nuevoEstado,
-      notaResolucion: nota || (nuevoEstado === "resuelto"
-        ? "El reporte fue marcado como resuelto."
-        : ""),
+      notaResolucion:
+        nota ||
+        (nuevoEstado === "resuelto"
+          ? "El reporte fue marcado como resuelto."
+          : ""),
       fechaResuelto: nuevoEstado === "resuelto" ? new Date() : null
     });
 
@@ -246,3 +255,42 @@ function actualizarKPIs(reportes = []) {
   if (kpiRevision)  kpiRevision.textContent  = revision;
   if (kpiResueltos) kpiResueltos.textContent = resueltos;
 }
+
+/* ---------- Mini menú del Técnico (Perfil / Cerrar sesión) ---------- */
+const btnMenuTec = document.getElementById("btnTecnicoMenu");
+const dropTec    = document.getElementById("tecnicoDropdown");
+const btnPerfil  = document.getElementById("tecnicoPerfil");
+const btnLogout  = document.getElementById("tecnicoLogout");
+
+// abrir/cerrar menú
+btnMenuTec?.addEventListener("click", (e) => {
+  e.stopPropagation();
+  if (!dropTec) return;
+  dropTec.hidden = !dropTec.hidden;
+});
+
+// cerrar si hace click fuera
+document.addEventListener("click", (e) => {
+  if (!dropTec || dropTec.hidden) return;
+  if (!btnMenuTec?.contains(e.target) && !dropTec.contains(e.target)) {
+    dropTec.hidden = true;
+  }
+});
+
+// Ver perfil del técnico (usa la misma página de perfil general)
+btnPerfil?.addEventListener("click", () => {
+  window.location.href = "./perfil.html";
+});
+
+// Cerrar sesión
+btnLogout?.addEventListener("click", async () => {
+  try {
+    await signOut(auth);
+    window.location.href = "./edet-login.html";
+  } catch (err) {
+    console.error("Error al cerrar sesión del técnico:", err);
+    window.mostrarAlerta?.("No se pudo cerrar sesión", "danger", {
+      titulo: "Error"
+    });
+  }
+});
