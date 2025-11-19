@@ -7,6 +7,9 @@ import {
   query,
   doc,
   updateDoc,
+   getDocs,      // 👈 FALTABA
+  where,
+  deleteDoc,       // 👈 FALTABA
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
 // ------------------------------------------------------
@@ -174,7 +177,7 @@ function renderTabla(reportes = []) {
 
   const filas = reportes
     .map((r) => {
-      const prioridad = obtenerPrioridadReporte(r); // 👈 usa prioridad guardada o inferida
+      const prioridad = obtenerPrioridadReporte(r); 
       const estado = r.estado || "pendiente";
       const fecha = formatearFecha(r.fecha);
 
@@ -201,14 +204,15 @@ function renderTabla(reportes = []) {
             }
           </span>
         </div>
-        <div class="ta-right">
-          <button class="btn-resolver" data-id="${r.id}">
-            <i class="bi bi-check2"></i> Resolver
-          </button>
-          <button class="btn-asignar" data-id="${r.id}">
-            <i class="bi bi-person-plus"></i> Asignar
-          </button>
-        </div>
+        <td class="acciones">
+  <button class="btn-blue btn-asignar" data-id="${r.id}">
+    <i class="bi bi-person-plus"></i> Asignar
+  </button>
+
+  <button class="btn-delete-admin" data-id="${r.id}">
+    <i class="bi bi-trash"></i>
+  </button>
+</td>
       </div>
     `;
     })
@@ -217,49 +221,142 @@ function renderTabla(reportes = []) {
   contenedor.innerHTML = filas;
 
   // listeners
-  contenedor.querySelectorAll(".btn-resolver").forEach((btn) => {
-    btn.addEventListener("click", onResolverClick);
-  });
   contenedor.querySelectorAll(".btn-asignar").forEach((btn) => {
     btn.addEventListener("click", onAsignarClick);
   });
 }
 
+
+// =======================================================
+// ELIMINAR REPORTE CON ANIMACIÓN + SWEETALERT2
+// =======================================================
+contenedor.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".btn-delete-admin");
+  if (!btn) return;
+
+  const id = btn.dataset.id;
+  const fila = btn.closest(".list-row");
+
+  // --- Confirmación bonita ---
+  const result = await Swal.fire({
+    title: "¿Eliminar reporte?",
+    text: "Esta acción no se puede deshacer.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar",
+    reverseButtons: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+  });
+
+  if (!result.isConfirmed) return;
+
+  try {
+    // Animación antes de eliminar
+    fila.classList.add("report-delete-anim");
+
+    setTimeout(async () => {
+      await deleteDoc(doc(db, "reportes", id));
+      fila.remove();
+
+      // Mensaje de éxito bonito
+      Swal.fire({
+        title: "Eliminado",
+        text: "El reporte fue eliminado correctamente.",
+        icon: "success",
+        timer: 1800,
+        showConfirmButton: false
+      });
+
+    }, 300);
+
+  } catch (err) {
+    console.error(err);
+
+    Swal.fire({
+      title: "Error",
+      text: "No se pudo eliminar el reporte.",
+      icon: "error",
+    });
+
+    fila.classList.remove("report-delete-anim");
+  }
+});
+
 /* =======================================================
    Acciones de administrador
 ======================================================= */
+let REPORTE_A_ASIGNAR = null;
+
+// ABRIR MODAL
 async function onAsignarClick(e) {
-  const id = e.currentTarget.dataset.id;
+  REPORTE_A_ASIGNAR = e.currentTarget.dataset.id;
 
-  // NUEVO: pedimos nombre y correo del técnico
-  const nombre = prompt("Nombre del técnico / cuadrilla:");
-  if (!nombre) return;
+  // Mostrar modal
+  document.getElementById("modalAsignarTecnico").classList.remove("hidden");
 
-  const email = prompt(
-    "Correo del técnico (el mismo con el que inicia sesión en EDET):"
-  );
+  // Cargar técnicos
+  const sel = document.getElementById("selectTecnicos");
+  sel.innerHTML = `<option>Cargando...</option>`;
+
+  try {
+    const snap = await getDocs(
+      query(collection(db, "usuarios"), where("rol", "==", "tecnico"))
+    );
+
+    sel.innerHTML = "";
+
+    snap.forEach((d) => {
+      const u = d.data();
+      sel.innerHTML += `
+        <option value="${u.email}">${u.nombre} (${u.email})</option>
+      `;
+    });
+
+    if (!sel.innerHTML.trim()) {
+      sel.innerHTML = `<option value="">No hay técnicos registrados</option>`;
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// BOTÓN CANCELAR
+document.getElementById("btnCancelarAsignacion").onclick = () => {
+  document.getElementById("modalAsignarTecnico").classList.add("hidden");
+  REPORTE_A_ASIGNAR = null;
+};
+
+// BOTÓN CONFIRMAR
+document.getElementById("btnConfirmarAsignacion").onclick = async () => {
+  const sel = document.getElementById("selectTecnicos");
+  const email = sel.value;
   if (!email) return;
 
   try {
-    await updateDoc(doc(db, "reportes", id), {
-      asignadoA: nombre,
-      tecnicoEmail: email.toLowerCase(), // 👈 esto usará el panel del técnico
+    await updateDoc(doc(db, "reportes", REPORTE_A_ASIGNAR), {
+      asignadoA: sel.options[sel.selectedIndex].text.split(" (")[0],
+      tecnicoEmail: email.toLowerCase(),
       estado: "en revisión",
-      ultimaActualizacion: new Date(),
-      // nota vacía por ahora, se completa cuando el técnico resuelve
-      notaResolucion: "",
+      ultimaActualizacion: new Date()
     });
 
-    window.mostrarAlerta?.("Reporte asignado correctamente", "success", {
-      titulo: "Asignado",
-    });
+    window.mostrarAlerta?.("Técnico asignado correctamente", "success");
+
   } catch (err) {
     console.error(err);
-    window.mostrarAlerta?.("No se pudo asignar el reporte", "danger", {
-      titulo: "Error",
-    });
+    window.mostrarAlerta?.("No se pudo asignar técnico", "danger");
   }
-}
+
+  // Cerrar modal
+  document.getElementById("modalAsignarTecnico").classList.add("hidden");
+  REPORTE_A_ASIGNAR = null;
+};
+
+
+
+
 
 async function onResolverClick(e) {
   const id = e.currentTarget.dataset.id;

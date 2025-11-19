@@ -184,40 +184,81 @@
   gap: 10px; /* ← aumenta el espacio entre los botones */
 }
 
-/* ===== Botón verde (resolver) ===== */
-.btn-resolver {
-  background: #22c55e;
-  color: #fff;
-  border: 0;
-  border-radius: 8px;
-  height: 30px; /* ← más chico */
-  padding: 0 10px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  transition: 0.2s ease;
-}
-.btn-resolver:hover { filter: brightness(.95); }
-
 /* ===== Botón azul (asignar) ===== */
 .btn-asignar {
   background: #0d6efd;
   color: #fff;
   border: 0;
-  border-radius: 8px;
+  border-radius: 15px;
   height: 30px; /* ← más chico */
-  padding: 0 10px;
+  padding: 0 2px;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
   transition: 0.2s ease;
+ 
 }
 .btn-asignar:hover {
   background: #0b5ed7;
+}
+
+/* ============================
+   BOTÓN PAPELERA ADMIN
+   ============================ */
+
+.btn-delete-admin {
+  background: #ffe5e5;
+  color: #c62828;
+  border: none;
+  font-size: 16px;
+  padding: 6px 12px;
+  border-radius: 15px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.25s ease;
+}
+
+.btn-delete-admin i {
+  font-size: 18px;
+}
+
+.btn-delete-admin:hover {
+  background: #ff4b4b;
+  color: #f8f3f3;
+  transform: translateY(-1px);
+}
+
+/* Animación para desaparecer filas */
+.report-delete-anim {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+/* ===== FIX PARA EL MENÚ "MI PERFIL" ===== */
+
+.user-dropdown .dropdown-btn {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px;
+  padding: 10px 16px;
+  text-decoration: none;
+  font-size: 15px;
+  color: #111827;
+  width: 100%;
+}
+
+.user-dropdown .dropdown-btn:hover {
+  background: #f3f4f6;
+}
+
+.user-dropdown .dropdown-btn i {
+  font-size: 16px;
+  color: #6b7280;
 }

@@ -14,6 +14,10 @@ import {
   signOut
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
+// Estos dos archivos activan el avatar, nombre y menú del técnico
+import "./navbar-auth.js";
+import "./profile-menu.js";
+
 const listaEl       = document.getElementById("lista-tecnico");
 const kpiAsignados  = document.getElementById("kpiAsignados");
 const kpiRevision   = document.getElementById("kpiRevision");
@@ -56,6 +60,8 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
+   cargarInfoTecnico(user);
+
   // (Opcional) chequeo de rol
   try {
     const snapUser = await getDoc(doc(db, "usuarios", user.uid));
@@ -82,6 +88,76 @@ onAuthStateChanged(auth, async (user) => {
     actualizarKPIs(reportes);
   });
 });
+
+
+/* -----------------------------
+   FOTO, NOMBRE y DROPDOWN
+------------------------------ */
+function cargarInfoTecnico(user) {
+  const avatar = document.getElementById("tecAvatar");
+  const nombreSpan = document.getElementById("tecName");
+
+  // valores por defecto
+  let nombre = user.email.split("@")[0];
+  let foto = user.photoURL || "";
+
+  // si existe documento en Firestore lo traemos
+  getDoc(doc(db, "usuarios", user.uid)).then((snap) => {
+    if (snap.exists()) {
+      const data = snap.data();
+      if (data.nombre) nombre = data.nombre;
+      if (data.foto) foto = data.foto;
+    }
+
+    // si no hay foto, avatar automático
+    if (!foto) {
+      foto = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombre)}&background=0f62fe&color=fff`;
+    }
+
+    avatar.src = foto;
+    nombreSpan.textContent = nombre;
+  });
+}
+
+/* -----------------------------
+   MENÚ DESPLEGABLE
+------------------------------ */
+document.getElementById("tecUserPill")?.addEventListener("click", (e) => {
+  e.stopPropagation();
+  const drop = document.getElementById("tecDropdown");
+  drop.hidden = !drop.hidden;
+});
+
+document.addEventListener("click", () => {
+  const drop = document.getElementById("tecDropdown");
+  if (drop) drop.hidden = true;
+});
+
+/* abrir perfil */
+document.getElementById("verPerfilTec")?.addEventListener("click", () => {
+  window.location.href = "./tecnico-perfil.html";
+});
+
+/* cerrar sesión */
+document.getElementById("logoutTec")?.addEventListener("click", async () => {
+  await signOut(auth);
+  window.location.href = "./edet-login.html";
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* ---------- Render ---------- */
 function renderReportes(reportes = []) {
@@ -279,7 +355,7 @@ document.addEventListener("click", (e) => {
 
 // Ver perfil del técnico (usa la misma página de perfil general)
 btnPerfil?.addEventListener("click", () => {
-  window.location.href = "./perfil.html";
+  window.location.href = "./tecnico-perfil.html";
 });
 
 // Cerrar sesión

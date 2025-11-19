@@ -335,3 +335,200 @@ body.edet-body {
 .tecnico-dropdown button:hover {
   background: #f3f4f6;
 }
+
+ 
+/* --- NAVBAR GENERAL --- */
+.navbar-technician {
+  display: flex;
+  align-items: center;
+  padding: 18px 40px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* Logo + título */
+.nav-tech-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.nav-tech-logo {
+  height: 60px;
+}
+
+.nav-tech-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* --- PARTE DERECHA DEL NAVBAR --- */
+.nav-tech-right {
+  margin-left: auto; /* Empuja todo a la derecha */
+  display: flex;
+  align-items: center;
+  gap: 24px; /* distancia entre mis trabajos y avatar */
+}
+
+/* Botón Mis trabajos */
+.btn-mis-trabajos {
+  background: #0f62fe;
+  padding: 10px 20px;
+  border-radius: 25px;
+  color: white !important;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.btn-mis-trabajos:hover {
+  background: #0c52d8;
+}
+
+/* --- Menú técnico (avatar + nombre) --- */
+.nav-tech-menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  position: relative;
+}
+
+.nav-tech-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.nav-tech-dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 10px 0;
+  width: 160px;
+  display: none;
+}
+
+.nav-tech-dropdown.show {
+  display: block;
+}
+
+.nav-tech-dropdown button {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.nav-tech-dropdown button:hover {
+  background: #f3f4f6;
+}
+
+/* ======== PERFIL DEL TÉCNICO ======== */
+
+.perfil-card-tec {
+  width: 50%;
+  max-width: 500px;
+  margin: 60px auto;
+  background: white;
+  padding: 50px 60px;
+  border-radius: 30px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+/* Foto redonda */
+.perfil-foto-tec {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+}
+
+.perfil-nombre-tec {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.perfil-email-tec {
+  font-size: 17px;
+  color: #444;
+  margin-bottom: 4px;
+}
+
+.perfil-uid-tec {
+  font-size: 14px;
+  color: #777;
+  margin-top: 10px;
+}
+
+
+/* =============================
+   DROPDOWN DEL TÉCNICO (CON ICONOS)
+   ============================= */
+
+.user-dropdown {
+  position: absolute;
+  top: 52px;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  padding: 6px 0;
+  width: 190px;
+  z-index: 9999;
+}
+
+/* Botones del menú */
+.user-dropdown a.dropdown-btn,
+.user-dropdown button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  color: #1f2937;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.user-dropdown a.dropdown-btn i,
+.user-dropdown button i {
+  font-size: 18px;
+  color: #6b7280;
+}
+
+.user-dropdown a.dropdown-btn:hover,
+.user-dropdown button:hover {
+  background: #f3f4f6;
+}
+
+/* Avatar circulito azul */
+.user-pill .avatar-sm {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+}

@@ -13,6 +13,32 @@ const userPanel    = document.querySelector("[data-user-panel]");
 const userNameSpan = document.querySelector("[data-user-name]");
 const userAvatar   = document.querySelector("[data-user-avatar]");
 
+
+// 🚫 BLOQUEAR NAVBAR DEL USUARIO EN ADMIN Y TÉCNICO
+async function bloquearSiNoEsUsuario(user) {
+  if (!user) return false;
+
+  try {
+    const snap = await getDoc(doc(db, "usuarios", user.uid));
+    const data = snap.data() || {};
+
+    // 👉 si NO es citizen, desactivamos este navbar
+    if (data.rol === "tecnico" || data.rol === "edet") {
+      const navbar = document.getElementById("navbar-usuario");
+      if (navbar) navbar.remove();
+
+      // cortar ejecución
+      return true;
+    }
+  } catch (err) {
+    console.warn("No se pudo verificar el rol:", err);
+  }
+
+  return false;
+}
+
+
+
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     // mostrar cosas de logueado

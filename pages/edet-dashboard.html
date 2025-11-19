@@ -29,19 +29,34 @@
     <span class="icon"><i class="bi bi-clipboard2-check"></i></span> Gestión
   </a>
 
+
+
   <!-- botón de acceder (se oculta al iniciar sesión) -->
   <a class="nav-item" href="./edet-login.html" data-login-link>
     <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
   </a>
 
-  <!-- perfil del usuario -->
-  <div class="nav-item user-pill" id="userMenuBtn" data-user-panel hidden>
-    <img src="" alt="avatar" class="user-avatar" data-user-avatar>
-    <span data-user-name></span>
-    <div class="user-dropdown" id="userDropdown" hidden>
-      <button id="logoutFromMenu">Cerrar sesión</button>
-    </div>
+  <!-- PANEL DE USUARIO (solo visible si está logueado) -->
+<div class="nav-item user-pill" id="userMenuBtn" data-user-panel hidden>
+  <img src="../src/img/default-avatar.png" class="user-avatar" data-user-avatar>
+  <span data-user-name>Usuario</span>
+  <i class="bi bi-caret-down-fill icon-dropdown"></i>
+
+  <!-- MENÚ DESPLEGABLE -->
+  <div class="user-dropdown" id="userDropdown" hidden>
+
+    <!-- MI PERFIL -->
+    <a href="./perfil-admin.html" class="dropdown-btn">
+      <i class="bi bi-person-circle"></i> Mi Perfil
+    </a>
+
+    <!-- CERRAR SESIÓN -->
+    <button id="logoutFromMenu">
+      <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+    </button>
+
   </div>
+</div>
 
 
       <button class="hamburger" aria-label="Abrir menú"><i class="bi bi-list"></i></button>
@@ -118,12 +133,34 @@
         <span class="ta-right">ACCIONES</span>
       </div>
 
+
+
+      <!-- ===== MODAL ASIGNAR TÉCNICO ===== -->
+<div id="modalAsignarTecnico" class="modal-tec hidden">
+  <div class="modal-tec-content">
+    <h3>Asignar técnico</h3>
+
+    <label class="modal-label">Seleccioná un técnico:</label>
+    <select id="selectTecnicos" class="modal-select">
+      <option value="">Cargando técnicos...</option>
+    </select>
+
+    <div class="modal-buttons">
+      <button id="btnCancelarAsignacion" class="btn-cancel">Cancelar</button>
+      <button id="btnConfirmarAsignacion" class="btn-confirm">Asignar</button>
+    </div>
+  </div>
+</div>
+
       <!-- Contenedor dinámico -->
       <div id="edet-reportes-container">
         <p class="muted" style="padding:12px 16px;">Cargando reportes...</p>
       </div>
     </section>
   </main>
+
+
+
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -145,5 +182,7 @@
 
   <!-- Lógica del dashboard EDET -->
   <script type="module" src="../src/js/edet-dashboard.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

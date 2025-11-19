@@ -440,3 +440,66 @@ body{
 .btn-asignar:hover {
   background: #0b5ed7;
 }
+
+
+/* ===== Modal técnico ===== */
+.modal-tec {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-tec.hidden {
+  display: none;
+}
+
+.modal-tec-content {
+  background: #fff;
+  padding: 25px;
+  width: 360px;
+  border-radius: 12px;
+  box-shadow: 0 4px 25px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+.modal-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.modal-select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-cancel {
+  padding: 8px 18px;
+  background: #ccc;
+  border: none;
+  border-radius: 6px;
+}
+
+.btn-confirm {
+  padding: 8px 18px;
+  background: #2563EB;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+
+.logo-sm {
+  height: 50px;
+}
