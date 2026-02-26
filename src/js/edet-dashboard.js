@@ -489,3 +489,48 @@ function actualizarCharts(reportes = []) {
     }
   }
 }
+// ==========================
+// FILTROS AVANZADOS
+// ==========================
+
+const filtroResolucion = document.getElementById("filtroResolucion");
+const fechaDesde = document.getElementById("fechaDesde");
+const fechaHasta = document.getElementById("fechaHasta");
+const btnAplicarFiltros = document.getElementById("btnAplicarFiltros");
+
+btnAplicarFiltros?.addEventListener("click", () => {
+  aplicarFiltrosAvanzados();
+});
+
+function aplicarFiltrosAvanzados() {
+  let reportesFiltrados = [...window.reportesOriginales]; // copia segura
+
+  // Filtrar por estado de resolución
+  const resolucion = filtroResolucion.value;
+
+  if (resolucion === "resuelto") {
+    reportesFiltrados = reportesFiltrados.filter(r => r.estado === "resuelto");
+  }
+
+  if (resolucion === "no_resuelto") {
+    reportesFiltrados = reportesFiltrados.filter(r => r.estado !== "resuelto");
+  }
+
+  // Filtrar por fecha (solo si tiene fecha)
+  const desde = fechaDesde.value;
+  const hasta = fechaHasta.value;
+
+  if (desde) {
+    reportesFiltrados = reportesFiltrados.filter(r => 
+      new Date(r.fecha_resolucion) >= new Date(desde)
+    );
+  }
+
+  if (hasta) {
+    reportesFiltrados = reportesFiltrados.filter(r => 
+      new Date(r.fecha_resolucion) <= new Date(hasta)
+    );
+  }
+
+  renderizarReportes(reportesFiltrados);
+}

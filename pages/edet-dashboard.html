@@ -89,24 +89,43 @@
     </section>
 
     <!-- Barra de búsqueda + filtros -->
-    <section class="edash-bar">
-      <div class="input-icon">
-        <i class="bi bi-search"></i>
-        <input type="text" id="buscarInput" placeholder="Buscar reportes..." />
-      </div>
-      <select class="select" id="filtroEstado">
-        <option value="todos">Todos los estados</option>
-        <option value="pendiente">Pendiente</option>
-        <option value="en revisión">En Revisión</option>
-        <option value="resuelto">Resuelto</option>
+   <!-- ===== FILTROS AVANZADOS ===== -->
+<section class="edash-filtros-avanzados card" style="margin-top:20px; padding:16px;">
+  <header class="card-head">Filtros Avanzados</header>
+
+  <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:end; margin-top:12px;">
+
+    <!-- Estado resolución -->
+    <div>
+      <label>Estado de resolución</label>
+      <select id="filtroResolucion" class="select">
+        <option value="todos">Todos</option>
+        <option value="resuelto">Solo resueltos</option>
+        <option value="no_resuelto">Solo no resueltos</option>
       </select>
-      <select class="select" id="filtroPrioridad">
-        <option value="todas">Todas las prioridades</option>
-        <option value="baja">Baja</option>
-        <option value="media">Media</option>
-        <option value="alta">Alta</option>
-      </select>
-    </section>
+    </div>
+
+    <!-- Fecha desde -->
+    <div>
+      <label>Fecha desde</label>
+      <input type="date" id="fechaDesde" class="select">
+    </div>
+
+    <!-- Fecha hasta -->
+    <div>
+      <label>Fecha hasta</label>
+      <input type="date" id="fechaHasta" class="select">
+    </div>
+
+    <!-- Botón aplicar -->
+    <div>
+      <button id="btnAplicarFiltros" class="btn-primary">
+        Aplicar filtros
+      </button>
+    </div>
+
+  </div>
+</section>
 
     <!-- Gráficos -->
     <section class="edash-charts">
