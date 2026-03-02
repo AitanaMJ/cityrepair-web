@@ -5,203 +5,118 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestión EDET • CityRepair</title>
 
-  <!-- Base del sitio -->
   <link rel="stylesheet" href="../src/css/styles.css">
-  <!-- Estilos del dashboard -->
   <link rel="stylesheet" href="../src/css/edet-dashboard.css">
-  <!-- Íconos -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
+
 <body>
-  <!-- NAVBAR -->
-  <header class="navbar">
-    <div class="container">
-      <div class="brand-left">
-        <div class="avatar-sm">E</div>
-        <div class="brand-txt">
-          <span class="brand-title">CityRepair</span>
-          <span class="brand-sub">Sistema de Reportes EDET</span>
-        </div>
+
+<header class="navbar">
+  <div class="container">
+    <div class="brand-left">
+      <div class="avatar-sm">E</div>
+      <div class="brand-txt">
+        <span class="brand-title">CityRepair</span>
+        <span class="brand-sub">Sistema de Reportes EDET</span>
       </div>
-
-      <nav class="nav-right">
-  <a class="nav-item active" href="./edet-dashboard.html">
-    <span class="icon"><i class="bi bi-clipboard2-check"></i></span> Gestión
-  </a>
-
-
-
-  <!-- botón de acceder (se oculta al iniciar sesión) -->
-  <a class="nav-item" href="./edet-login.html" data-login-link>
-    <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
-  </a>
-
-  <!-- PANEL DE USUARIO (solo visible si está logueado) -->
-<div class="nav-item user-pill" id="userMenuBtn" data-user-panel hidden>
-  <img src="../src/img/default-avatar.png" class="user-avatar" data-user-avatar>
-  <span data-user-name>Usuario</span>
-  <i class="bi bi-caret-down-fill icon-dropdown"></i>
-
-  <!-- MENÚ DESPLEGABLE -->
-  <div class="user-dropdown" id="userDropdown" hidden>
-
-    <!-- MI PERFIL -->
-    <a href="./perfil-admin.html" class="dropdown-btn">
-      <i class="bi bi-person-circle"></i> Mi Perfil
-    </a>
-
-    <!-- CERRAR SESIÓN -->
-    <button id="logoutFromMenu">
-      <i class="bi bi-box-arrow-right"></i> Cerrar sesión
-    </button>
-
-  </div>
-</div>
-
-
-      <button class="hamburger" aria-label="Abrir menú"><i class="bi bi-list"></i></button>
-    </div>
-    <div class="navbar-divider"></div>
-  </header>
-
-  <!-- ===== DASHBOARD ===== -->
-  <main class="container edash">
-    <h1 class="edash-title">Panel de Gestión EDET</h1>
-
-    <!-- KPIs -->
-    <section class="edash-kpis">
-      <article class="kpi">
-        <div class="kpi-num" id="kpiTotal">0</div>
-        <div class="kpi-sub">Total Reportes</div>
-      </article>
-      <article class="kpi">
-        <div class="kpi-num kpi-num--green" id="kpiOk">0</div>
-        <div class="kpi-sub">Resueltos</div>
-      </article>
-      <article class="kpi">
-        <div class="kpi-num kpi-num--blue" id="kpiReview">0</div>
-        <div class="kpi-sub">En Revisión</div>
-      </article>
-      <article class="kpi">
-        <div class="kpi-num kpi-num--red" id="kpiHigh">0</div>
-        <div class="kpi-sub">Alta Prioridad</div>
-      </article>
-    </section>
-
-    <!-- Barra de búsqueda + filtros -->
-   <!-- ===== FILTROS AVANZADOS ===== -->
-<section class="edash-filtros-avanzados card" style="margin-top:20px; padding:16px;">
-  <header class="card-head">Filtros Avanzados</header>
-
-  <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:end; margin-top:12px;">
-
-    <!-- Estado resolución -->
-    <div>
-      <label>Estado de resolución</label>
-      <select id="filtroResolucion" class="select">
-        <option value="todos">Todos</option>
-        <option value="resuelto">Solo resueltos</option>
-        <option value="no_resuelto">Solo no resueltos</option>
-      </select>
-    </div>
-
-    <!-- Fecha desde -->
-    <div>
-      <label>Fecha desde</label>
-      <input type="date" id="fechaDesde" class="select">
-    </div>
-
-    <!-- Fecha hasta -->
-    <div>
-      <label>Fecha hasta</label>
-      <input type="date" id="fechaHasta" class="select">
-    </div>
-
-    <!-- Botón aplicar -->
-    <div>
-      <button id="btnAplicarFiltros" class="btn-primary">
-        Aplicar filtros
-      </button>
-    </div>
-
-  </div>
-</section>
-
-    <!-- Gráficos -->
-    <section class="edash-charts">
-      <article class="card">
-        <header class="card-head">Estado de Reportes</header>
-        <canvas id="chartStatus" height="180"></canvas>
-      </article>
-      <article class="card">
-        <header class="card-head">Reportes por Zona</header>
-        <canvas id="chartZones" height="180"></canvas>
-      </article>
-    </section>
-
-    <!-- Listado dinámico -->
-    <section class="edash-list card">
-      <header class="card-head">Listado de Reportes</header>
-
-      <div class="list-head">
-        <span>REPORTE</span>
-        <span>TIPO / UBICACIÓN</span>
-        <span>ESTADO</span>
-        <span>PRIORIDAD</span>
-        <span>ASIGNADO A</span>
-        <span class="ta-right">ACCIONES</span>
-      </div>
-
-
-
-      <!-- ===== MODAL ASIGNAR TÉCNICO ===== -->
-<div id="modalAsignarTecnico" class="modal-tec hidden">
-  <div class="modal-tec-content">
-    <h3>Asignar técnico</h3>
-
-    <label class="modal-label">Seleccioná un técnico:</label>
-    <select id="selectTecnicos" class="modal-select">
-      <option value="">Cargando técnicos...</option>
-    </select>
-
-    <div class="modal-buttons">
-      <button id="btnCancelarAsignacion" class="btn-cancel">Cancelar</button>
-      <button id="btnConfirmarAsignacion" class="btn-confirm">Asignar</button>
     </div>
   </div>
-</div>
+</header>
 
-      <!-- Contenedor dinámico -->
-      <div id="edet-reportes-container">
-        <p class="muted" style="padding:12px 16px;">Cargando reportes...</p>
+<main class="container edash">
+
+  <h1 class="edash-title">Panel de Gestión EDET</h1>
+
+  <!-- KPIs -->
+  <section class="edash-kpis">
+    <article class="kpi">
+      <div class="kpi-num" id="kpiTotal">0</div>
+      <div class="kpi-sub">Total Reportes</div>
+    </article>
+    <article class="kpi">
+      <div class="kpi-num kpi-num--green" id="kpiOk">0</div>
+      <div class="kpi-sub">Resueltos</div>
+    </article>
+    <article class="kpi">
+      <div class="kpi-num kpi-num--blue" id="kpiReview">0</div>
+      <div class="kpi-sub">En Revisión</div>
+    </article>
+    <article class="kpi">
+      <div class="kpi-num kpi-num--red" id="kpiHigh">0</div>
+      <div class="kpi-sub">Alta Prioridad</div>
+    </article>
+  </section>
+
+  <!-- FILTROS -->
+  <section class="card" style="margin-top:20px; padding:16px;">
+    <header class="card-head">Filtros Avanzados</header>
+
+    <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:end; margin-top:12px;">
+
+      <div>
+        <label>Estado de resolución</label>
+        <select id="filtroResolucion" class="select">
+          <option value="todos">Todos</option>
+          <option value="resuelto">Solo resueltos</option>
+          <option value="no_resuelto">Solo no resueltos</option>
+        </select>
       </div>
-    </section>
-  </main>
 
+      <div>
+        <label>Fecha desde</label>
+        <input type="date" id="fechaDesde" class="select">
+      </div>
 
+      <div>
+        <label>Fecha hasta</label>
+        <input type="date" id="fechaHasta" class="select">
+      </div>
 
+      <div>
+        <button id="btnAplicarFiltros" class="btn-primary">
+          Aplicar filtros
+        </button>
 
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+        <button id="btnExportarPDF" class="btn-primary" style="margin-left:10px;">
+          Exportar PDF
+        </button>
+      </div>
 
-  <!-- JS global (drawer, toasts, etc.) -->
-  <script src="../src/js/app.js"></script>
+    </div>
+  </section>
 
-  <!-- Firebase primero -->
-  <script type="module" src="../src/js/firebase.js"></script>
+  <!-- GRÁFICOS -->
+  <section class="edash-charts">
+    <article class="card">
+      <header class="card-head">Estado de Reportes</header>
+      <canvas id="chartStatus" height="180"></canvas>
+    </article>
 
-  <!-- Navbar: muestra perfil / oculta acceder -->
-  <script type="module" src="../src/js/navbar-auth.js"></script>
+    <article class="card">
+      <header class="card-head">Reportes por Zona</header>
+      <canvas id="chartZones" height="180"></canvas>
+    </article>
+  </section>
 
-    <!-- Logout genérico -->
-  <script type="module" src="../src/js/profile-menu.js"></script>
+  <!-- LISTADO -->
+  <section class="card">
+    <header class="card-head">Listado de Reportes</header>
 
-  <!-- Logout genérico -->
-  <script type="module" src="../src/js/logout.js"></script>
+    <div id="edet-reportes-container">
+      <p style="padding:12px;">Cargando reportes...</p>
+    </div>
+  </section>
 
-  <!-- Lógica del dashboard EDET -->
-  <script type="module" src="../src/js/edet-dashboard.js"></script>
+</main>
 
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Librerías -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- JS -->
+<script type="module" src="../src/js/firebase.js"></script>
+<script type="module" src="../src/js/edet-dashboard.js"></script>
+
 </body>
 </html>
