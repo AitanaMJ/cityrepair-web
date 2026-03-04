@@ -272,3 +272,108 @@
   width: 100% !important;
   height: 100% !important;
 }
+
+/* ==============================
+   LISTADO MODERNO DE REPORTES
+============================== */
+
+.reportes-wrapper {
+  display: grid;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+/* Tarjeta individual */
+
+.reporte-card {
+  background: white;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  transition: all 0.25s ease;
+  border-left: 6px solid transparent;
+}
+
+.reporte-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* Colores laterales según estado */
+
+.estado-ok {
+  border-left-color: #16a34a;
+}
+
+.estado-review {
+  border-left-color: #ec4899;
+}
+
+.estado-pendiente {
+  border-left-color: #3b82f6;
+}
+
+/* Header tarjeta */
+
+.reporte-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.reporte-id {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Body */
+
+.reporte-body h4 {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  color: #111827;
+}
+
+.estado-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 4px 0;
+}
+
+.fecha-label {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* BADGES PRIORIDAD */
+
+.badge {
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.prioridad-alta {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.prioridad-media {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.prioridad-baja {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+/* Empty state */
+
+.empty-state {
+  text-align: center;
+  padding: 30px;
+  color: #9ca3af;
+}

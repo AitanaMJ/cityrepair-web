@@ -88,24 +88,75 @@ function aplicarFiltros() {
 btnAplicarFiltros.addEventListener("click", aplicarFiltros);
 
 /* =======================================================
-   TABLA
+   LISTADO MODERNO DE REPORTES
 ======================================================= */
 
 function renderTabla(reportes) {
 
   if (!reportes.length) {
-    contenedor.innerHTML = "<p>No hay reportes.</p>";
+    contenedor.innerHTML =
+      "<p class='empty-state'>No hay reportes disponibles</p>";
     return;
   }
 
-  contenedor.innerHTML = reportes.map(r => `
-    <div class="list-row">
-      <div>#${r.id.slice(0,6)}</div>
-      <div>${r.tipo}</div>
-      <div>${r.estado}</div>
-      <div>${r.fecha?.toDate().toLocaleDateString("es-AR")}</div>
+  contenedor.innerHTML = `
+    <div class="reportes-wrapper">
+
+      ${reportes.map(r => {
+
+        const fecha = r.fecha?.toDate()
+          .toLocaleDateString("es-AR");
+
+        const estado = (r.estado || "pendiente").toLowerCase();
+
+        const estadoClass =
+          estado === "resuelto"
+            ? "estado-ok"
+            : estado.includes("rev")
+              ? "estado-review"
+              : "estado-pendiente";
+
+        const prioridad = (r.prioridad || "media").toLowerCase();
+
+        const prioridadClass =
+          prioridad === "alta"
+            ? "prioridad-alta"
+            : prioridad === "media"
+              ? "prioridad-media"
+              : "prioridad-baja";
+
+        return `
+          <div class="reporte-card ${estadoClass}">
+
+            <div class="reporte-header">
+              <span class="reporte-id">
+                #${r.id.slice(0,6)}
+              </span>
+
+              <span class="badge ${prioridadClass}">
+                ${prioridad}
+              </span>
+            </div>
+
+            <div class="reporte-body">
+              <h4>${r.tipo || "Sin categoría"}</h4>
+
+              <p class="estado-label">
+                ${estado}
+              </p>
+
+              <p class="fecha-label">
+                ${fecha}
+              </p>
+            </div>
+
+          </div>
+        `;
+
+      }).join("")}
+
     </div>
-  `).join("");
+  `;
 }
 
 /* =======================================================
@@ -127,7 +178,7 @@ function actualizarKPIs(reportes) {
 }
 
 /* =======================================================
-   CHARTS (ARREGLADOS)
+   CHARTS
 ======================================================= */
 
 function actualizarCharts(reportes) {
@@ -143,7 +194,6 @@ function actualizarCharts(reportes) {
     else if (est.includes("rev")) estados.revision++;
     else estados.pendiente++;
 
-    // 🔥 ACORTAMOS EL TEXTO DE ZONA
     let zona = (r.ubicacion || "Sin zona").split(",")[0];
 
     if (zona.length > 20) {
@@ -155,10 +205,6 @@ function actualizarCharts(reportes) {
 
   if (CHART_ESTADOS) CHART_ESTADOS.destroy();
   if (CHART_ZONA) CHART_ZONA.destroy();
-
-  /* =======================
-     CHART ESTADO
-  ======================= */
 
   CHART_ESTADOS = new Chart(ctxEstado, {
     type: "doughnut",
@@ -182,10 +228,6 @@ function actualizarCharts(reportes) {
       maintainAspectRatio: false
     }
   });
-
-  /* =======================
-     CHART ZONA
-  ======================= */
 
   CHART_ZONA = new Chart(ctxZona, {
     type: "bar",
@@ -213,7 +255,7 @@ function actualizarCharts(reportes) {
 }
 
 /* =======================================================
-   EXPORTAR PDF (SIN CAMBIOS)
+   EXPORTAR PDF
 ======================================================= */
 
 document.getElementById("btnExportarPDF")
