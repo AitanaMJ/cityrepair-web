@@ -22,6 +22,9 @@ const fechaDesde = document.getElementById("fechaDesde");
 const fechaHasta = document.getElementById("fechaHasta");
 const btnAplicarFiltros = document.getElementById("btnAplicarFiltros");
 
+const ctxEstado = document.getElementById("chartStatus");
+const ctxZona = document.getElementById("chartZones");
+
 let REPORTES_ORIGINALES = [];
 let CHART_ESTADOS = null;
 let CHART_ZONA = null;
@@ -45,7 +48,6 @@ onSnapshot(q, (snap) => {
 
   REPORTES_ORIGINALES = reportes;
   aplicarFiltros();
-
 });
 
 /* =======================================================
@@ -81,7 +83,6 @@ function aplicarFiltros() {
   renderTabla(filtrados);
   actualizarKPIs(filtrados);
   actualizarCharts(filtrados);
-
 }
 
 btnAplicarFiltros.addEventListener("click", aplicarFiltros);
@@ -105,7 +106,6 @@ function renderTabla(reportes) {
       <div>${r.fecha?.toDate().toLocaleDateString("es-AR")}</div>
     </div>
   `).join("");
-
 }
 
 /* =======================================================
@@ -124,11 +124,10 @@ function actualizarKPIs(reportes) {
 
   kpiHigh.textContent =
     reportes.filter(r => r.prioridad === "alta").length;
-
 }
 
 /* =======================================================
-   CHARTS
+   CHARTS (ARREGLADOS)
 ======================================================= */
 
 function actualizarCharts(reportes) {
@@ -144,51 +143,77 @@ function actualizarCharts(reportes) {
     else if (est.includes("rev")) estados.revision++;
     else estados.pendiente++;
 
-    const zona = r.ubicacion || "Sin zona";
+    // 🔥 ACORTAMOS EL TEXTO DE ZONA
+    let zona = (r.ubicacion || "Sin zona").split(",")[0];
 
-    if (!zonas[zona]) zonas[zona] = 0;
-    zonas[zona]++;
+    if (zona.length > 20) {
+      zona = zona.slice(0,20) + "...";
+    }
 
+    zonas[zona] = (zonas[zona] || 0) + 1;
   });
 
   if (CHART_ESTADOS) CHART_ESTADOS.destroy();
   if (CHART_ZONA) CHART_ZONA.destroy();
 
-  CHART_ESTADOS = new Chart(
-    document.getElementById("chartStatus"),
-    {
-      type: "doughnut",
-      data: {
-        labels: ["Pendiente","En revisión","Resuelto"],
-        datasets: [{
-          data: [
-            estados.pendiente,
-            estados.revision,
-            estados.resuelto
-          ]
-        }]
+  /* =======================
+     CHART ESTADO
+  ======================= */
+
+  CHART_ESTADOS = new Chart(ctxEstado, {
+    type: "doughnut",
+    data: {
+      labels: ["Pendiente","En revisión","Resuelto"],
+      datasets: [{
+        data: [
+          estados.pendiente,
+          estados.revision,
+          estados.resuelto
+        ],
+        backgroundColor: [
+          "#3b82f6",
+          "#ec4899",
+          "#f97316"
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  });
+
+  /* =======================
+     CHART ZONA
+  ======================= */
+
+  CHART_ZONA = new Chart(ctxZona, {
+    type: "bar",
+    data: {
+      labels: Object.keys(zonas),
+      datasets: [{
+        label: "Reportes",
+        data: Object.values(zonas),
+        backgroundColor: "#3b82f6"
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          ticks: {
+            maxRotation: 0,
+            autoSkip: true
+          }
+        }
       }
     }
-  );
-
-  CHART_ZONA = new Chart(
-    document.getElementById("chartZones"),
-    {
-      type: "bar",
-      data: {
-        labels: Object.keys(zonas),
-        datasets: [{
-          label: "Reportes",
-          data: Object.values(zonas)
-        }]
-      }
-    }
-  );
-
+  });
 }
 
 /* =======================================================
-   EXPORTAR PDF
+   EXPORTAR PDF (SIN CAMBIOS)
 ======================================================= */
 
 document.getElementById("btnExportarPDF")
@@ -215,9 +240,7 @@ document.getElementById("btnExportarPDF")
       doc.addPage();
       y = 20;
     }
-
   });
 
   doc.save("reportes-edet.pdf");
-
 });
