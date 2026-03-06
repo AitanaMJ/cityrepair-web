@@ -1,23 +1,4 @@
 // src/js/perfil.js
-import { auth, db, storage } from "./firebase.js";
-
-import {
-  onAuthStateChanged,
-  updateProfile
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-
-import {
-  collection,
-  query,
-  where,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
-
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
 
 // ==== Elementos del DOM ====
 const fotoPerfil = document.getElementById("fotoPerfil");

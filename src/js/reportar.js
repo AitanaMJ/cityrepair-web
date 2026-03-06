@@ -1,21 +1,5 @@
 // src/js/reportar.js
-import { auth, db, storage } from "./firebase.js";
 
-import {
-  collection,
-  addDoc,
-  serverTimestamp,
-  doc,
-  updateDoc,
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
-
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
 
 // Formulario principal
 const form = document.getElementById("form-reporte");

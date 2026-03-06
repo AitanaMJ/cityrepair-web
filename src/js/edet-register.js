@@ -1,13 +1,4 @@
 // src/js/edet-register.js
-import { auth, db } from './firebase.js';
-import {
-  createUserWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-import {
-  doc,
-  setDoc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
 // validaciones básicas
 const emailOK = (email) => /@edet\.com\.ar$/i.test(email);

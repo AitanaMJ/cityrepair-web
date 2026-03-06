@@ -1,9 +1,5 @@
 // src/js/edet.js
-import { auth } from './firebase.js';
-import {
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
 
 /* ------------------------------------------------------------------
    1. Configuración: quiénes son admins EDET

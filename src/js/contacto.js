@@ -1,10 +1,4 @@
 // src/js/contacto.js
-import { db } from "./firebase.js";
-import {
-  doc,
-  setDoc,
-  serverTimestamp,
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("contactForm");

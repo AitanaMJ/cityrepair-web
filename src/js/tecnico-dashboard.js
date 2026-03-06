@@ -1,18 +1,5 @@
 // src/js/tecnico-dashboard.js
-import { auth, db } from "./firebase.js";
-import {
-  collection,
-  query,
-  where,
-  onSnapshot,
-  doc,
-  updateDoc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
-import {
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
 
 // Estos dos archivos activan el avatar, nombre y menú del técnico
 import "./navbar-auth.js";

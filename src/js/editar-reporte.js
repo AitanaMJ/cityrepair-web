@@ -1,11 +1,4 @@
-import { db } from "./firebase.js";
-import {
-  doc,
-  getDoc,
-  updateDoc,
-  Timestamp,
-  arrayUnion
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
 
 const tipoEl = document.getElementById("tipo");
 const zonaEl = document.getElementById("zona");

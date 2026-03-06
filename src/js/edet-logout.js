@@ -1,6 +1,4 @@
 // src/js/edet-logout.js
-import { auth } from './firebase.js';
-import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('edet-logout');

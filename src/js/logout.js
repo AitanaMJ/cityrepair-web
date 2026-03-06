@@ -1,6 +1,5 @@
 // src/js/logout.js
-import { auth } from "./firebase.js";
-import { signOut } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
 
 const btnLogout = document.querySelector("[data-logout]");
 if (btnLogout) {

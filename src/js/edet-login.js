@@ -1,12 +1,5 @@
 // src/js/edet-login.js
-import { auth, db } from "./firebase.js";
-import {
-  signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-import {
-  doc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
 
 // Solo permite correos corporativos de EDET
 const emailOK = (email) => /@edet\.com\.ar$/i.test(email);

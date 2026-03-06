@@ -1,5 +1,4 @@
 // src/js/auth-guard.js
-import { auth } from "./firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 // para no mostrar alerta en el primer render, cuando Firebase aún no respondió

@@ -1,5 +1,4 @@
 // src/js/perfil-admin.js
-import { auth } from "./firebase.js";
 
 auth.onAuthStateChanged((user) => {
   if (!user) return;

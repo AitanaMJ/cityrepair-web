@@ -1,8 +1,4 @@
 // src/js/register.js
-import { auth, db } from "./firebase.js";
-import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-import { setDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
-import { setAuth } from "./auth.js";
 
 const form = document.querySelector("form");
 

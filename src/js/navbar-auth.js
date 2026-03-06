@@ -1,7 +1,5 @@
 // src/js/navbar-auth.js
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
-import { auth, db } from "./firebase.js";
+i
 
 const loginLink    = document.querySelector("[data-login-link]");
 const logoutLink   = document.querySelector("[data-logout]");

@@ -1,13 +1,4 @@
 // === IMPORT FIREBASE ===
-import { db } from "./firebase.js";
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
 // === CONFIG GEMINI (GRATIS) ===
 const GEMINI_API_KEY = "AIzaSyCsVrp7YRsORJ4PRnULdBiOOkUOEkiUeyM";

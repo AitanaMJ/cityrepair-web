@@ -1,20 +1,4 @@
 // src/js/mis-reportes.js
-import { auth, db, storage } from "./firebase.js";
-import {
-  collection,
-  query,
-  where,
-  orderBy,
-  getDocs,
-  deleteDoc,
-  doc
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
-import {
-  ref,
-  deleteObject
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
-
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 const contenedor = document.getElementById("lista-reportes");
 const sinReportesEl = document.getElementById("sin-reportes");

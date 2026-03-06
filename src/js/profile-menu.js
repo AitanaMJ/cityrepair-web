@@ -32,8 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     logoutFromMenu.addEventListener("click", async (e) => {
       e.preventDefault();
       try {
-        const { signOut } = await import("https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js");
-        const { auth }    = await import("./firebase.js");
+        
         await signOut(auth);
         window.location.href = "/pages/login.html";
       } catch (err) {
