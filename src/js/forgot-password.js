@@ -1,4 +1,4 @@
-// src/js/forgot-password.js
+// src/js/forgot-password.js (SIN Firebase)
 
 document.addEventListener("DOMContentLoaded", () => {
   const link = document.getElementById("forgotPassLink");
@@ -6,12 +6,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!link) return;
 
-  link.addEventListener("click", async (e) => {
+  link.addEventListener("click", (e) => {
     e.preventDefault();
-    const email = emailInput.value.trim();
 
+    const email = emailInput.value.trim();
     if (!email) {
-      // usa tu toast global
       window.mostrarAlerta?.(
         "Escribí primero tu correo en el campo de arriba.",
         "warn",
@@ -20,21 +19,24 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    try {
-      await sendPasswordResetEmail(auth, email);
+    const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+    const usuario = usuarios.find(u => u.email === email);
+
+    if (!usuario) {
       window.mostrarAlerta?.(
-        "Te enviamos un correo para restablecer la contraseña. Revisá SPAM.",
-        "success",
-        { titulo: "Listo ✅" }
+        "Ese correo no está registrado.",
+        "danger",
+        { titulo: "Usuario no encontrado" }
       );
-    } catch (err) {
-      console.error(err);
-      window.mostrarAlerta?.(
-        "No pudimos enviar el correo. ¿Ese mail está registrado?",
-        "error",
-        { titulo: "No se pudo enviar" }
-      );
+      return;
     }
+
+    // 🔐 Simulación
+    window.mostrarAlerta?.(
+      "Simulación: En un sistema real recibirías un email para cambiar tu contraseña.",
+      "info",
+      { titulo: "Modo demo" }
+    );
   });
 });
 

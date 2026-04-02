@@ -1,6 +1,5 @@
 // ---------- src/js/auth.js ----------
 const AUTH_KEY = 'cr_auth';
-const USERS_KEY = 'cr_edet_users'; // opcional: “BD” demo para empleados EDET
 
 // A dónde debe ir cada rol cuando entra
 export const HOME = {
@@ -90,18 +89,4 @@ export function applyRoleUI(root = document) {
       location.replace('/index.html');
     });
   });
-}
-
-/* ------------ Helpers opcionales de “BD” demo para EDET --------------- */
-export function loadUsers() {
-  try { return JSON.parse(localStorage.getItem(USERS_KEY) || '[]'); }
-  catch { return []; }
-}
-export function saveUser(u) {
-  const list = loadUsers();
-  list.push(u);
-  localStorage.setItem(USERS_KEY, JSON.stringify(list));
-}
-export function findUserByEmail(email) {
-  return loadUsers().find(u => u.email.toLowerCase() === email.toLowerCase());
 }

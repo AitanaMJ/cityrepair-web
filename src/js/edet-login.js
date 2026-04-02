@@ -24,49 +24,59 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      // 1️⃣ Login con Firebase Auth
-      const cred = await signInWithEmailAndPassword(auth, email, pass);
-      const uid  = cred.user.uid;
+  // Obtener usuarios guardados en localStorage
+  const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
-      // 2️⃣ Buscar el documento del usuario en Firestore
-      const snap = await getDoc(doc(db, "usuarios", uid));
-      const data = snap.data() || {};
+  // Buscar usuario por email
+  const user = usuarios.find(u => 
+    u.email.toLowerCase() === email.toLowerCase() &&
+    u.password === pass
+  );
 
-      // Rol normalizado (por si está en mayúsculas / minúsculas mezcladas)
-      const rol = (data.rol || "").toLowerCase();
+  if (!user) {
+    window.mostrarAlerta?.("Credenciales inválidas", "danger", {
+      titulo: "Error de acceso"
+    });
+    return;
+  }
 
-      // 3️⃣ Redirección según rol
-      if (rol === "admin" || rol === "edet") {
-        // Compatibilidad: si antes usabas rol = "edet", lo tratamos como admin
-        window.mostrarAlerta?.("Bienvenido al panel administrador", "success", {
-          titulo: "EDET – Admin"
-        });
-        setTimeout(() => {
-          window.location.href = "./edet-dashboard.html";
-        }, 700);
+  const rol = (user.rol || "").toLowerCase();
 
-      } else if (rol === "tecnico") {
-        window.mostrarAlerta?.("Bienvenido al panel del técnico", "success", {
-          titulo: "EDET – Técnico"
-        });
-        setTimeout(() => {
-          window.location.href = "./tecnico-dashboard.html";
-        }, 700);
+  // Guardar sesión
+  localStorage.setItem("session", JSON.stringify({
+    email: user.email,
+    rol: user.rol
+  }));
 
-      } else {
-        // Existe en Auth pero no tiene rol válido de EDET
-        window.mostrarAlerta?.(
-          "Tu cuenta no tiene permisos de EDET (admin o técnico).",
-          "danger",
-          { titulo: "Acceso denegado" }
-        );
-      }
+  if (rol === "admin" || rol === "edet") {
+    window.mostrarAlerta?.("Bienvenido al panel administrador", "success", {
+      titulo: "EDET – Admin"
+    });
+    setTimeout(() => {
+      window.location.href = "./edet-dashboard.html";
+    }, 700);
 
-    } catch (err) {
-      console.error(err);
-      window.mostrarAlerta?.("Credenciales inválidas", "danger", {
-        titulo: "Error de acceso"
-      });
-    }
+  } else if (rol === "tecnico") {
+    window.mostrarAlerta?.("Bienvenido al panel del técnico", "success", {
+      titulo: "EDET – Técnico"
+    });
+    setTimeout(() => {
+      window.location.href = "./tecnico-dashboard.html";
+    }, 700);
+
+  } else {
+    window.mostrarAlerta?.(
+      "Tu cuenta no tiene permisos de EDET.",
+      "danger",
+      { titulo: "Acceso denegado" }
+    );
+  }
+
+} catch (err) {
+  console.error(err);
+  window.mostrarAlerta?.("Error inesperado", "danger", {
+    titulo: "Error"
+  });
+}
   });
 });

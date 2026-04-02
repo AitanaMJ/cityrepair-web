@@ -7,18 +7,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!userMenuBtn || !userDropdown) return;
 
-  // abrir/cerrar menú al hacer click en el avatar/nombre
+  // ===============================
+  // ABRIR / CERRAR MENÚ
+  // ===============================
   userMenuBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     userDropdown.hidden = !userDropdown.hidden;
   });
 
-  // cerrar si se hace click fuera
   document.addEventListener("click", () => {
     userDropdown.hidden = true;
   });
 
-  // ir a la página de perfil
+  // ===============================
+  // IR AL PERFIL
+  // ===============================
   if (goProfileBtn) {
     goProfileBtn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -27,13 +30,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // cerrar sesión desde el menú
+  // ===============================
+  // CERRAR SESIÓN (LOCAL)
+  // ===============================
   if (logoutFromMenu) {
-    logoutFromMenu.addEventListener("click", async (e) => {
+    logoutFromMenu.addEventListener("click", (e) => {
       e.preventDefault();
+
       try {
-        
-        await signOut(auth);
+        // borrar sesión
+        localStorage.removeItem("cr_auth");
+
+        // opcional: bandera para guards
+        sessionStorage.setItem("cr_logging_out", "1");
+
         window.location.href = "/pages/login.html";
       } catch (err) {
         console.error("Error al cerrar sesión:", err);

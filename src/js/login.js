@@ -1,4 +1,4 @@
-// src/js/login.js
+// src/js/login.js (SIN Firebase)
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
@@ -15,12 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // espera mínima de 1 s antes de mostrar el toast (sensación de carga real)
-  const minDelay = async (promise, ms = 1000) => {
-    const wait = new Promise((r) => setTimeout(r, ms));
-    const [result] = await Promise.allSettled([promise, wait]);
-    if (result.status === "rejected") throw result.reason;
-    return result.value;
+  const minDelay = async (ms = 1000) => {
+    return new Promise((r) => setTimeout(r, ms));
   };
 
   const setLoading = (loading) => {
@@ -53,36 +49,37 @@ document.addEventListener("DOMContentLoaded", () => {
     setLoading(true);
 
     try {
-      const auth = getAuth();
-      const { user } = await minDelay(
-        signInWithEmailAndPassword(auth, email, password),
-        1000
+      // ⬇️ Buscar usuario en localStorage
+      const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+      const usuario = usuarios.find(
+        u => u.email === email && u.password === password
       );
 
-      // guarda datos del usuario en localStorage (usado por app.js)
+      await minDelay(1000);
+
+      if (!usuario) {
+        throw new Error("Credenciales incorrectas");
+      }
+
+      // Guardar sesión activa
       localStorage.setItem("cr_auth", JSON.stringify({
-        email: user.email,
-        uid: user.uid,
-        role: "citizen"
+        email: usuario.email,
+        role: usuario.role || "citizen"
       }));
 
-      // muestra toast
       showToast("Inicio de sesión exitoso", "success", "Bienvenido");
 
-      // sincroniza con el tiempo del toast (4 s)
       const TOAST_DURATION = 4000;
 
-      // liberar el botón justo al final del toast
       setTimeout(() => setLoading(false), TOAST_DURATION - 300);
 
-      // redirigir cuando termina la animación de la barra del toast
       setTimeout(() => {
         window.location.href = "mis-reportes.html";
       }, TOAST_DURATION);
 
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-      await new Promise((r) => setTimeout(r, 500));
       showToast("Correo o contraseña incorrectos", "danger", "Error");
       setLoading(false);
       isSubmitting = false;

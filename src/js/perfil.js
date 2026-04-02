@@ -1,105 +1,96 @@
 // src/js/perfil.js
+// ===============================
+// PERFIL DE USUARIO - SIN FIREBASE
+// ===============================
 
-// ==== Elementos del DOM ====
-const fotoPerfil = document.getElementById("fotoPerfil");
-const nombrePerfil = document.getElementById("nombrePerfil");
-const emailPerfil = document.getElementById("emailPerfil");
+document.addEventListener("DOMContentLoaded", () => {
+  const sessionRaw = localStorage.getItem("cr_auth");
+  const session = sessionRaw ? JSON.parse(sessionRaw) : null;
 
-const uidPerfil = document.getElementById("perfilUID");
-const creacionPerfil = document.getElementById("perfilCreacion");
-const ultimoLoginPerfil = document.getElementById("perfilUltimoLogin");
-
-const totalReportesEl = document.getElementById("perfilTotalReportes");
-const pendientesEl = document.getElementById("perfilPendientes");
-const resueltosEl = document.getElementById("perfilResueltos");
-
-const btnCambiarFoto = document.getElementById("btnCambiarFoto");
-const inputFoto = document.getElementById("inputFoto");
-
-// ==== Cargar datos del usuario ====
-
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
+  if (!session || session.role !== "usuario") {
     window.location.href = "./login.html";
     return;
   }
 
-  // ==== Mostrar info básica =====
-  fotoPerfil.src = user.photoURL || "../src/img/default-avatar.png";
-  nombrePerfil.textContent = user.displayName || "Usuario sin nombre";
-  emailPerfil.textContent = user.email;
+  // ==== Elementos del DOM ====
+  const fotoPerfil = document.getElementById("fotoPerfil");
+  const nombrePerfil = document.getElementById("nombrePerfil");
+  const emailPerfil = document.getElementById("emailPerfil");
 
-  uidPerfil.textContent = user.uid;
-  creacionPerfil.textContent = user.metadata.creationTime || "N/A";
-  ultimoLoginPerfil.textContent = user.metadata.lastSignInTime || "N/A";
+  const uidPerfil = document.getElementById("perfilUID");
+  const creacionPerfil = document.getElementById("perfilCreacion");
+  const ultimoLoginPerfil = document.getElementById("perfilUltimoLogin");
 
-  // ==== Estadísticas de reportes ====
-  try {
-    const q = query(
-      collection(db, "reportes"),
-      where("usuarioId", "==", user.uid)
-    );
+  const totalReportesEl = document.getElementById("perfilTotalReportes");
+  const pendientesEl = document.getElementById("perfilPendientes");
+  const resueltosEl = document.getElementById("perfilResueltos");
 
-    const snap = await getDocs(q);
+  const btnCambiarFoto = document.getElementById("btnCambiarFoto");
+  const inputFoto = document.getElementById("inputFoto");
 
-    let total = 0;
-    let pendientes = 0;
-    let resueltos = 0;
+  // ===============================
+  // DATOS BÁSICOS DESDE SESSION
+  // ===============================
+  fotoPerfil.src = session.photoURL || "../src/img/default-avatar.png";
+  nombrePerfil.textContent = session.nombre || "Usuario";
+  emailPerfil.textContent = session.email || "";
 
-    snap.forEach((doc) => {
+  uidPerfil.textContent = session.uid || "local-user";
+  creacionPerfil.textContent = session.creationTime || "N/A";
+  ultimoLoginPerfil.textContent = session.lastLogin || new Date().toLocaleString();
+
+  // ===============================
+  // ESTADÍSTICAS DESDE localStorage
+  // ===============================
+  const reportes = JSON.parse(localStorage.getItem("cr_reportes")) || [];
+
+  let total = 0;
+  let pendientes = 0;
+  let resueltos = 0;
+
+  reportes.forEach((rep) => {
+    if (rep.usuarioId === session.uid) {
       total++;
 
-      const estado = (doc.data().estado || "pendiente").toLowerCase();
-
+      const estado = (rep.estado || "pendiente").toLowerCase();
       if (estado === "pendiente") pendientes++;
       if (estado === "resuelto") resueltos++;
+    }
+  });
+
+  totalReportesEl.textContent = total;
+  pendientesEl.textContent = pendientes;
+  resueltosEl.textContent = resueltos;
+
+  // ===============================
+  // CAMBIO DE FOTO (base64 local)
+  // ===============================
+  if (btnCambiarFoto && inputFoto) {
+    btnCambiarFoto.addEventListener("click", () => inputFoto.click());
+
+    inputFoto.addEventListener("change", (e) => {
+      const archivo = e.target.files[0];
+      if (!archivo) return;
+
+      const reader = new FileReader();
+
+      reader.onload = function (event) {
+        const base64 = event.target.result;
+
+        // actualizar sesión
+        session.photoURL = base64;
+        localStorage.setItem("cr_auth", JSON.stringify(session));
+
+        fotoPerfil.src = base64;
+
+        if (typeof window.mostrarAlerta === "function") {
+          window.mostrarAlerta("Foto actualizada correctamente.", "success");
+        } else {
+          alert("Foto actualizada correctamente.");
+        }
+      };
+
+      reader.readAsDataURL(archivo);
     });
-
-    totalReportesEl.textContent = total;
-    pendientesEl.textContent = pendientes;
-    resueltosEl.textContent = resueltos;
-
-  } catch (error) {
-    console.error("Error al cargar estadísticas:", error);
-  }
-});
-
-// ==== Cambio de foto de perfil ====
-
-btnCambiarFoto.addEventListener("click", () => inputFoto.click());
-
-inputFoto.addEventListener("change", async (e) => {
-  const archivo = e.target.files[0];
-  if (!archivo) return;
-
-  const user = auth.currentUser;
-  if (!user) return;
-
-  try {
-    const ruta = `avatars/${user.uid}.jpg`;
-    const storageRef = ref(storage, ruta);
-
-    // Subir archivo
-    await uploadBytes(storageRef, archivo);
-    const url = await getDownloadURL(storageRef);
-
-    // Actualizar perfil de Firebase Auth
-    await updateProfile(user, { photoURL: url });
-
-    fotoPerfil.src = url;
-
-    if (typeof window.mostrarAlerta === "function") {
-      window.mostrarAlerta("Foto actualizada correctamente.", "success");
-    } else {
-      alert("Foto actualizada correctamente.");
-    }
-
-  } catch (error) {
-    console.error("Error al subir foto:", error);
-    if (typeof window.mostrarAlerta === "function") {
-      window.mostrarAlerta("No se pudo cambiar la foto.", "danger");
-    } else {
-      alert("Error al cambiar foto.");
-    }
   }
 });

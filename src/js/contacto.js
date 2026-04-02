@@ -19,46 +19,48 @@ document.addEventListener("DOMContentLoaded", () => {
     const asunto  = elAsunto?.value.trim()  || "";
     const mensaje = elMensaje?.value.trim() || "";
 
-    if (!nombre || !correo || !asunto || !mensaje) {
-      window.mostrarAlerta?.(
-        "Completá todos los campos.",
-        "warn",
-        "Campos obligatorios"
-      ) || alert("Completá todos los campos.");
-      return;
-    }
+    const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
+
+if (!nombre || !correo || !asunto || !mensaje) {
+  window.mostrarAlerta?.("Completá todos los campos.", "warn", "Campos obligatorios");
+  return;
+}
+
+if (!emailValido) {
+  window.mostrarAlerta?.("Ingresá un correo válido.", "warn", "Email inválido");
+  return;
+}
 
     try {
-      // ID personalizado (ej: contacto-20251111-abc123)
-      const customId =
-        "contacto-" +
-        new Date().toISOString().slice(0,10).replaceAll("-", "") +
-        "-" +
-        Math.random().toString(36).slice(2, 8);
+  const contactos = JSON.parse(localStorage.getItem("contactos")) || [];
 
-      await setDoc(doc(db, "contactos", customId), {
-        nombre,
-        correo,
-        asunto,
-        mensaje,
-        creadoEn: serverTimestamp(),
-        leido: false,
-      });
+  contactos.push({
+    id: Date.now(),
+    nombre,
+    correo,
+    asunto,
+    mensaje,
+    creadoEn: new Date().toISOString(),
+    leido: false,
+  });
 
-      window.mostrarAlerta?.(
-        "Tu mensaje se envió correctamente. ¡Gracias por escribirnos!",
-        "success",
-        "Enviado"
-      ) || alert("Mensaje enviado correctamente.");
+  localStorage.setItem("contactos", JSON.stringify(contactos));
 
-      form.reset();
-    } catch (err) {
-      console.error("Error guardando contacto:", err);
-      window.mostrarAlerta?.(
-        "No pudimos enviar el mensaje. Probá de nuevo en unos instantes.",
-        "danger",
-        "Error"
-      ) || alert("No se pudo enviar el mensaje.");
-    }
+  window.mostrarAlerta?.(
+    "Tu mensaje se envió correctamente. ¡Gracias por escribirnos!",
+    "success",
+    "Enviado"
+  ) || alert("Mensaje enviado correctamente.");
+
+  form.reset();
+
+} catch (err) {
+  console.error("Error guardando contacto:", err);
+  window.mostrarAlerta?.(
+    "No pudimos enviar el mensaje. Probá de nuevo en unos instantes.",
+    "danger",
+    "Error"
+  ) || alert("No se pudo enviar el mensaje.");
+}
   });
 });

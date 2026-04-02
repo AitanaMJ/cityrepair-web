@@ -1,55 +1,25 @@
 // src/js/app.js
 console.log("CityRepair listo ✅");
+import { getAuth, getRole, isLoggedIn, logout } from "./auth.js";
 
 (function () {
   // =====================================================================
   //                    Helpers de autenticación (simple)
   // =====================================================================
-  const AUTH_KEY = "cr_auth";
-
-  function getAuth() {
-    try { return JSON.parse(localStorage.getItem(AUTH_KEY)) || null; }
-    catch { return null; }
-  }
-  function isLoggedIn() {
-    return !!getAuth();
-  }
-  function hasRole(role) {
-    const u = getAuth();
-    return !!u && u.role === role;
-  }
+  
+  
   function redirectToLogin(nextPath) {
     const url = `/pages/login.html?next=${encodeURIComponent(nextPath)}`;
     window.location.replace(url);
   }
 
-  // 🔴 NUEVO: mostrar/ocultar botón de cerrar sesión del navbar
-  document.addEventListener("DOMContentLoaded", () => {
-    const btnLogout = document.getElementById("btnLogout");
-    if (!btnLogout) return;
-
-    const user = getAuth();
-    if (user) {
-      // mostrar
-      btnLogout.style.display = "inline-flex";
-      btnLogout.addEventListener("click", (e) => {
-        e.preventDefault();
-        // si también usás firebase signOut, lo hacés en el login.js o logout.js
-        localStorage.removeItem("cr_auth");
-        window.location.href = "/pages/login.html";
-      });
-    } else {
-      // ocultar
-      btnLogout.style.display = "none";
-    }
-  });
 
   // Guard genérico para páginas que requieren ciudadano
   function guardCitizenPage() {
     const p = location.pathname;
     const needsCitizen =
       p.endsWith("/pages/reportar.html") || p.endsWith("/pages/mis-reportes.html");
-    if (needsCitizen && !hasRole("citizen")) {
+    if (needsCitizen && getRole() !== "citizen") {
       const next = location.pathname + location.search + location.hash;
       redirectToLogin(next);
     }
@@ -65,7 +35,7 @@ console.log("CityRepair listo ✅");
       if (!protectHrefs.includes(href)) return;
 
       a.addEventListener("click", (e) => {
-        if (!hasRole("citizen")) {
+        if (getRole() !== "citizen") {
           e.preventDefault();
           redirectToLogin(href);
         }
@@ -311,12 +281,10 @@ console.log("CityRepair listo ✅");
     const formDom = document.getElementById("form-reporte");
     if (!formDom) return;
 
-    if (formDom.dataset.firebase === "1") return;
-
     formDom.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      if (!hasRole("citizen")) {
+      if (getRole() !== "citizen") {
         redirectToLogin("/pages/reportar.html");
         return;
       }
@@ -386,18 +354,14 @@ console.log("CityRepair listo ✅");
 
   
 // ===== Mostrar / ocultar botones de sesión =====
-document.addEventListener("DOMContentLoaded", () => {
-  const user = (function(){
-    try { return JSON.parse(localStorage.getItem('cr_auth')) || null; }
-    catch { return null; }
-  })();
+  document.addEventListener("DOMContentLoaded", () => {
 
   const btnLogin     = document.getElementById('btnLogin');
   const btnLogout    = document.getElementById('btnLogout');
   const drawerLogin  = document.getElementById('drawerLogin');
   const drawerLogout = document.getElementById('drawerLogout');
 
-  const showLoggedUI = !!user;
+  const showLoggedUI = isLoggedIn();
 
   if (btnLogin)  btnLogin.hidden  = showLoggedUI;
   if (btnLogout) btnLogout.hidden = !showLoggedUI;
@@ -406,49 +370,14 @@ document.addEventListener("DOMContentLoaded", () => {
   if (drawerLogout) drawerLogout.hidden = !showLoggedUI;
 
   const doLogout = () => {
-    localStorage.removeItem('cr_auth');
+    logout();
     window.location.href = '/index.html';
   };
 
   if (btnLogout)    btnLogout.addEventListener('click', (e) => { e.preventDefault(); doLogout(); });
   if (drawerLogout) drawerLogout.addEventListener('click', (e) => { e.preventDefault(); doLogout(); });
+
 });
-
-// --- manejar cierre de sesión (Firebase + localStorage) ---
-document.addEventListener('DOMContentLoaded', () => {
-  const logoutBtns = document.querySelectorAll('[data-logout]');
-  if (!logoutBtns.length) return;
-
-  logoutBtns.forEach(btn => {
-    btn.addEventListener('click', async (e) => {
-      e.preventDefault();
-
-      try {
-        // usamos import dinámico porque app.js no es módulo
-        const { getAuth, signOut } = await import("https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js");
-        const auth = getAuth();
-        await signOut(auth);
-      } catch (err) {
-        console.warn('No se pudo cerrar en Firebase (o no estaba logueado):', err);
-      }
-
-      // limpiar storage de la app
-      localStorage.removeItem('cr_auth');
-
-      // feedback
-      if (window.mostrarAlerta) {
-        window.mostrarAlerta('Sesión cerrada', 'success', { titulo: 'Listo' });
-      }
-
-      // redirigir
-      window.location.href = '/index.html';
-    });
-  });
-});
-
-
-
-})();
 
 document.addEventListener("DOMContentLoaded", () => {
   const avatars = document.querySelectorAll(".avatar-sm, .avatar-lg");
@@ -457,4 +386,4 @@ document.addEventListener("DOMContentLoaded", () => {
     av.style.background = "none";
   });
 });
-
+})();

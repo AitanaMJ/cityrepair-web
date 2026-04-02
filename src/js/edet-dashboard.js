@@ -1,5 +1,5 @@
 
-
+//edet-dashboard.js
 /* =======================================================
    ELEMENTOS
 ======================================================= */
@@ -27,20 +27,15 @@ let CHART_ZONA = null;
    ESCUCHA FIREBASE
 ======================================================= */
 
-const q = query(collection(db, "reportes"), orderBy("fecha", "desc"));
+document.addEventListener("DOMContentLoaded", () => {
+  const data = JSON.parse(localStorage.getItem("reportes")) || [];
 
-onSnapshot(q, (snap) => {
+  // adaptar estructura si hace falta
+  REPORTES_ORIGINALES = data.map(r => ({
+    ...r,
+    fecha: new Date(r.fecha) // importante
+  }));
 
-  const reportes = [];
-
-  snap.forEach((docSnap) => {
-    reportes.push({
-      id: docSnap.id,
-      ...docSnap.data(),
-    });
-  });
-
-  REPORTES_ORIGINALES = reportes;
   aplicarFiltros();
 });
 
@@ -66,12 +61,12 @@ function aplicarFiltros() {
 
   if (desde) {
     const fDesde = new Date(desde);
-    filtrados = filtrados.filter(r => r.fecha?.toDate() >= fDesde);
+    filtrados = filtrados.filter(r => new Date(r.fecha) >= fDesde);
   }
 
   if (hasta) {
     const fHasta = new Date(hasta);
-    filtrados = filtrados.filter(r => r.fecha?.toDate() <= fHasta);
+    filtrados = filtrados.filter(r => new Date(r.fecha) <= fHasta);
   }
 
   renderTabla(filtrados);
@@ -98,8 +93,7 @@ function renderTabla(reportes) {
 
       ${reportes.map(r => {
 
-        const fecha = r.fecha?.toDate()
-          .toLocaleDateString("es-AR");
+        const fecha = new Date(r.fecha).toLocaleDateString("es-AR");
 
         const estado = (r.estado || "pendiente").toLowerCase();
 

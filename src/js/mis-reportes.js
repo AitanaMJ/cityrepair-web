@@ -23,7 +23,7 @@ function mostrarMensajeCargando() {
 
 function formatearFecha(timestamp) {
   if (!timestamp) return "";
-  const d = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  const d = new Date(timestamp);
   return d.toLocaleString("es-AR", {
     day: "2-digit",
     month: "2-digit",
@@ -60,55 +60,37 @@ function actualizarResumen() {
 }
 
 // 🔴 eliminar reporte (y sus imágenes si las tiene)
-async function eliminarReporte(id, imagenes = []) {
+async function eliminarReporte(id) {
   const confirmar = confirm(
     "¿Estás segura de eliminar este reporte? Esta acción no se puede deshacer."
   );
   if (!confirmar) return;
 
   try {
-    // borrar imágenes en Storage (si se puede)
-    for (const url of imagenes) {
-      if (!url) continue;
-      try {
-        const imgRef = ref(storage, url);
-        await deleteObject(imgRef);
-      } catch (e) {
-        // si falla borrar la imagen no rompemos todo
-        console.warn("No se pudo borrar imagen:", e);
-      }
-    }
+    let todos = JSON.parse(localStorage.getItem("reportes")) || [];
 
-    // borrar documento en Firestore
-    await deleteDoc(doc(db, "reportes", id));
+    todos = todos.filter(r => r.id !== id);
 
-    // sacar de la lista en memoria
+    localStorage.setItem("reportes", JSON.stringify(todos));
+
     reportesUsuario = reportesUsuario.filter((r) => r.id !== id);
 
-    // refrescar resumen + vista
     actualizarResumen();
     renderReportes(filtroEstadoSelect?.value || "todos");
 
-    if (typeof window.mostrarAlerta === "function") {
-      window.mostrarAlerta(
-        "Reporte eliminado correctamente.",
-        "success",
-        { titulo: "Eliminado" }
-      );
-    } else {
-      alert("Reporte eliminado correctamente.");
-    }
+    window.mostrarAlerta?.(
+      "Reporte eliminado correctamente.",
+      "success",
+      { titulo: "Eliminado" }
+    );
+
   } catch (error) {
     console.error("Error al eliminar reporte:", error);
-    if (typeof window.mostrarAlerta === "function") {
-      window.mostrarAlerta(
-        "No se pudo eliminar el reporte.",
-        "danger",
-        { titulo: "Error" }
-      );
-    } else {
-      alert("No se pudo eliminar el reporte.");
-    }
+    window.mostrarAlerta?.(
+      "No se pudo eliminar el reporte.",
+      "danger",
+      { titulo: "Error" }
+    );
   }
 }
 
@@ -217,8 +199,8 @@ function crearTarjetaReporte(id, data) {
     btnEliminar.textContent = "Eliminar";
     btnEliminar.classList.add("btn-delete");
     btnEliminar.addEventListener("click", () => {
-      eliminarReporte(id, imagenes);
-    });
+  eliminarReporte(id);
+});
 
     actions.appendChild(btnEditar);
     actions.appendChild(btnEliminar);
@@ -256,68 +238,56 @@ function renderReportes(filtro = "todos") {
   });
 }
 
-onAuthStateChanged(auth, async (user) => {
+document.addEventListener("DOMContentLoaded", () => {
   if (!contenedor) return;
 
-  if (!user) {
-    if (typeof window.mostrarAlerta === "function") {
-      window.mostrarAlerta(
-        "Debes iniciar sesión para ver tus reportes.",
-        "warn",
-        { titulo: "Sesión requerida" }
-      );
-      setTimeout(() => {
-        window.location.href = "./login.html";
-      }, 800);
-    } else {
-      alert("Debes iniciar sesión para ver tus reportes.");
+  const session = JSON.parse(localStorage.getItem("cr_auth"));
+
+  if (!session) {
+    window.mostrarAlerta?.(
+      "Debes iniciar sesión para ver tus reportes.",
+      "warn",
+      { titulo: "Sesión requerida" }
+    );
+
+    setTimeout(() => {
       window.location.href = "./login.html";
-    }
+    }, 800);
+
     return;
   }
 
   mostrarMensajeCargando();
 
   try {
-    const q = query(
-      collection(db, "reportes"),
-      where("usuarioId", "==", user.uid),
-      orderBy("fecha", "desc")
-    );
+    const todos = JSON.parse(localStorage.getItem("reportes")) || [];
 
-    const snap = await getDocs(q);
-
-    reportesUsuario = [];
-
-    snap.forEach((docSnap) => {
-      reportesUsuario.push({
-        id: docSnap.id,
-        data: docSnap.data()
-      });
-    });
+    // Filtrar solo los del usuario logueado
+    reportesUsuario = todos
+      .filter(r => r.usuarioId === session.uid)
+      .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+      .map(r => ({
+        id: r.id,
+        data: r
+      }));
 
     if (reportesUsuario.length === 0) {
       contenedor.innerHTML = "";
       if (sinReportesEl) sinReportesEl.style.display = "block";
-      actualizarResumen(); // pone todo en 0
+      actualizarResumen();
       return;
     }
 
-    // actualizar resumen y pintar todo al inicio
     actualizarResumen();
     renderReportes("todos");
 
   } catch (error) {
     console.error("Error al obtener reportes:", error);
-    if (typeof window.mostrarAlerta === "function") {
-      window.mostrarAlerta(
-        "No se pudo cargar tus reportes.",
-        "danger",
-        { titulo: "Error" }
-      );
-    } else {
-      alert("❌ Error al cargar tus reportes.");
-    }
+    window.mostrarAlerta?.(
+      "No se pudo cargar tus reportes.",
+      "danger",
+      { titulo: "Error" }
+    );
   }
 });
 

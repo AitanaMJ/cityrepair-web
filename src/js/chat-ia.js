@@ -1,5 +1,5 @@
+// chat-ia.js
 // === IMPORT FIREBASE ===
-
 // === CONFIG GEMINI (GRATIS) ===
 const GEMINI_API_KEY = "AIzaSyCsVrp7YRsORJ4PRnULdBiOOkUOEkiUeyM";
 async function askGemini(message) {
@@ -53,28 +53,6 @@ function addMsg(content, type) {
   messagesBox.scrollTop = messagesBox.scrollHeight;
 }
 
-// === BUSCAR REPORTE ===
-async function searchReport(text) {
-  text = text.trim();
-
-  if (/^CR-[A-Z0-9]{5,10}$/i.test(text)) {
-    const q = query(
-      collection(db, "reportes"),
-      where("codigoSeguimiento", "==", text)
-    );
-    const snap = await getDocs(q);
-    if (!snap.empty) return snap.docs[0].data();
-  }
-
-  if (/^[A-Za-z0-9]{15,30}$/.test(text)) {
-    const ref = doc(db, "reportes", text);
-    const d = await getDoc(ref);
-    if (d.exists()) return d.data();
-  }
-
-  return null;
-}
-
 // === ENVIAR MENSAJE ===
 async function sendMessage() {
   const text = input.value.trim();
@@ -85,23 +63,11 @@ async function sendMessage() {
 
   let prompt = text;
 
-  const reportData = await searchReport(text);
-  if (reportData) {
-    prompt = `
-Eres la IA de CityRepair.
-El usuario pregunta sobre el estado de un reporte.
-
-Datos del reporte:
-- Código: ${reportData.codigoSeguimiento}
-- Estado: ${reportData.estado}
-- Prioridad: ${reportData.prioridad}
-- Descripción: ${reportData.descripcion}
-- Fecha: ${reportData.fecha}
-
-Responde de forma amable y simple.
-    `;
+  try {
+    const response = await askGemini(prompt);
+    addMsg(response, "bot");
+  } catch (error) {
+    console.error(error);
+    addMsg("Ocurrió un error al responder.", "bot");
   }
-
-  const response = await askGemini(prompt);
-  addMsg(response, "bot");
 }

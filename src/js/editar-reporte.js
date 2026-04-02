@@ -1,4 +1,4 @@
-
+// editar-reporte.js (SIN Firebase)
 
 const tipoEl = document.getElementById("tipo");
 const zonaEl = document.getElementById("zona");
@@ -8,78 +8,100 @@ const form = document.getElementById("form-editar");
 
 let reporteId = null;
 
-// Leer el ID del reporte desde la URL o localStorage
+// Leer ID desde URL o localStorage
 const params = new URLSearchParams(location.search);
 reporteId = params.get("id") || localStorage.getItem("reporteId");
-if (reporteId) localStorage.setItem("reporteId", reporteId);
 
-// Función para cargar los datos del reporte
-async function cargarDatos() {
+if (reporteId) {
+  localStorage.setItem("reporteId", reporteId);
+}
+
+/* ---------------------------------------------------
+   Obtener todos los reportes
+--------------------------------------------------- */
+function getReportes() {
+  return JSON.parse(localStorage.getItem("reportes")) || [];
+}
+
+/* ---------------------------------------------------
+   Guardar reportes
+--------------------------------------------------- */
+function saveReportes(reportes) {
+  localStorage.setItem("reportes", JSON.stringify(reportes));
+}
+
+/* ---------------------------------------------------
+   Cargar datos del reporte
+--------------------------------------------------- */
+function cargarDatos() {
   if (!reporteId) return;
 
-  try {
-    const docRef = doc(db, "reportes", reporteId);
-    const docSnap = await getDoc(docRef);
+  const reportes = getReportes();
+  const reporte = reportes.find(r => r.id === reporteId);
 
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      tipoEl.value = data.tipo || "";
-      zonaEl.value = data.zona || "";
-      descripcionEl.value = data.descripcion || "";
-
-      // Mostrar historial si hay
-      if (data.historial && Array.isArray(data.historial)) {
-        historialLista.innerHTML = data.historial
-          .map((item) => `<li>${item}</li>`)
-          .join("");
-      }
-    }
-  } catch (error) {
-    console.error("Error al cargar el reporte:", error);
+  if (!reporte) {
     Swal.fire({
       icon: "error",
-      title: "Error",
-      text: "No se pudieron cargar los datos del reporte"
+      title: "Reporte no encontrado"
     });
+    return;
+  }
+
+  tipoEl.value = reporte.tipo || "";
+  zonaEl.value = reporte.zona || "";
+  descripcionEl.value = reporte.descripcion || "";
+
+  if (reporte.historial && Array.isArray(reporte.historial)) {
+    historialLista.innerHTML = reporte.historial
+      .map(item => `<li>${item}</li>`)
+      .join("");
   }
 }
 
-// Evento para guardar cambios
-form.addEventListener("submit", async (e) => {
+/* ---------------------------------------------------
+   Guardar cambios
+--------------------------------------------------- */
+form.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  try {
-    const nuevaModificacion = `Modificado el ${new Date().toLocaleString()}`;
-    const docRef = doc(db, "reportes", reporteId);
+  const reportes = getReportes();
+  const index = reportes.findIndex(r => r.id === reporteId);
 
-    await updateDoc(docRef, {
-      tipo: tipoEl.value,
-      zona: zonaEl.value,
-      descripcion: descripcionEl.value,
-      historial: arrayUnion(nuevaModificacion),
-      ultimaModificacion: Timestamp.now()
-    });
-
-    // Mostrar mensaje elegante con redirección
-    Swal.fire({
-      icon: "success",
-      title: "Cambios guardados",
-      text: "El reporte fue actualizado exitosamente",
-      showConfirmButton: false,
-      timer: 2000
-    }).then(() => {
-      window.location.href = "mis-reportes.html";
-    });
-
-  } catch (error) {
-    console.error("Error al guardar cambios:", error);
+  if (index === -1) {
     Swal.fire({
       icon: "error",
-      title: "Error",
-      text: "No se pudieron guardar los cambios"
+      title: "Reporte no encontrado"
     });
+    return;
   }
+
+  const nuevaModificacion = `Modificado el ${new Date().toLocaleString()}`;
+
+  reportes[index].tipo = tipoEl.value;
+  reportes[index].zona = zonaEl.value;
+  reportes[index].descripcion = descripcionEl.value;
+  reportes[index].ultimaModificacion = new Date().toISOString();
+
+  if (!Array.isArray(reportes[index].historial)) {
+    reportes[index].historial = [];
+  }
+
+  reportes[index].historial.push(nuevaModificacion);
+
+  saveReportes(reportes);
+
+  Swal.fire({
+    icon: "success",
+    title: "Cambios guardados",
+    text: "El reporte fue actualizado exitosamente",
+    showConfirmButton: false,
+    timer: 2000
+  }).then(() => {
+    window.location.href = "mis-reportes.html";
+  });
 });
 
-// Iniciar
+/* ---------------------------------------------------
+   Iniciar
+--------------------------------------------------- */
 cargarDatos();
