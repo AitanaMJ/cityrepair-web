@@ -1,62 +1,62 @@
-const express = require('express');
-const mysql = require('mysql2');
-const cors = require('cors');
+const express = require("express");
+const cors = require("cors");
+const db = require("./db");
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
-// CONEXIÓN A MYSQL
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'sqlpromo2026', // poné tu contraseña si tenés
-    database: 'cityrepair'
-});
+/* LOGIN */
+app.post("/api/login", (req, res) => {
+  const { email, password } = req.body;
 
-db.connect(err => {
-    if (err) {
-        console.error('Error de conexión:', err);
-    } else {
-        console.log('Conectado a MySQL');
+  db.query(
+    "SELECT * FROM usuarios WHERE email = ? AND password = ?",
+    [email, password],
+    (err, results) => {
+      if (err) return res.status(500).json({ error: "Error servidor" });
+
+      if (results.length === 0) {
+        return res.status(401).json({ error: "Credenciales inválidas" });
+      }
+
+      res.json({ user: results[0] });
     }
+  );
 });
 
+/* REGISTRO */
+app.post("/api/register", (req, res) => {
+  const { email, password } = req.body;
 
-// =========================
-// RUTAS
-// =========================
+  db.query(
+    "INSERT INTO usuarios (email, password) VALUES (?, ?)",
+    [email, password],
+    (err) => {
+      if (err) return res.status(500).json({ error: "Error al registrar" });
 
-// Obtener usuarios
-app.get('/usuarios', (req, res) => {
-    db.query('SELECT * FROM usuarios', (err, result) => {
-        if (err) return res.status(500).json(err);
-        res.json(result);
-    });
+      res.json({ message: "Usuario creado" });
+    }
+  );
 });
 
-// Crear usuario
-app.post('/usuarios', (req, res) => {
-    const { nombre, email, password, id_rol } = req.body;
+/* CREAR REPORTE */
+app.post("/api/reportes", (req, res) => {
+  const { usuario_id, tipo, ubicacion, descripcion, zona, prioridad } = req.body;
 
-    const sql = 'INSERT INTO usuarios (nombre,email,password,id_rol) VALUES (?,?,?,?)';
+  db.query(
+    `INSERT INTO reportes (usuario_id, tipo, ubicacion, descripcion, zona, prioridad)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [usuario_id, tipo, ubicacion, descripcion, zona, prioridad],
+    (err) => {
+      if (err) return res.status(500).json({ error: "Error al guardar reporte" });
 
-    db.query(sql, [nombre, email, password, id_rol], (err, result) => {
-        if (err) return res.status(500).json(err);
-        res.json({ mensaje: 'Usuario creado' });
-    });
-});
-
-// Eliminar usuario
-app.delete('/usuarios/:id', (req, res) => {
-    db.query('DELETE FROM usuarios WHERE id_usuario = ?', 
-    [req.params.id], 
-    (err, result) => {
-        if (err) return res.status(500).json(err);
-        res.json({ mensaje: 'Usuario eliminado' });
-    });
+      res.json({ message: "Reporte creado" });
+    }
+  );
 });
 
 app.listen(3000, () => {
-    console.log('Servidor corriendo en puerto 3000');
+  console.log("🚀 Servidor en http://localhost:3000");
 });
