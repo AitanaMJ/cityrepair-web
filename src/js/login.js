@@ -1,4 +1,4 @@
-// src/js/login.js (SIN Firebase)
+// src/js/login.js (CON BACKEND)
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
@@ -49,24 +49,25 @@ document.addEventListener("DOMContentLoaded", () => {
     setLoading(true);
 
     try {
-      // ⬇️ Buscar usuario en localStorage
-      const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+      // 🔥 LLAMADA AL BACKEND
+      const res = await fetch("http://localhost:3000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      });
 
-      const usuario = usuarios.find(
-        u => u.email === email && u.password === password
-      );
+      const data = await res.json();
 
       await minDelay(1000);
 
-      if (!usuario) {
+      if (!data.user) {
         throw new Error("Credenciales incorrectas");
       }
 
-      // Guardar sesión activa
-      localStorage.setItem("cr_auth", JSON.stringify({
-        email: usuario.email,
-        role: usuario.role || "citizen"
-      }));
+      // Guardar sesión
+      localStorage.setItem("cr_auth", JSON.stringify(data.user));
 
       showToast("Inicio de sesión exitoso", "success", "Bienvenido");
 
@@ -86,4 +87,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-
