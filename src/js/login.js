@@ -1,4 +1,4 @@
-// src/js/login.js (CON BACKEND)
+// src/js/login.js (CON BACKEND CORREGIDO)
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const setLoading = (loading) => {
     if (!submitBtn) return;
+
     if (loading) {
       submitBtn.dataset.prevText = submitBtn.textContent;
       submitBtn.textContent = "Iniciando sesión…";
@@ -34,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
     if (isSubmitting) return;
     isSubmitting = true;
 
@@ -62,12 +64,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
       await minDelay(1000);
 
-      if (!data.user) {
-        throw new Error("Credenciales incorrectas");
+      // 🔥 VALIDACIÓN CORRECTA
+      if (!res.ok) {
+        throw new Error(data.error || "Error al iniciar sesión");
       }
 
-      // Guardar sesión
-      localStorage.setItem("cr_auth", JSON.stringify(data.user));
+      // ✅ Guardar sesión
+      localStorage.setItem("cr_auth", JSON.stringify({
+        email: data.user.email,
+        role: data.user.role
+      }));
 
       showToast("Inicio de sesión exitoso", "success", "Bienvenido");
 
@@ -82,8 +88,9 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
       showToast("Correo o contraseña incorrectos", "danger", "Error");
+
       setLoading(false);
       isSubmitting = false;
     }
   });
-});
+})
