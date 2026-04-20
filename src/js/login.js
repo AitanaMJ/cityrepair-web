@@ -1,4 +1,4 @@
-// src/js/login.js (CON BACKEND CORREGIDO)
+// src/js/login.js
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
@@ -51,7 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setLoading(true);
 
     try {
-      // 🔥 LLAMADA AL BACKEND
       const res = await fetch("http://localhost:3000/api/login", {
         method: "POST",
         headers: {
@@ -64,7 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       await minDelay(1000);
 
-      // 🔥 VALIDACIÓN CORRECTA
       if (!res.ok) {
         throw new Error(data.error || "Error al iniciar sesión");
       }
@@ -81,8 +79,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       setTimeout(() => setLoading(false), TOAST_DURATION - 300);
 
+      // 🔥 REDIRECCIÓN SEGÚN ROL
       setTimeout(() => {
-        window.location.href = "mis-reportes.html";
+        if (data.user.role === "tecnico") {
+          window.location.href = "tecnico-dashboard.html";
+        } else {
+          window.location.href = "mis-reportes.html";
+        }
       }, TOAST_DURATION);
 
     } catch (error) {
@@ -93,4 +96,4 @@ document.addEventListener("DOMContentLoaded", () => {
       isSubmitting = false;
     }
   });
-})
+});

@@ -9,19 +9,19 @@ const kpiResueltos  = document.getElementById("kpiResueltos");
 function badgeEstado(estado = "pendiente") {
   const e = (estado || "").toLowerCase();
   if (e === "resuelto")
-    return `<span class="tag tag--green">Resuelto</span>`;
+    return <span class="tag tag--green">Resuelto</span>;
   if (e.includes("rev"))
-    return `<span class="tag tag--blue">En revisión</span>`;
-  return `<span class="tag tag--blue">Pendiente</span>`;
+    return <span class="tag tag--blue">En revisión</span>;
+  return <span class="tag tag--blue">Pendiente</span>;
 }
 
 function badgePrioridad(p = "baja") {
   const pp = (p || "").toLowerCase();
   if (pp === "alta")
-    return `<span class="tag tag--red">Alta</span>`;
+    return <span class="tag tag--red">Alta</span>;
   if (pp === "media")
-    return `<span class="tag tag--yellow">Media</span>`;
-  return `<span class="tag tag--gray">Baja</span>`;
+    return <span class="tag tag--yellow">Media</span>;
+  return <span class="tag tag--gray">Baja</span>;
 }
 
 function formatearFecha(ts) {
@@ -40,8 +40,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const session = JSON.parse(localStorage.getItem("cr_auth"));
 
+  // 🔥 PROTECCIÓN DE ROL
   if (!session || session.role !== "tecnico") {
-    window.location.href = "./edet-login.html";
+    window.location.href = "./login.html";
     return;
   }
 
