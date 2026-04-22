@@ -29,23 +29,6 @@ app.post("/api/login", (req, res) => {
 });
 
 /* =========================
-   REGISTRO
-========================= */
-app.post("/api/register", (req, res) => {
-  const { email, password } = req.body;
-
-  db.query(
-    "INSERT INTO usuarios (email, password) VALUES (?, ?)",
-    [email, password],
-    (err) => {
-      if (err) return res.status(500).json({ error: "Error al registrar" });
-
-      res.json({ message: "Usuario creado" });
-    }
-  );
-});
-
-/* =========================
    CREAR REPORTE
 ========================= */
 app.post("/api/reportes", (req, res) => {
@@ -56,29 +39,24 @@ app.post("/api/reportes", (req, res) => {
      VALUES (?, ?, ?, ?, ?, ?)`,
     [usuario_id, tipo, ubicacion, descripcion, zona, prioridad],
     (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: "Error al guardar reporte" });
-      }
-
+      if (err) return res.status(500).json({ error: "Error al guardar" });
       res.json({ message: "Reporte creado" });
     }
   );
 });
 
 /* =========================
-   OBTENER TODOS LOS REPORTES
+   TODOS LOS REPORTES
 ========================= */
 app.get("/api/reportes", (req, res) => {
   db.query("SELECT * FROM reportes", (err, results) => {
-    if (err) return res.status(500).json({ error: "Error al obtener reportes" });
-
+    if (err) return res.status(500).json({ error: "Error" });
     res.json(results);
   });
 });
 
 /* =========================
-   ASIGNAR REPORTE A TÉCNICO
+   ASIGNAR TÉCNICO
 ========================= */
 app.put("/api/reportes/:id/asignar", (req, res) => {
   const { id } = req.params;
@@ -88,18 +66,14 @@ app.put("/api/reportes/:id/asignar", (req, res) => {
     "UPDATE reportes SET tecnico_email = ? WHERE id = ?",
     [tecnico_email, id],
     (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: "Error al asignar reporte" });
-      }
-
-      res.json({ message: "Reporte asignado" });
+      if (err) return res.status(500).json({ error: "Error asignando" });
+      res.json({ message: "Asignado" });
     }
   );
 });
 
 /* =========================
-   VER REPORTES DE UN TÉCNICO
+   REPORTES POR TÉCNICO
 ========================= */
 app.get("/api/reportes/tecnico/:email", (req, res) => {
   const { email } = req.params;
@@ -108,18 +82,14 @@ app.get("/api/reportes/tecnico/:email", (req, res) => {
     "SELECT * FROM reportes WHERE tecnico_email = ?",
     [email],
     (err, results) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: "Error al obtener reportes" });
-      }
-
+      if (err) return res.status(500).json({ error: "Error" });
       res.json(results);
     }
   );
 });
 
 /* =========================
-   CAMBIAR ESTADO DEL REPORTE
+   CAMBIAR ESTADO
 ========================= */
 app.put("/api/reportes/:id/estado", (req, res) => {
   const { id } = req.params;
@@ -129,19 +99,12 @@ app.put("/api/reportes/:id/estado", (req, res) => {
     "UPDATE reportes SET estado = ? WHERE id = ?",
     [estado, id],
     (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: "Error al actualizar estado" });
-      }
-
+      if (err) return res.status(500).json({ error: "Error estado" });
       res.json({ message: "Estado actualizado" });
     }
   );
 });
 
-/* =========================
-   INICIAR SERVIDOR
-========================= */
 app.listen(3000, () => {
   console.log("🚀 Servidor en http://localhost:3000");
 });
