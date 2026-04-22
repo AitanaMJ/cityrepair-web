@@ -9,6 +9,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+  const session = JSON.parse(localStorage.getItem("cr_auth"));
+
+if (!session || session.role !== "admin") {
+  window.location.href = "./login.html";
+}
+
   const emailEl = document.getElementById("perfilEmail");
   const nombreEl = document.getElementById("perfilNombre");
   const avatarEl = document.getElementById("perfilAvatar");

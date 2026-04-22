@@ -68,10 +68,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // ✅ Guardar sesión
-      localStorage.setItem("cr_auth", JSON.stringify({
-        email: data.user.email,
-        role: data.user.role
-      }));
+     if (data.user.role === "tecnico") {
+  window.location.href = "tecnico-dashboard.html";
+} 
+else if (data.user.role === "admin") {
+  window.location.href = "admin.html";
+} 
+else {
+  window.location.href = "mis-reportes.html";
+}
 
       showToast("Inicio de sesión exitoso", "success", "Bienvenido");
 

@@ -5,9 +5,7 @@ const kpiAsignados  = document.getElementById("kpiAsignados");
 const kpiRevision   = document.getElementById("kpiRevision");
 const kpiResueltos  = document.getElementById("kpiResueltos");
 
-const filtroEstado = document.getElementById("filtro-estado");
-const filtroZona   = document.getElementById("filtro-zona");
-const filtroPrioridad = document.getElementById("filtro-prioridad");
+
 
 let reportesGlobal = [];
 
@@ -82,30 +80,7 @@ async function cargarReportes(email) {
 }
 
 /* ---------- Filtros ---------- */
-function aplicarFiltros() {
-  let filtrados = [...reportesGlobal];
 
-  if (filtroEstado?.value) {
-    filtrados = filtrados.filter(r =>
-      (r.estado || "").toLowerCase().includes(filtroEstado.value)
-    );
-  }
-
-  if (filtroZona?.value) {
-    filtrados = filtrados.filter(r =>
-      (r.zona || "") === filtroZona.value
-    );
-  }
-
-  if (filtroPrioridad?.value) {
-    filtrados = filtrados.filter(r =>
-      (r.prioridad || "") === filtroPrioridad.value
-    );
-  }
-
-  renderReportes(filtrados);
-  actualizarKPIs(filtrados);
-}
 
 /* ---------- Render ---------- */
 function renderReportes(reportes = []) {
