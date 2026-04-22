@@ -45,6 +45,17 @@ app.post("/api/reportes", (req, res) => {
   );
 });
 
+// ELIMINAR REPORTE
+app.delete("/api/reportes/:id", (req, res) => {
+  const { id } = req.params;
+
+  db.query("DELETE FROM reportes WHERE id = ?", [id], (err) => {
+    if (err) return res.status(500).json({ error: "Error al eliminar" });
+
+    res.json({ message: "Eliminado" });
+  });
+});
+
 /* =========================
    TODOS LOS REPORTES
 ========================= */
