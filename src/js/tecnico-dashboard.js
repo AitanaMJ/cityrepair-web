@@ -1,158 +1,155 @@
-const API = "http://localhost:3000/api";
+// src/js/tecnico-dashboard.js
 
 const listaEl       = document.getElementById("lista-tecnico");
 const kpiAsignados  = document.getElementById("kpiAsignados");
 const kpiRevision   = document.getElementById("kpiRevision");
 const kpiResueltos  = document.getElementById("kpiResueltos");
 
-
-
-let reportesGlobal = [];
-
 /* ---------- Helpers ---------- */
 function badgeEstado(estado = "pendiente") {
   const e = (estado || "").toLowerCase();
-
-  if (e === "resuelto") {
-    return <span class="tag tag--green">Resuelto</span>;
-  }
-
-  if (e.includes("rev")) {
-    return <span class="tag tag--blue">En revisión</span>;
-  }
-
-  return <span class="tag tag--gray">Pendiente</span>;
+  if (e === "resuelto")
+    return `<span class="tag tag--green">Resuelto</span>`;
+  if (e.includes("rev"))
+    return `<span class="tag tag--blue">En revisión</span>`;
+  return `<span class="tag tag--blue">Pendiente</span>`;
 }
 
 function badgePrioridad(p = "baja") {
   const pp = (p || "").toLowerCase();
-
-  if (pp === "alta") {
-    return <span class="tag tag--red">Alta</span>;
-  }
-
-  if (pp === "media") {
-    return <span class="tag tag--yellow">Media</span>;
-  }
-
-  return <span class="tag tag--gray">Baja</span>;
+  if (pp === "alta")
+    return `<span class="tag tag--red">Alta</span>`;
+  if (pp === "media")
+    return `<span class="tag tag--yellow">Media</span>`;
+  return `<span class="tag tag--gray">Baja</span>`;
 }
 
 function formatearFecha(ts) {
   if (!ts) return "";
   const d = new Date(ts);
-  return d.toLocaleString("es-AR");
+  return d.toLocaleString("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
 }
 
-/* ---------- INIT ---------- */
+/* ---------- Verificar sesión ---------- */
 document.addEventListener("DOMContentLoaded", () => {
+
   const session = JSON.parse(localStorage.getItem("cr_auth"));
 
   if (!session || session.role !== "tecnico") {
-    window.location.href = "./login.html";
+    window.location.href = "./edet-login.html";
     return;
   }
 
-  cargarReportes(session.email);
-
-  filtroEstado?.addEventListener("change", aplicarFiltros);
-  filtroZona?.addEventListener("change", aplicarFiltros);
-  filtroPrioridad?.addEventListener("change", aplicarFiltros);
+  cargarReportesTecnico(session.email);
 });
 
-/* ---------- Cargar desde backend ---------- */
-async function cargarReportes(email) {
-  try {
-    const res = await fetch('${API}/reportes/tecnico/${email}');
+/* ---------- Cargar reportes asignados ---------- */
+function cargarReportesTecnico(emailTecnico) {
+  const todos = JSON.parse(localStorage.getItem("reportes")) || [];
 
-    if (!res.ok) throw new Error("Error al traer reportes");
+  const asignados = todos.filter(r =>
+    (r.tecnicoEmail || "").toLowerCase() === emailTecnico.toLowerCase()
+  );
 
-    const data = await res.json();
-
-    reportesGlobal = data;
-
-    aplicarFiltros();
-
-  } catch (err) {
-    console.error("Error cargando reportes:", err);
-    listaEl.innerHTML = <p>Error cargando reportes</p>;
-  }
+  renderReportes(asignados);
+  actualizarKPIs(asignados);
 }
-
-/* ---------- Filtros ---------- */
-
 
 /* ---------- Render ---------- */
 function renderReportes(reportes = []) {
   if (!listaEl) return;
 
   if (reportes.length === 0) {
-    listaEl.innerHTML = <p>No hay reportes</p>;
+    listaEl.innerHTML = `
+      <p class="muted">No tenés reportes asignados.</p>`;
     return;
   }
 
-  listaEl.innerHTML = reportes.map(r => `
-    <div class="card-reporte-tec">
-      
-      <div>
-        <strong>#${r.id}</strong>
-        <div>${formatearFecha(r.fecha)}</div>
+  listaEl.innerHTML = reportes.map(r => {
+
+    const fecha = formatearFecha(r.fecha);
+    const codigo = r.codigoSeguimiento || "CR-" + r.id.slice(0,6).toUpperCase();
+
+    return `
+      <div class="card-reporte-tec" data-id="${r.id}">
+        <div>
+          <strong>#${codigo}</strong>
+          <div>${fecha}</div>
+        </div>
+
+        <div>
+          <div>${r.tipo || "Reporte"}</div>
+          <div>${r.ubicacion || "Sin dirección"}</div>
+          <p>${r.descripcion || ""}</p>
+        </div>
+
+        <div>${badgeEstado(r.estado)}</div>
+        <div>${badgePrioridad(r.prioridad)}</div>
+
+        <div>
+          <button class="btn-estado" data-estado="en revisión">
+            En revisión
+          </button>
+          <button class="btn-estado" data-estado="resuelto">
+            Marcar resuelto
+          </button>
+        </div>
       </div>
+    `;
+  }).join("");
 
-      <div>
-        <div>${r.tipo || "Sin tipo"}</div>
-        <div>${r.ubicacion || "Sin ubicación"}</div>
-        <p>${r.descripcion || ""}</p>
-      </div>
-
-      <div>${badgeEstado(r.estado)}</div>
-      <div>${badgePrioridad(r.prioridad)}</div>
-
-      <div>
-        <button onclick="cambiarEstado(${r.id}, 'en revision')">
-          En revisión
-        </button>
-
-        <button onclick="cambiarEstado(${r.id}, 'resuelto')">
-          Resuelto
-        </button>
-      </div>
-
-    </div>
-  `).join("");
+  document.querySelectorAll(".btn-estado").forEach(btn => {
+    btn.addEventListener("click", cambiarEstado);
+  });
 }
 
 /* ---------- Cambiar estado ---------- */
-async function cambiarEstado(id, estado) {
-  try {
-    const res = await fetch('${API}/reportes/${id}/estado', {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ estado })
-    });
+function cambiarEstado(e) {
 
-    if (!res.ok) throw new Error("Error actualizando");
+  const btn = e.currentTarget;
+  const row = btn.closest(".card-reporte-tec");
+  const id  = row.dataset.id;
+  const nuevoEstado = btn.dataset.estado;
 
-    const session = JSON.parse(localStorage.getItem("cr_auth"));
+  let reportes = JSON.parse(localStorage.getItem("reportes")) || [];
 
-    cargarReportes(session.email);
+  reportes = reportes.map(r => {
+    if (r.id === id) {
+      r.estado = nuevoEstado;
+      if (nuevoEstado === "resuelto") {
+        r.fechaResuelto = new Date().toISOString();
+      }
+    }
+    return r;
+  });
 
-  } catch (err) {
-    console.error("Error actualizando:", err);
-  }
+  localStorage.setItem("reportes", JSON.stringify(reportes));
+
+  cargarReportesTecnico(
+    JSON.parse(localStorage.getItem("cr_auth")).email
+  );
+
+  alert("Estado actualizado");
 }
 
 /* ---------- KPIs ---------- */
-function actualizarKPIs(reportes) {
-  kpiAsignados.textContent = reportes.length;
+function actualizarKPIs(reportes = []) {
+  const total = reportes.length;
 
-  kpiRevision.textContent = reportes.filter(r =>
-    (r.estado || "").includes("rev")
+  const revision = reportes.filter(r =>
+    (r.estado || "").toLowerCase().includes("rev")
   ).length;
 
-  kpiResueltos.textContent = reportes.filter(r =>
-    r.estado === "resuelto"
+  const resueltos = reportes.filter(r =>
+    (r.estado || "").toLowerCase() === "resuelto"
   ).length;
+
+  if (kpiAsignados) kpiAsignados.textContent = total;
+  if (kpiRevision)  kpiRevision.textContent  = revision;
+  if (kpiResueltos) kpiResueltos.textContent = resueltos;
 }
