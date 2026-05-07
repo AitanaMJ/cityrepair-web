@@ -71,7 +71,24 @@ document.addEventListener("DOMContentLoaded", () => {
         role: data.user.role
       }));
 
-      console.log("Usuario logueado:", data.user); // 🔍 Debug útil
+      console.log("Usuario logueado:", data.user);
+
+      // 🚫 BLOQUEAR ADMINS EN LOGIN NORMAL
+      if (data.user.role === "admin") {
+
+        localStorage.removeItem("cr_auth");
+
+        showToast(
+          "Los administradores deben ingresar desde el portal EDET.",
+          "danger",
+          "Acceso denegado"
+        );
+
+        setLoading(false);
+        isSubmitting = false;
+
+        return;
+      }
 
       showToast("Inicio de sesión exitoso", "success", "Bienvenido");
 
@@ -79,20 +96,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
       setTimeout(() => setLoading(false), TOAST_DURATION - 300);
 
-      // 🔥 REDIRECCIÓN SEGÚN ROL (FIX)
+      // 🔥 REDIRECCIÓN SEGÚN ROL
       setTimeout(() => {
-        if (data.user.role === "admin") {
-          window.location.href = "perfil-admin.html";
-        } else if (data.user.role === "tecnico") {
+
+        if (data.user.role === "tecnico") {
           window.location.href = "tecnico-dashboard.html";
         } else {
           window.location.href = "mis-reportes.html";
         }
+
       }, TOAST_DURATION);
 
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-      showToast("Correo o contraseña incorrectos", "danger", "Error");
+
+      showToast(
+        "Correo o contraseña incorrectos",
+        "danger",
+        "Error"
+      );
 
       setLoading(false);
       isSubmitting = false;
