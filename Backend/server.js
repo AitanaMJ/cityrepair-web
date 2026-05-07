@@ -8,22 +8,32 @@ app.use(cors());
 app.use(express.json());
 
 /* =========================
-   LOGIN
+   LOGIN (MEJORADO)
 ========================= */
 app.post("/api/login", (req, res) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
+
+  // 🔍 limpiar espacios
+  email = email.trim();
+  password = password.trim();
 
   db.query(
-    "SELECT * FROM usuarios WHERE email = ? AND password = ?",
-    [email, password],
+    "SELECT * FROM usuarios WHERE email = ?",
+    [email],
     (err, results) => {
       if (err) return res.status(500).json({ error: "Error servidor" });
 
       if (results.length === 0) {
-        return res.status(401).json({ error: "Credenciales inválidas" });
+        return res.status(401).json({ error: "Usuario no encontrado" });
       }
 
-      res.json({ user: results[0] });
+      const user = results[0];
+
+      if (user.password !== password) {
+        return res.status(401).json({ error: "Contraseña incorrecta" });
+      }
+
+      res.json({ user });
     }
   );
 });

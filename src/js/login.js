@@ -1,5 +1,3 @@
-// src/js/login.js
-
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
   if (!form) return;
@@ -73,15 +71,19 @@ document.addEventListener("DOMContentLoaded", () => {
         role: data.user.role
       }));
 
+      console.log("Usuario logueado:", data.user); // 🔍 Debug útil
+
       showToast("Inicio de sesión exitoso", "success", "Bienvenido");
 
       const TOAST_DURATION = 4000;
 
       setTimeout(() => setLoading(false), TOAST_DURATION - 300);
 
-      // 🔥 REDIRECCIÓN SEGÚN ROL
+      // 🔥 REDIRECCIÓN SEGÚN ROL (FIX)
       setTimeout(() => {
-        if (data.user.role === "tecnico") {
+        if (data.user.role === "admin") {
+          window.location.href = "perfil-admin.html";
+        } else if (data.user.role === "tecnico") {
           window.location.href = "tecnico-dashboard.html";
         } else {
           window.location.href = "mis-reportes.html";

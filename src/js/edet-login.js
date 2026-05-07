@@ -1,9 +1,3 @@
-// src/js/edet-login.js
-
-
-// Solo permite correos corporativos de EDET
-const emailOK = (email) => /@edet\.com\.ar$/i.test(email);
-
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("edet-login-form");
   if (!form) return;
@@ -12,71 +6,64 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
 
     const email = document.getElementById("email").value.trim();
-    const pass  = document.getElementById("password").value.trim();
+    const password = document.getElementById("password").value.trim();
 
-    if (!emailOK(email)) {
-      window.mostrarAlerta?.(
-        "Usá tu correo corporativo @edet.com.ar",
-        "danger",
-        { titulo: "Email inválido" }
-      );
+    if (!email || !password) {
+      window.mostrarAlerta?.("Completá todos los campos", "warn");
       return;
     }
 
     try {
-  // Obtener usuarios guardados en localStorage
-  const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+      const res = await fetch("http://localhost:3000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      });
 
-  // Buscar usuario por email
-  const user = usuarios.find(u => 
-    u.email.toLowerCase() === email.toLowerCase() &&
-    u.password === pass
-  );
+      const data = await res.json();
 
-  if (!user) {
-    window.mostrarAlerta?.("Credenciales inválidas", "danger", {
-      titulo: "Error de acceso"
-    });
-    return;
-  }
+      if (!res.ok) {
+        window.mostrarAlerta?.("Credenciales inválidas", "danger", {
+          titulo: "Error de acceso"
+        });
+        return;
+      }
 
-  const rol = (user.rol || "").toLowerCase();
+      const user = data.user;
+      const rol = (user.role || "").toLowerCase();
 
-  // Guardar sesión
-  localStorage.setItem("session", JSON.stringify({
-    email: user.email,
-    rol: user.rol
-  }));
+      // ✅ Guardar sesión (igual que el login normal)
+      localStorage.setItem("cr_auth", JSON.stringify({
+        email: user.email,
+        role: user.role
+      }));
 
-  if (rol === "admin" || rol === "edet") {
-    window.mostrarAlerta?.("Bienvenido al panel administrador", "success", {
-      titulo: "EDET – Admin"
-    });
-    setTimeout(() => {
-      window.location.href = "./edet-dashboard.html";
-    }, 700);
+      // 🔥 VALIDACIÓN POR ROL (NO POR EMAIL)
+      if (rol === "admin") {
+        window.mostrarAlerta?.("Bienvenido administrador", "success");
+        setTimeout(() => {
+          window.location.href = "perfil-admin.html";
+        }, 800);
 
-  } else if (rol === "tecnico") {
-    window.mostrarAlerta?.("Bienvenido al panel del técnico", "success", {
-      titulo: "EDET – Técnico"
-    });
-    setTimeout(() => {
-      window.location.href = "./tecnico-dashboard.html";
-    }, 700);
+      } else if (rol === "tecnico") {
+        window.mostrarAlerta?.("Bienvenido técnico", "success");
+        setTimeout(() => {
+          window.location.href = "tecnico-dashboard.html";
+        }, 800);
 
-  } else {
-    window.mostrarAlerta?.(
-      "Tu cuenta no tiene permisos de EDET.",
-      "danger",
-      { titulo: "Acceso denegado" }
-    );
-  }
+      } else {
+        window.mostrarAlerta?.(
+          "No tenés acceso a este portal",
+          "danger"
+        );
+        localStorage.removeItem("cr_auth");
+      }
 
-} catch (err) {
-  console.error(err);
-  window.mostrarAlerta?.("Error inesperado", "danger", {
-    titulo: "Error"
-  });
-}
+    } catch (err) {
+      console.error(err);
+      window.mostrarAlerta?.("Error del servidor", "danger");
+    }
   });
 });
