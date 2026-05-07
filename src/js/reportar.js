@@ -1,5 +1,3 @@
-// src/js/reportar.js
-
 const form = document.getElementById("form-reporte");
 
 /**
@@ -25,7 +23,7 @@ function calcularPrioridadPorTipo(tipo) {
   }
 }
 
-// 🔒 Guard de sesión usando localStorage
+// 🔒 Verificar sesión
 document.addEventListener("DOMContentLoaded", () => {
 
   const session = JSON.parse(localStorage.getItem("cr_auth"));
@@ -38,61 +36,62 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!form) return;
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const tipo = document.getElementById("tipo").value.trim();
+
     const ubicacion =
       document.getElementById("ubicacion")?.value.trim() ||
       document.getElementById("direccion")?.value.trim() ||
       "";
-    const descripcion = document.getElementById("descripcion").value.trim();
-    const zona = document.getElementById("zona")?.value.trim() || "";
 
-    const inputImagenes = document.getElementById("imagenes");
-    const archivos = inputImagenes ? Array.from(inputImagenes.files) : [];
+    const descripcion =
+      document.getElementById("descripcion").value.trim();
+
+    const zona =
+      document.getElementById("zona")?.value.trim() || "";
 
     if (!tipo || !ubicacion || !descripcion) {
       alert("Completá los campos obligatorios.");
       return;
     }
 
-    // 🔥 Convertimos imágenes a base64 para guardarlas en localStorage
-    const leerImagenes = archivos.map(file => {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.readAsDataURL(file);
+    const prioridad = calcularPrioridadPorTipo(tipo);
+
+    try {
+
+      const res = await fetch("http://localhost:3000/api/reportes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          usuario_id: session.id,
+          tipo,
+          ubicacion,
+          descripcion,
+          zona,
+          prioridad
+        })
       });
-    });
 
-    Promise.all(leerImagenes).then((imagenesBase64) => {
+      const data = await res.json();
 
-      const prioridad = calcularPrioridadPorTipo(tipo);
-
-      const reportes = JSON.parse(localStorage.getItem("reportes")) || [];
-
-      const nuevoReporte = {
-        id: Date.now().toString(),
-        usuarioId: session.uid,
-        tipo,
-        ubicacion,
-        descripcion,
-        zona,
-        estado: "pendiente",
-        prioridad,
-        fecha: new Date().toISOString(),
-        imagenes: imagenesBase64,
-        codigoSeguimiento: "CR-" + Math.random().toString(36).substring(2, 8).toUpperCase()
-      };
-
-      reportes.push(nuevoReporte);
-
-      localStorage.setItem("reportes", JSON.stringify(reportes));
+      if (!res.ok) {
+        throw new Error(data.error || "Error al crear reporte");
+      }
 
       alert("✅ Reporte enviado con éxito.");
+
       window.location.href = "./mis-reportes.html";
-    });
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert("❌ Error al enviar el reporte.");
+    }
 
   });
 
