@@ -66,10 +66,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // ✅ Guardar sesión
-      localStorage.setItem("cr_auth", JSON.stringify({
-        email: data.user.email,
-        role: data.user.role
-      }));
+    localStorage.setItem("cr_auth", JSON.stringify({
+      id: data.user.id,
+      email: data.user.email,
+      role: data.user.role
+}));
 
       console.log("Usuario logueado:", data.user);
 
