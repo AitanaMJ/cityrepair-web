@@ -77,6 +77,29 @@ app.get("/api/reportes", (req, res) => {
 });
 
 /* =========================
+   MIS REPORTES
+========================= */
+app.get("/api/mis-reportes/:usuario_id", (req, res) => {
+
+  const { usuario_id } = req.params;
+
+  db.query(
+    "SELECT * FROM reportes WHERE usuario_id = ? ORDER BY fecha DESC",
+    [usuario_id],
+    (err, results) => {
+
+      if (err) {
+        return res.status(500).json({
+          error: "Error obteniendo reportes"
+        });
+      }
+
+      res.json(results);
+    }
+  );
+});
+
+/* =========================
    REPORTES POR USUARIO
 ========================= */
 app.get("/api/mis-reportes/:usuario_id", (req, res) => {

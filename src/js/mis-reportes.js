@@ -7,7 +7,7 @@ let reportesUsuario = [];
 
 /* =========================
    CARGAR REPORTES
-========================= /
+========================= */
 async function cargarReportes() {
 
   try {
@@ -26,7 +26,7 @@ async function cargarReportes() {
 
     // ✅ Obtener reportes del usuario
     const res = await fetch(
-      ${API}/mis-reportes/${session.id}
+      '${API}/mis-reportes/${session.id}'
     );
 
     if (!res.ok) {
@@ -48,13 +48,15 @@ async function cargarReportes() {
 
     console.error("Error:", err);
 
-    contenedor.innerHTML =       <p>Error cargando reportes</p>    ;
+    contenedor.innerHTML = `
+      <p>Error cargando reportes</p>
+    `;
   }
 }
 
-/ =========================
+/* =========================
    RENDER REPORTES
-========================= /
+========================= */
 function renderReportes(filtro = "todos") {
 
   contenedor.innerHTML = "";
@@ -72,7 +74,9 @@ function renderReportes(filtro = "todos") {
   // ✅ Sin reportes
   if (lista.length === 0) {
 
-    contenedor.innerHTML =       <p>No hay reportes</p>    ;
+    contenedor.innerHTML = `
+      <p>No hay reportes</p>
+    `;
 
     return;
   }
@@ -84,19 +88,47 @@ function renderReportes(filtro = "todos") {
 
     div.className = "reporte-card";
 
-    div.innerHTML =       <h3>${r.tipo}</h3>        <p>${r.descripcion}</p>        <small>         ${r.ubicacion} - ${r.zona}       </small>        <p>         <b>Estado:</b>         ${r.estado || "pendiente"}       </p>        <p>         <b>Prioridad:</b>         ${r.prioridad || "baja"}       </p>        <p>         <b>Fecha:</b>         ${new Date(r.fecha).toLocaleString()}       </p>        ${r.estado === "pendiente" ?
-        <button onclick="eliminarReporte(${r.id})">
-          Eliminar
-        </button>
-      : ""}    ;
+    div.innerHTML = `
+      <h3>${r.tipo}</h3>
+
+      <p>${r.descripcion}</p>
+
+      <small>
+        ${r.ubicacion} - ${r.zona}
+      </small>
+
+      <p>
+        <b>Estado:</b>
+        ${r.estado || "pendiente"}
+      </p>
+
+      <p>
+        <b>Prioridad:</b>
+        ${r.prioridad || "baja"}
+      </p>
+
+      <p>
+        <b>Fecha:</b>
+        ${new Date(r.fecha).toLocaleString()}
+      </p>
+
+      ${r.estado === "pendiente"
+        ? `
+          <button onclick="eliminarReporte(${r.id})">
+            Eliminar
+          </button>
+        `
+        : ""
+      }
+    `;
 
     contenedor.appendChild(div);
   });
 }
 
-/ =========================
+/* =========================
    ELIMINAR REPORTE
-========================= /
+========================= */
 async function eliminarReporte(id) {
 
   if (!confirm("¿Eliminar reporte?")) return;
@@ -104,7 +136,7 @@ async function eliminarReporte(id) {
   try {
 
     const res = await fetch(
-      ${API}/reportes/${id},
+      '${API}/reportes/${id}',
       {
         method: "DELETE"
       }
@@ -124,7 +156,7 @@ async function eliminarReporte(id) {
   }
 }
 
-/ =========================
+/* =========================
    EVENTOS
 ========================= */
 document.addEventListener(
