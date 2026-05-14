@@ -136,11 +136,11 @@ async function eliminarReporte(id) {
   try {
 
     const res = await fetch(
-      '${API}/reportes/${id}',
-      {
-        method: "DELETE"
-      }
-    );
+  '${API}/reportes/${id}',
+  {
+    method: "DELETE"
+  }
+);
 
     if (!res.ok) {
       throw new Error("Error eliminando");
