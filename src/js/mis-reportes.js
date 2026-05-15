@@ -25,9 +25,9 @@ async function cargarReportes() {
     console.log("Sesión:", session);
 
     // ✅ Obtener reportes del usuario
-    const res = await fetch(
-      '${API}/mis-reportes/${session.id}'
-    );
+const res = await fetch( 
+    '${API}/mis-reportes/${session.id}' 
+  );
 
     if (!res.ok) {
       throw new Error("Error obteniendo reportes");
@@ -55,7 +55,7 @@ async function cargarReportes() {
 }
 
 /* =========================
-   RENDER REPORTES
+RENDER REPORTES
 ========================= */
 function renderReportes(filtro = "todos") {
 
@@ -127,7 +127,7 @@ function renderReportes(filtro = "todos") {
 }
 
 /* =========================
-   ELIMINAR REPORTE
+ELIMINAR REPORTE
 ========================= */
 async function eliminarReporte(id) {
 
@@ -135,12 +135,10 @@ async function eliminarReporte(id) {
 
   try {
 
-    const res = await fetch(
-  '${API}/reportes/${id}',
-  {
-    method: "DELETE"
-  }
-);
+const res = await fetch( 
+  '${API}/reportes/${id}', 
+  { method: "DELETE" } )
+
 
     if (!res.ok) {
       throw new Error("Error eliminando");
@@ -157,7 +155,7 @@ async function eliminarReporte(id) {
 }
 
 /* =========================
-   EVENTOS
+EVENTOS
 ========================= */
 document.addEventListener(
   "DOMContentLoaded",
