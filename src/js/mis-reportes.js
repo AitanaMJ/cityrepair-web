@@ -6,7 +6,7 @@ const filtroEstadoSelect = document.getElementById("filtro-estado");
 let reportesUsuario = [];
 
 /* =========================
-   CARGAR REPORTES
+CARGAR REPORTES
 ========================= */
 async function cargarReportes() {
   try {
@@ -21,7 +21,7 @@ async function cargarReportes() {
     console.log("Sesión:", session);
 
     // 📡 Obtener reportes
-    const res = await fetch('${API}/mis-reportes/${session.id}');
+    const res = await fetch(`${API}/mis-reportes/${session.id}`);
 
     if (!res.ok) {
       throw new Error("Error obteniendo reportes");
@@ -47,7 +47,7 @@ async function cargarReportes() {
 }
 
 /* =========================
-   RENDER REPORTES
+RENDER REPORTES
 ========================= */
 function renderReportes(filtro = "todos") {
   contenedor.innerHTML = "";
@@ -115,7 +115,7 @@ function renderReportes(filtro = "todos") {
 }
 
 /* =========================
-   ELIMINAR REPORTE
+ELIMINAR REPORTE
 ========================= */
 async function eliminarReporte(id) {
   const confirmar = confirm("¿Eliminar reporte?");
@@ -123,7 +123,7 @@ async function eliminarReporte(id) {
   if (!confirmar) return;
 
   try {
-    const res = await fetch('${API}/reportes/${id}', {
+    const res = await fetch(`${API}/reportes/${id}`, {
       method: "DELETE",
     });
 
@@ -141,7 +141,7 @@ async function eliminarReporte(id) {
 }
 
 /* =========================
-   EVENTOS
+EVENTOS
 ========================= */
 
 // 🚀 Cargar al iniciar
