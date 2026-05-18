@@ -1,28 +1,91 @@
 /* ============================
    MIS REPORTES – CityRepair
-   Archivo: src/css/mis-reportes.css
-   ============================ */
+============================ */
 
-/* Espaciado general de la página de "Mis reportes" */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap');
+
 .myreports {
-  padding-top: 24px;
-  padding-bottom: 32px;
+  padding-top: 28px;
+  padding-bottom: 40px;
 }
 
-/* ===== Tarjeta de reporte ===== */
+/* ===== Header ===== */
+.myreports-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
 
+.myreports-header .page-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #111;
+}
+
+/* ===== Summary pills ===== */
+.myreports-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.summary-pill {
+  font-size: 0.82rem;
+  font-family: 'DM Sans', sans-serif;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #f0f0f0;
+  color: #444;
+  font-weight: 500;
+}
+
+.summary-pendiente  { background: #fff3cd; color: #856404; }
+.summary-enproceso  { background: #cfe2ff; color: #084298; }
+.summary-resuelto   { background: #d1e7dd; color: #0f5132; }
+
+/* ===== Filtros ===== */
+.myreports-filters label {
+  font-size: 0.88rem;
+  color: #555;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.myreports-filters select {
+  margin-left: 6px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 0.88rem;
+  font-family: 'DM Sans', sans-serif;
+  background: #fff;
+  cursor: pointer;
+}
+
+/* ===== Tarjeta ===== */
 .reporte-card {
   background: #ffffff;
-  border-radius: 12px;
-  padding: 12px 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  border: 1px solid #f0f0f0;
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
+  font-family: 'DM Sans', sans-serif;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-/* Header de la tarjeta: tipo + estado */
+.reporte-card:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,0.11);
+  transform: translateY(-2px);
+}
+
+/* Header tarjeta */
 .reporte-header {
   display: flex;
   justify-content: space-between;
@@ -30,221 +93,146 @@
   gap: 8px;
 }
 
-/* Tipo de problema (título corto) */
 .reporte-tipo {
   font-weight: 600;
   font-size: 0.95rem;
+  color: #111;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: capitalize;
 }
 
-/* Etiqueta de estado del reporte */
+.reporte-icono {
+  font-size: 1.1rem;
+}
+
+/* Badge de estado */
 .reporte-estado {
-  font-size: 0.8rem;
-  padding: 2px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 12px;
   border-radius: 999px;
   text-transform: capitalize;
   white-space: nowrap;
+  letter-spacing: 0.02em;
 }
 
-/* Estados por color */
-.reporte-estado.pendiente {
-  background: #fff3cd;
-  color: #856404;
-}
-
+.reporte-estado.pendiente   { background: #fff3cd; color: #856404; }
 .reporte-estado.en-proceso,
-.reporte-estado.en_proceso {
-  background: #cfe2ff;
-  color: #084298;
-}
+.reporte-estado.en_proceso  { background: #cfe2ff; color: #084298; }
+.reporte-estado.resuelto    { background: #d1e7dd; color: #0f5132; }
 
-.reporte-estado.resuelto {
-  background: #d1e7dd;
-  color: #0f5132;
-}
-
-/* Descripción del problema */
+/* Descripción */
 .reporte-descripcion {
-  margin: 4px 0;
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
-/* Meta: ubicación · zona · fecha */
-.reporte-meta {
-  font-size: 0.8rem;
-  color: #666;
-}
-
-.reporte-codigo {
-  font-size: 0.8rem;
+  font-size: 0.88rem;
   color: #444;
-  cursor: pointer;
+  line-height: 1.5;
+  margin: 0;
 }
 
-/* ===== Imágenes del reporte ===== */
-
-.reporte-imgs {
+/* Meta info */
+.reporte-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 6px;
+  gap: 6px 14px;
+  font-size: 0.78rem;
+  color: #777;
 }
 
-/* Miniaturas */
-.reporte-imgs img {
-  max-width: 110px;
-  max-height: 110px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #eee;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
-}
-
-/* Hover sobre imagen */
-.reporte-imgs img:hover {
-  transform: scale(1.03);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  opacity: 0.95;
-}
-
-/* ===== Mensajes de estado (sin reportes, cargando, etc.) ===== */
-
-#sin-reportes {
-  font-size: 0.9rem;
-}
-
-/* Ajustes responsivos ligeros */
-@media (max-width: 768px) {
-  .reporte-card {
-    padding: 10px 12px;
-  }
-
-  .reporte-tipo {
-    font-size: 0.9rem;
-  }
-
-  .reporte-meta {
-    font-size: 0.78rem;
-  }
-
-  .reporte-imgs img {
-    max-width: 95px;
-    max-height: 95px;
-  }
-}
-
-.myreports-header {
+.reporte-meta span {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 3px;
 }
 
-.myreports-summary {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.summary-pill {
-  font-size: 0.85rem;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: #f4f4f4;
-  color: #333;
-}
-
-/* Colores por estado */
-.summary-pendiente {
-  background: #fff3cd;
-  color: #856404;
-}
-
-.summary-enproceso {
-  background: #cfe2ff;
-  color: #084298;
-}
-
-.summary-resuelto {
-  background: #d1e7dd;
-  color: #0f5132;
-}
-
-@media (max-width: 768px) {
-  .myreports-summary {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-
-.myreports-header .page-title {
-  font-size: 1.3rem;
+/* Prioridad */
+.reporte-prioridad {
   font-weight: 600;
+  border-radius: 6px;
+  padding: 1px 6px;
 }
 
-.myreports-filters label {
-  font-size: 0.9rem;
-  color: #555;
+.prioridad-alta   { background: #fde8e8; color: #c0392b; }
+.prioridad-media  { background: #fef3cd; color: #d68910; }
+.prioridad-baja   { background: #eafaf1; color: #1e8449; }
+
+/* ===== Botones de acción ===== */
+.report-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid #f0f0f0;
 }
 
-.myreports-filters select {
-  margin-left: 4px;
-  padding: 4px 8px;
+.btn-edit {
+  flex: 1;
+  padding: 7px 0;
+  background: #0d6efd;
+  color: #fff;
+  font-size: 0.83rem;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
   border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
 }
 
-/* En mobile, título arriba y filtro abajo */
+.btn-edit:hover {
+  background: #0b5ed7;
+  transform: scale(1.02);
+}
+
+.btn-delete {
+  flex: 1;
+  padding: 7px 0;
+  background: #fff;
+  color: #dc3545;
+  border: 1.5px solid #dc3545;
+  font-size: 0.83rem;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-delete:hover {
+  background: #dc3545;
+  color: #fff;
+  transform: scale(1.02);
+}
+
+/* ===== Mensajes ===== */
+.empty-msg, .error-msg {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  color: #888;
+  text-align: center;
+  padding: 32px 0;
+}
+
+.error-msg { color: #dc3545; }
+
+/* ===== Responsive ===== */
 @media (max-width: 768px) {
   .myreports-header {
     flex-direction: column;
     align-items: flex-start;
   }
-}
 
+  .myreports-summary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-/* Contenedor de los botones (Editar / Eliminar) */
-.report-actions {
-  margin-top: 10px;
-  text-align: left;   /* 👈 los alinea a la izquierda */
-}
+  .reporte-card {
+    padding: 14px 16px;
+  }
 
-/* Botón Editar */
-.btn-edit {
-  display: inline-block;
-  padding: 6px 14px;
-  background: #0d6efd;
-  color: #fff;
-  font-size: 0.85rem;
-  border-radius: 6px;
-  border: none;
-  margin-right: 8px;
-  cursor: pointer;
-  transition: background 0.15s ease;
-}
-
-.btn-edit:hover {
-  background: #0b5ed7;
-}
-
-/* Botón Eliminar */
-.btn-delete {
-  display: inline-block;
-  padding: 6px 14px;
-  background: #dc3545;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  transition: background 0.15s ease;
-}
-
-.btn-delete:hover {
-  background: #bb2d3b;
+  .reporte-tipo {
+    font-size: 0.88rem;
+  }
 }

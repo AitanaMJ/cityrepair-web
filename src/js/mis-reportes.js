@@ -6,21 +6,19 @@ const filtroEstadoSelect = document.getElementById("filtro-estado");
 let reportesUsuario = [];
 
 /* =========================
-CARGAR REPORTES
+  CARGAR REPORTES
 ========================= */
 async function cargarReportes() {
   try {
     const session = JSON.parse(localStorage.getItem("cr_auth"));
 
-    // 🔒 Verificar sesión
     if (!session) {
       window.location.href = "./login.html";
       return;
     }
 
-    console.log("Sesión:", session);
+    console.log("Sesion:", session);
 
-    // 📡 Obtener reportes
     const res = await fetch(`${API}/mis-reportes/${session.id}`);
 
     if (!res.ok) {
@@ -31,7 +29,6 @@ async function cargarReportes() {
 
     console.log("Reportes:", data);
 
-    // 📌 Ordenar por fecha descendente
     reportesUsuario = data.sort(
       (a, b) => new Date(b.fecha) - new Date(a.fecha)
     );
@@ -39,75 +36,71 @@ async function cargarReportes() {
     renderReportes();
   } catch (error) {
     console.error("Error cargando reportes:", error);
-
-    contenedor.innerHTML = `
-      <p>Error cargando reportes</p>
-    `;
+    contenedor.innerHTML = `<p class="error-msg">Error cargando reportes</p>`;
   }
 }
 
 /* =========================
-RENDER REPORTES
+  RENDER REPORTES
 ========================= */
 function renderReportes(filtro = "todos") {
   contenedor.innerHTML = "";
 
-  // 🔍 Filtrar reportes
   const lista =
     filtro === "todos"
       ? reportesUsuario
       : reportesUsuario.filter(
-          (r) =>
-            (r.estado || "").toLowerCase() === filtro.toLowerCase()
+          (r) => (r.estado || "").toLowerCase() === filtro.toLowerCase()
         );
 
-  // ⚠️ Sin reportes
   if (lista.length === 0) {
-    contenedor.innerHTML = `
-      <p>No hay reportes</p>
-    `;
+    contenedor.innerHTML = `<p class="empty-msg">No hay reportes</p>`;
     return;
   }
 
-  // 📦 Crear tarjetas
   lista.forEach((reporte) => {
+    const estado = reporte.estado || "pendiente";
+    const prioridad = reporte.prioridad || "baja";
+    const fecha = new Date(reporte.fecha).toLocaleDateString("es-AR", {
+      day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit"
+    });
+
+    const iconos = {
+      "corte-total": "⚡",
+      "corte-parcial": "🔌",
+      "cable-caido": "🪛",
+      "medidor-quemado": "🔥",
+      "baja-tension": "📉",
+      "poste-danado": "🏚️",
+    };
+    const icono = iconos[reporte.tipo] || "📋";
+
     const div = document.createElement("div");
-
     div.className = "reporte-card";
-
     div.innerHTML = `
-      <h3>${reporte.tipo}</h3>
+      <div class="reporte-header">
+        <div class="reporte-tipo">
+          <span class="reporte-icono">${icono}</span>
+          ${reporte.tipo}
+        </div>
+        <span class="reporte-estado ${estado.replace(" ", "-")}">${estado}</span>
+      </div>
 
-      <p>${reporte.descripcion}</p>
+      <p class="reporte-descripcion">${reporte.descripcion}</p>
 
-      <small>
-        ${reporte.ubicacion} - ${reporte.zona}
-      </small>
+      <div class="reporte-meta">
+        <span>📍 ${reporte.ubicacion}</span>
+        <span>🏘️ ${reporte.zona}</span>
+        <span>🕐 ${fecha}</span>
+        <span class="reporte-prioridad prioridad-${prioridad}">🚨 ${prioridad}</span>
+      </div>
 
-      <p>
-        <strong>Estado:</strong>
-        ${reporte.estado || "pendiente"}
-      </p>
-
-      <p>
-        <strong>Prioridad:</strong>
-        ${reporte.prioridad || "baja"}
-      </p>
-
-      <p>
-        <strong>Fecha:</strong>
-        ${new Date(reporte.fecha).toLocaleString()}
-      </p>
-
-      ${
-        reporte.estado === "pendiente"
-          ? `
-            <button onclick="eliminarReporte(${reporte.id})">
-              Eliminar
-            </button>
-          `
-          : ""
-      }
+      ${estado === "pendiente" ? `
+        <div class="report-actions">
+          <button class="btn-edit" onclick="editarReporte(${reporte.id})">✏️ Editar</button>
+          <button class="btn-delete" onclick="eliminarReporte(${reporte.id})">🗑️ Eliminar</button>
+        </div>
+      ` : ""}
     `;
 
     contenedor.appendChild(div);
@@ -115,11 +108,17 @@ function renderReportes(filtro = "todos") {
 }
 
 /* =========================
-ELIMINAR REPORTE
+  EDITAR REPORTE
+========================= */
+function editarReporte(id) {
+  window.location.href = `./editar-reporte.html?id=${id}`;
+}
+
+/* =========================
+  ELIMINAR REPORTE
 ========================= */
 async function eliminarReporte(id) {
-  const confirmar = confirm("¿Eliminar reporte?");
-
+  const confirmar = confirm("¿Eliminar este reporte?");
   if (!confirmar) return;
 
   try {
@@ -127,27 +126,20 @@ async function eliminarReporte(id) {
       method: "DELETE",
     });
 
-    if (!res.ok) {
-      throw new Error("Error eliminando reporte");
-    }
+    if (!res.ok) throw new Error("Error eliminando reporte");
 
-    // 🔄 Recargar lista
     cargarReportes();
   } catch (error) {
     console.error("Error eliminando:", error);
-
     alert("Error eliminando reporte");
   }
 }
 
 /* =========================
-EVENTOS
+  EVENTOS
 ========================= */
-
-// 🚀 Cargar al iniciar
 document.addEventListener("DOMContentLoaded", cargarReportes);
 
-// 🔍 Filtro por estado
 if (filtroEstadoSelect) {
   filtroEstadoSelect.addEventListener("change", (e) => {
     renderReportes(e.target.value);
