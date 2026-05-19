@@ -113,6 +113,7 @@ btnAplicarFiltros.addEventListener("click", aplicarFiltros);
 ======================================================= */
 
 function renderTabla(reportes) {
+  REPORTES_FILTRADOS = reportes;
 
   if (!reportes.length) {
     contenedor.innerHTML =
@@ -175,7 +176,7 @@ function renderTabla(reportes) {
 }
 
 /* =======================================================
-  KPIs
+   KPIs
 ======================================================= */
 
 function actualizarKPIs(reportes) {
@@ -186,7 +187,7 @@ function actualizarKPIs(reportes) {
 }
 
 /* =======================================================
-  CHARTS
+   CHARTS
 ======================================================= */
 
 function actualizarCharts(reportes) {
@@ -239,33 +240,156 @@ function actualizarCharts(reportes) {
 }
 
 /* =======================================================
-  EXPORTAR PDF
+   EXPORTAR PDF
 ======================================================= */
+
+// Guardamos los reportes actualmente filtrados
+let REPORTES_FILTRADOS = [];
 
 document.getElementById("btnExportarPDF")
 .addEventListener("click", () => {
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
 
+  const reportes = REPORTES_FILTRADOS.length
+    ? REPORTES_FILTRADOS
+    : REPORTES_ORIGINALES;
+
+  // ── Encabezado ──────────────────────────────────────
+  doc.setFillColor(13, 110, 253);
+  doc.rect(0, 0, pageW, 32, "F");
+
+  doc.setTextColor(255, 255, 255);
   doc.setFontSize(18);
-  doc.text("Reporte CityRepair EDET", 20, 20);
-  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.text("CityRepair — Panel EDET", 14, 14);
 
-  let y = 40;
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "normal");
+  const fecha = new Date().toLocaleDateString("es-AR", {
+    day: "2-digit", month: "long", year: "numeric"
+  });
+  doc.text(`Exportado el ${fecha}  ·  ${reportes.length} reportes`, 14, 24);
 
-  REPORTES_ORIGINALES.forEach((r,i) => {
-    doc.text(`${i+1}. ${r.tipo}`, 20, y);
-    doc.text(`Estado: ${r.estado}`, 20, y+6);
-    y += 16;
-    if (y > 280) { doc.addPage(); y = 20; }
+  // ── Encabezados de columna ───────────────────────────
+  let y = 44;
+
+  doc.setFillColor(240, 244, 255);
+  doc.rect(10, y - 6, pageW - 20, 10, "F");
+
+  doc.setTextColor(30, 64, 175);
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "bold");
+  doc.text("#",     14, y);
+  doc.text("TIPO",  30, y);
+  doc.text("ZONA",  90, y);
+  doc.text("ESTADO",130, y);
+  doc.text("PRIORIDAD", 165, y);
+  doc.text("FECHA",  190, y);
+
+  y += 8;
+
+  // ── Filas ────────────────────────────────────────────
+  reportes.forEach((r, i) => {
+
+    if (y > pageH - 20) {
+      doc.addPage();
+
+      // Encabezado en página nueva
+      doc.setFillColor(13, 110, 253);
+      doc.rect(0, 0, pageW, 18, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "bold");
+      doc.text("CityRepair — Panel EDET", 14, 12);
+
+      y = 30;
+
+      doc.setFillColor(240, 244, 255);
+      doc.rect(10, y - 6, pageW - 20, 10, "F");
+      doc.setTextColor(30, 64, 175);
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "bold");
+      doc.text("#",     14, y);
+      doc.text("TIPO",  30, y);
+      doc.text("ZONA",  90, y);
+      doc.text("ESTADO",130, y);
+      doc.text("PRIORIDAD", 165, y);
+      doc.text("FECHA",  190, y);
+      y += 8;
+    }
+
+    // Fila alternada
+    if (i % 2 === 0) {
+      doc.setFillColor(249, 250, 251);
+      doc.rect(10, y - 5, pageW - 20, 9, "F");
+    }
+
+    // Color de estado
+    const estado = (r.estado || "pendiente").toLowerCase();
+    if (estado === "resuelto") doc.setTextColor(22, 163, 74);
+    else if (estado.includes("rev")) doc.setTextColor(217, 119, 6);
+    else doc.setTextColor(59, 130, 246);
+
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "normal");
+
+    doc.setTextColor(100, 116, 139);
+    doc.text(`${i + 1}`, 14, y);
+
+    doc.setTextColor(17, 24, 39);
+    const tipo = (r.tipo || "Sin tipo").slice(0, 22);
+    doc.text(tipo, 30, y);
+
+    const zona = (r.zona || r.ubicacion || "—").slice(0, 20);
+    doc.text(zona, 90, y);
+
+    // Badge estado
+    if (estado === "resuelto") doc.setTextColor(22, 163, 74);
+    else if (estado.includes("rev")) doc.setTextColor(217, 119, 6);
+    else doc.setTextColor(59, 130, 246);
+    doc.setFont("helvetica", "bold");
+    doc.text(estado, 130, y);
+
+    // Prioridad
+    const prioridad = (r.prioridad || "media").toLowerCase();
+    if (prioridad === "alta") doc.setTextColor(220, 38, 38);
+    else if (prioridad === "media") doc.setTextColor(180, 100, 0);
+    else doc.setTextColor(22, 163, 74);
+    doc.text(prioridad, 165, y);
+
+    // Fecha
+    doc.setTextColor(107, 114, 128);
+    doc.setFont("helvetica", "normal");
+    const fechaR = new Date(r.fecha).toLocaleDateString("es-AR");
+    doc.text(fechaR, 190, y);
+
+    y += 10;
   });
 
-  doc.save("reportes-edet.pdf");
+  // ── Pie de página ─────────────────────────────────
+  doc.setFillColor(13, 110, 253);
+  doc.rect(0, pageH - 12, pageW, 12, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "normal");
+  doc.text("CityRepair © 2025 — Documento generado automáticamente", 14, pageH - 4);
+
+  const filtro = filtroResolucion.value;
+  const nombre = filtro === "todos" || !filtro
+    ? "todos"
+    : filtro === "resuelto"
+      ? "resueltos"
+      : "sin_resolver";
+
+  doc.save(`reportes-edet_${nombre}.pdf`);
 });
 
 /* =======================================================
-  LOGOUT
+   LOGOUT
 ======================================================= */
 function cerrarSesion() {
   localStorage.removeItem("cr_auth");
