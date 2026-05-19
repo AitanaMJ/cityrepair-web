@@ -1,8 +1,9 @@
-
 //edet-dashboard.js
 /* =======================================================
    ELEMENTOS
 ======================================================= */
+
+const API = "http://localhost:3000/api";
 
 const contenedor = document.getElementById("edet-reportes-container");
 
@@ -24,20 +25,51 @@ let CHART_ESTADOS = null;
 let CHART_ZONA = null;
 
 /* =======================================================
-   ESCUCHA FIREBASE
+   CARGAR DESDE BACKEND
 ======================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
-  const data = JSON.parse(localStorage.getItem("reportes")) || [];
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const res = await fetch(`${API}/reportes`);
+    const data = await res.json();
 
-  // adaptar estructura si hace falta
-  REPORTES_ORIGINALES = data.map(r => ({
-    ...r,
-    fecha: new Date(r.fecha) // importante
-  }));
+    REPORTES_ORIGINALES = data.map(r => ({
+      ...r,
+      fecha: new Date(r.fecha)
+    }));
 
-  aplicarFiltros();
+    aplicarFiltros();
+  } catch (err) {
+    console.error("Error cargando reportes:", err);
+    contenedor.innerHTML = "<p class='empty-state'>Error cargando reportes</p>";
+  }
 });
+
+/* =======================================================
+   CAMBIAR ESTADO DESDE EL DASHBOARD
+======================================================= */
+
+async function cambiarEstado(id, nuevoEstado) {
+  try {
+    const res = await fetch(`${API}/reportes/${id}/estado`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ estado: nuevoEstado })
+    });
+
+    if (!res.ok) throw new Error("Error actualizando estado");
+
+    // Actualizar localmente sin recargar todo
+    const reporte = REPORTES_ORIGINALES.find(r => r.id == id);
+    if (reporte) reporte.estado = nuevoEstado;
+
+    aplicarFiltros();
+  } catch (err) {
+    alert("Error al cambiar el estado");
+  }
+}
+
+window.cambiarEstado = cambiarEstado;
 
 /* =======================================================
    FILTROS
@@ -77,7 +109,7 @@ function aplicarFiltros() {
 btnAplicarFiltros.addEventListener("click", aplicarFiltros);
 
 /* =======================================================
-   LISTADO MODERNO DE REPORTES
+   LISTADO DE REPORTES
 ======================================================= */
 
 function renderTabla(reportes) {
@@ -90,11 +122,9 @@ function renderTabla(reportes) {
 
   contenedor.innerHTML = `
     <div class="reportes-wrapper">
-
       ${reportes.map(r => {
 
         const fecha = new Date(r.fecha).toLocaleDateString("es-AR");
-
         const estado = (r.estado || "pendiente").toLowerCase();
 
         const estadoClass =
@@ -113,36 +143,33 @@ function renderTabla(reportes) {
               ? "prioridad-media"
               : "prioridad-baja";
 
+        const idCorto = String(r.id).slice(0, 6);
+
         return `
           <div class="reporte-card ${estadoClass}">
-
             <div class="reporte-header">
-              <span class="reporte-id">
-                #${r.id.slice(0,6)}
-              </span>
-
-              <span class="badge ${prioridadClass}">
-                ${prioridad}
-              </span>
+              <span class="reporte-id">#${idCorto}</span>
+              <span class="badge ${prioridadClass}">${prioridad}</span>
             </div>
 
             <div class="reporte-body">
               <h4>${r.tipo || "Sin categoría"}</h4>
-
-              <p class="estado-label">
-                ${estado}
-              </p>
-
-              <p class="fecha-label">
-                ${fecha}
-              </p>
+              <p class="estado-label">${estado}</p>
+              <p class="fecha-label">${fecha}</p>
+              ${r.descripcion ? `<p class="desc-label">${r.descripcion}</p>` : ""}
             </div>
 
+            <div class="reporte-acciones">
+              <select onchange="cambiarEstado(${r.id}, this.value)">
+                <option value="pendiente" ${estado === "pendiente" ? "selected" : ""}>Pendiente</option>
+                <option value="en revision" ${estado === "en revision" ? "selected" : ""}>En revisión</option>
+                <option value="resuelto" ${estado === "resuelto" ? "selected" : ""}>Resuelto</option>
+              </select>
+            </div>
           </div>
         `;
 
       }).join("")}
-
     </div>
   `;
 }
@@ -152,17 +179,10 @@ function renderTabla(reportes) {
 ======================================================= */
 
 function actualizarKPIs(reportes) {
-
   kpiTotal.textContent = reportes.length;
-
-  kpiOk.textContent =
-    reportes.filter(r => r.estado === "resuelto").length;
-
-  kpiReview.textContent =
-    reportes.filter(r => r.estado?.includes("rev")).length;
-
-  kpiHigh.textContent =
-    reportes.filter(r => r.prioridad === "alta").length;
+  kpiOk.textContent = reportes.filter(r => r.estado === "resuelto").length;
+  kpiReview.textContent = reportes.filter(r => r.estado?.includes("rev")).length;
+  kpiHigh.textContent = reportes.filter(r => r.prioridad === "alta").length;
 }
 
 /* =======================================================
@@ -175,19 +195,13 @@ function actualizarCharts(reportes) {
   const zonas = {};
 
   reportes.forEach(r => {
-
     const est = (r.estado || "pendiente").toLowerCase();
-
     if (est === "resuelto") estados.resuelto++;
     else if (est.includes("rev")) estados.revision++;
     else estados.pendiente++;
 
     let zona = (r.ubicacion || "Sin zona").split(",")[0];
-
-    if (zona.length > 20) {
-      zona = zona.slice(0,20) + "...";
-    }
-
+    if (zona.length > 20) zona = zona.slice(0,20) + "...";
     zonas[zona] = (zonas[zona] || 0) + 1;
   });
 
@@ -199,22 +213,11 @@ function actualizarCharts(reportes) {
     data: {
       labels: ["Pendiente","En revisión","Resuelto"],
       datasets: [{
-        data: [
-          estados.pendiente,
-          estados.revision,
-          estados.resuelto
-        ],
-        backgroundColor: [
-          "#3b82f6",
-          "#ec4899",
-          "#f97316"
-        ]
+        data: [estados.pendiente, estados.revision, estados.resuelto],
+        backgroundColor: ["#3b82f6","#ec4899","#f97316"]
       }]
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false
-    }
+    options: { responsive: true, maintainAspectRatio: false }
   });
 
   CHART_ZONA = new Chart(ctxZona, {
@@ -230,14 +233,7 @@ function actualizarCharts(reportes) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      scales: {
-        x: {
-          ticks: {
-            maxRotation: 0,
-            autoSkip: true
-          }
-        }
-      }
+      scales: { x: { ticks: { maxRotation: 0, autoSkip: true } } }
     }
   });
 }
@@ -254,22 +250,15 @@ document.getElementById("btnExportarPDF")
 
   doc.setFontSize(18);
   doc.text("Reporte CityRepair EDET", 20, 20);
-
   doc.setFontSize(12);
 
   let y = 40;
 
   REPORTES_ORIGINALES.forEach((r,i) => {
-
     doc.text(`${i+1}. ${r.tipo}`, 20, y);
     doc.text(`Estado: ${r.estado}`, 20, y+6);
-
     y += 16;
-
-    if (y > 280) {
-      doc.addPage();
-      y = 20;
-    }
+    if (y > 280) { doc.addPage(); y = 20; }
   });
 
   doc.save("reportes-edet.pdf");
