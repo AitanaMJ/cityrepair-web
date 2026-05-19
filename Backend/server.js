@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 /* =========================
-   LOGIN
+  LOGIN
 ========================= */
 app.post("/api/login", (req, res) => {
 
@@ -91,7 +91,7 @@ app.post("/api/reportes", (req, res) => {
 });
 
 /* =========================
-   TODOS LOS REPORTES
+  TODOS LOS REPORTES
 ========================= */
 app.get("/api/reportes", (req, res) => {
 
@@ -111,7 +111,7 @@ app.get("/api/reportes", (req, res) => {
 });
 
 /* =========================
-   MIS REPORTES
+  MIS REPORTES
 ========================= */
 app.get("/api/mis-reportes/:usuario_id", (req, res) => {
 
@@ -185,7 +185,7 @@ app.put("/api/reportes/:id/asignar", (req, res) => {
 });
 
 /* =========================
-   REPORTES POR TÉCNICO
+  REPORTES POR TÉCNICO
 ========================= */
 app.get("/api/reportes/tecnico/:email", (req, res) => {
 
@@ -208,7 +208,7 @@ app.get("/api/reportes/tecnico/:email", (req, res) => {
 });
 
 /* =========================
-   CAMBIAR ESTADO
+  CAMBIAR ESTADO
 ========================= */
 app.put("/api/reportes/:id/estado", (req, res) => {
 
@@ -234,7 +234,60 @@ app.put("/api/reportes/:id/estado", (req, res) => {
 });
 
 /* =========================
-   INICIAR SERVIDOR
+  OBTENER REPORTE POR ID
+========================= */
+app.get("/api/reportes/:id", (req, res) => {
+
+  const { id } = req.params;
+
+  db.query(
+    "SELECT * FROM reportes WHERE id = ?",
+    [id],
+    (err, results) => {
+
+      if (err) {
+        return res.status(500).json({
+          error: "Error obteniendo reporte"
+        });
+      }
+
+      if (results.length === 0) {
+        return res.status(404).json({
+          error: "Reporte no encontrado"
+        });
+      }
+
+      res.json(results[0]);
+    }
+  );
+});
+
+/* =========================
+  EDITAR REPORTE
+========================= */
+app.put("/api/reportes/:id", (req, res) => {
+
+  const { id } = req.params;
+  const { tipo, zona, descripcion } = req.body;
+
+  db.query(
+    "UPDATE reportes SET tipo = ?, zona = ?, descripcion = ? WHERE id = ?",
+    [tipo, zona, descripcion, id],
+    (err) => {
+
+      if (err) {
+        return res.status(500).json({
+          error: "Error actualizando reporte"
+        });
+      }
+
+      res.json({ message: "Reporte actualizado" });
+    }
+  );
+});
+
+/* =========================
+  INICIAR SERVIDOR
 ========================= */
 app.listen(3000, () => {
   console.log("🚀 Servidor en http://localhost:3000");

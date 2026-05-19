@@ -6,7 +6,7 @@ const filtroEstadoSelect = document.getElementById("filtro-estado");
 let reportesUsuario = [];
 
 /* =========================
-  CARGAR REPORTES
+   CARGAR REPORTES
 ========================= */
 async function cargarReportes() {
   try {
@@ -108,14 +108,14 @@ function renderReportes(filtro = "todos") {
 }
 
 /* =========================
-  EDITAR REPORTE
+   EDITAR REPORTE
 ========================= */
 function editarReporte(id) {
   window.location.href = `./editar-reporte.html?id=${id}`;
 }
 
 /* =========================
-  ELIMINAR REPORTE
+   ELIMINAR REPORTE
 ========================= */
 async function eliminarReporte(id) {
   const confirmar = confirm("¿Eliminar este reporte?");
@@ -136,7 +136,7 @@ async function eliminarReporte(id) {
 }
 
 /* =========================
-  EVENTOS
+   EVENTOS
 ========================= */
 document.addEventListener("DOMContentLoaded", cargarReportes);
 
@@ -145,3 +145,6 @@ if (filtroEstadoSelect) {
     renderReportes(e.target.value);
   });
 }
+
+window.eliminarReporte = eliminarReporte;
+window.editarReporte = editarReporte;

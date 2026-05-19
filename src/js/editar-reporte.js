@@ -1,4 +1,4 @@
-// editar-reporte.js (SIN Firebase)
+const API = "http://localhost:3000/api";
 
 const tipoEl = document.getElementById("tipo");
 const zonaEl = document.getElementById("zona");
@@ -6,99 +6,71 @@ const descripcionEl = document.getElementById("descripcion");
 const historialLista = document.getElementById("historial-lista");
 const form = document.getElementById("form-editar");
 
-let reporteId = null;
-
-// Leer ID desde URL o localStorage
 const params = new URLSearchParams(location.search);
-reporteId = params.get("id") || localStorage.getItem("reporteId");
+const reporteId = params.get("id");
 
-if (reporteId) {
-  localStorage.setItem("reporteId", reporteId);
+if (!reporteId) {
+  Swal.fire({ icon: "error", title: "ID de reporte no encontrado" })
+    .then(() => window.location.href = "mis-reportes.html");
 }
 
 /* ---------------------------------------------------
-   Obtener todos los reportes
+   Cargar datos del reporte desde el backend
 --------------------------------------------------- */
-function getReportes() {
-  return JSON.parse(localStorage.getItem("reportes")) || [];
-}
+async function cargarDatos() {
+  try {
+    const res = await fetch(`${API}/reportes/${reporteId}`);
 
-/* ---------------------------------------------------
-   Guardar reportes
---------------------------------------------------- */
-function saveReportes(reportes) {
-  localStorage.setItem("reportes", JSON.stringify(reportes));
-}
+    if (!res.ok) throw new Error("Reporte no encontrado");
 
-/* ---------------------------------------------------
-   Cargar datos del reporte
---------------------------------------------------- */
-function cargarDatos() {
-  if (!reporteId) return;
+    const reporte = await res.json();
 
-  const reportes = getReportes();
-  const reporte = reportes.find(r => r.id === reporteId);
+    tipoEl.value = reporte.tipo || "";
+    zonaEl.value = reporte.zona || "";
+    descripcionEl.value = reporte.descripcion || "";
 
-  if (!reporte) {
-    Swal.fire({
-      icon: "error",
-      title: "Reporte no encontrado"
-    });
-    return;
-  }
+    if (historialLista) {
+      historialLista.innerHTML = `<li>Creado el ${new Date(reporte.fecha).toLocaleString()}</li>`;
+    }
 
-  tipoEl.value = reporte.tipo || "";
-  zonaEl.value = reporte.zona || "";
-  descripcionEl.value = reporte.descripcion || "";
-
-  if (reporte.historial && Array.isArray(reporte.historial)) {
-    historialLista.innerHTML = reporte.historial
-      .map(item => `<li>${item}</li>`)
-      .join("");
+  } catch (error) {
+    Swal.fire({ icon: "error", title: "Reporte no encontrado" })
+      .then(() => window.location.href = "mis-reportes.html");
   }
 }
 
 /* ---------------------------------------------------
-   Guardar cambios
+   Guardar cambios en el backend
 --------------------------------------------------- */
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const reportes = getReportes();
-  const index = reportes.findIndex(r => r.id === reporteId);
-
-  if (index === -1) {
-    Swal.fire({
-      icon: "error",
-      title: "Reporte no encontrado"
+  try {
+    const res = await fetch(`${API}/reportes/${reporteId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tipo: tipoEl.value,
+        zona: zonaEl.value,
+        descripcion: descripcionEl.value,
+      }),
     });
-    return;
+
+    if (!res.ok) throw new Error("Error al guardar");
+
+    Swal.fire({
+      icon: "success",
+      title: "Cambios guardados",
+      text: "El reporte fue actualizado exitosamente",
+      showConfirmButton: false,
+      timer: 2000,
+    }).then(() => {
+      window.location.href = "mis-reportes.html";
+    });
+
+  } catch (error) {
+    Swal.fire({ icon: "error", title: "Error al guardar los cambios" });
   }
-
-  const nuevaModificacion = `Modificado el ${new Date().toLocaleString()}`;
-
-  reportes[index].tipo = tipoEl.value;
-  reportes[index].zona = zonaEl.value;
-  reportes[index].descripcion = descripcionEl.value;
-  reportes[index].ultimaModificacion = new Date().toISOString();
-
-  if (!Array.isArray(reportes[index].historial)) {
-    reportes[index].historial = [];
-  }
-
-  reportes[index].historial.push(nuevaModificacion);
-
-  saveReportes(reportes);
-
-  Swal.fire({
-    icon: "success",
-    title: "Cambios guardados",
-    text: "El reporte fue actualizado exitosamente",
-    showConfirmButton: false,
-    timer: 2000
-  }).then(() => {
-    window.location.href = "mis-reportes.html";
-  });
 });
 
 /* ---------------------------------------------------
