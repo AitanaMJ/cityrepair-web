@@ -175,7 +175,7 @@ function renderTabla(reportes) {
 }
 
 /* =======================================================
-   KPIs
+  KPIs
 ======================================================= */
 
 function actualizarKPIs(reportes) {
@@ -186,7 +186,7 @@ function actualizarKPIs(reportes) {
 }
 
 /* =======================================================
-   CHARTS
+  CHARTS
 ======================================================= */
 
 function actualizarCharts(reportes) {
@@ -239,7 +239,7 @@ function actualizarCharts(reportes) {
 }
 
 /* =======================================================
-   EXPORTAR PDF
+  EXPORTAR PDF
 ======================================================= */
 
 document.getElementById("btnExportarPDF")
@@ -263,3 +263,12 @@ document.getElementById("btnExportarPDF")
 
   doc.save("reportes-edet.pdf");
 });
+
+/* =======================================================
+  LOGOUT
+======================================================= */
+function cerrarSesion() {
+  localStorage.removeItem("cr_auth");
+  window.location.href = "./login.html";
+}
+window.cerrarSesion = cerrarSesion;
