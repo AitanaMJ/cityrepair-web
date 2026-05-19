@@ -201,8 +201,7 @@ function actualizarCharts(reportes) {
     else if (est.includes("rev")) estados.revision++;
     else estados.pendiente++;
 
-    let zona = (r.ubicacion || "Sin zona").split(",")[0];
-    if (zona.length > 20) zona = zona.slice(0,20) + "...";
+    let zona = r.zona || "Sin zona";
     zonas[zona] = (zonas[zona] || 0) + 1;
   });
 
