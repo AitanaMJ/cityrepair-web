@@ -294,10 +294,18 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", () => {
     y += 10;
   });
 
-  doc.setFillColor(13, 110, 253);
-  doc.rect(0, pageH - 12, pageW, 12, "F");
-  doc.setTextColor(255, 255, 255); doc.setFontSize(8); doc.setFont("helvetica", "normal");
-  doc.text("CityRepair © 2025 — Documento generado automáticamente", 14, pageH - 4);
+  // Pie de página con número en TODAS las páginas
+  const totalPaginas = doc.internal.getNumberOfPages();
+  for (let p = 1; p <= totalPaginas; p++) {
+    doc.setPage(p);
+    doc.setFillColor(13, 110, 253);
+    doc.rect(0, pageH - 12, pageW, 12, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "normal");
+    doc.text("CityRepair © 2025 — Documento generado automáticamente", 14, pageH - 4);
+    doc.text(`Página ${p} de ${totalPaginas}`, pageW - 14, pageH - 4, { align: "right" });
+  }
 
   doc.save(`reportes-edet.pdf`);
 });
