@@ -252,3 +252,16 @@ label {
   .edash-title { font-size: 1.5rem; }
   .edet-navbar { padding: 12px 16px; }
 }
+
+/* Botón perfil en navbar */
+.btn-perfil {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem; font-weight: 600;
+  text-decoration: none;
+  background: #f1f5f9; color: #0f172a;
+  border: 1.5px solid #e5e7eb;
+  transition: background 0.15s ease;
+}
+.btn-perfil:hover { background: #e2e8f0; }

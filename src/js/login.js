@@ -74,20 +74,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       console.log("Usuario logueado:", data.user);
 
-      // 🚫 BLOQUEAR ADMINS EN LOGIN NORMAL
+      // ✅ REDIRIGIR ADMINS AL DASHBOARD
       if (data.user.role === "admin") {
-
-        localStorage.removeItem("cr_auth");
-
-        showToast(
-          "Los administradores deben ingresar desde el portal EDET.",
-          "danger",
-          "Acceso denegado"
-        );
-
-        setLoading(false);
-        isSubmitting = false;
-
+        showToast("Inicio de sesión exitoso", "success", "Bienvenido");
+        setTimeout(() => {
+          window.location.href = "edet-dashboard.html";
+        }, TOAST_DURATION);
         return;
       }
 
