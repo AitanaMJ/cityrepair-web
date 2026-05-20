@@ -17,23 +17,18 @@ async function cargarReportes() {
       return;
     }
 
-    console.log("Sesion:", session);
-
     const res = await fetch(`${API}/mis-reportes/${session.id}`);
 
-    if (!res.ok) {
-      throw new Error("Error obteniendo reportes");
-    }
+    if (!res.ok) throw new Error("Error obteniendo reportes");
 
     const data = await res.json();
-
-    console.log("Reportes:", data);
 
     reportesUsuario = data.sort(
       (a, b) => new Date(b.fecha) - new Date(a.fecha)
     );
 
     renderReportes();
+
   } catch (error) {
     console.error("Error cargando reportes:", error);
     contenedor.innerHTML = `<p class="error-msg">Error cargando reportes</p>`;
@@ -41,56 +36,78 @@ async function cargarReportes() {
 }
 
 /* =========================
-  RENDER REPORTES
+   ACTUALIZAR PILLS
+========================= */
+function actualizarPills(lista) {
+  const elPendiente = document.getElementById("resumen-pendiente");
+  const elResuelto  = document.getElementById("resumen-resuelto");
+
+  const pendientes = reportesUsuario.filter(r => (r.estado || "pendiente") === "pendiente").length;
+  const resueltos  = reportesUsuario.filter(r => r.estado === "resuelto").length;
+
+  if (elPendiente) elPendiente.textContent = `Pendientes: ${pendientes}`;
+  if (elResuelto)  elResuelto.textContent  = `Resueltos: ${resueltos}`;
+}
+
+/* =========================
+   RENDER REPORTES
 ========================= */
 function renderReportes(filtro = "todos") {
   contenedor.innerHTML = "";
 
-  const lista =
-    filtro === "todos"
-      ? reportesUsuario
-      : reportesUsuario.filter(
-          (r) => (r.estado || "").toLowerCase() === filtro.toLowerCase()
-        );
+  let lista = reportesUsuario;
+
+  if (filtro !== "todos") {
+    lista = lista.filter(r =>
+      (r.estado || "pendiente").toLowerCase() === filtro.toLowerCase()
+    );
+  }
+
+  actualizarPills(lista);
 
   if (lista.length === 0) {
     contenedor.innerHTML = `<p class="empty-msg">No hay reportes</p>`;
     return;
   }
 
-  lista.forEach((reporte) => {
-    const estado = reporte.estado || "pendiente";
-    const prioridad = reporte.prioridad || "baja";
-    const fecha = new Date(reporte.fecha).toLocaleDateString("es-AR", {
-      day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit"
+  const iconos = {
+    "corte-total": "⚡", "corte-parcial": "🔌",
+    "cable-caido": "🪛", "medidor-quemado": "🔥",
+    "baja-tension": "📉", "poste-danado": "🏚️",
+    "luminaria-publica": "💡", "transformador-riesgo": "⚠️"
+  };
+
+  lista.forEach(reporte => {
+    const estado    = (reporte.estado || "pendiente").toLowerCase();
+    const prioridad = (reporte.prioridad || "baja").toLowerCase();
+    const icono     = iconos[reporte.tipo] || "📋";
+    const fecha     = new Date(reporte.fecha).toLocaleDateString("es-AR", {
+      day: "2-digit", month: "short", year: "numeric",
+      hour: "2-digit", minute: "2-digit"
     });
 
-    const iconos = {
-      "corte-total": "⚡",
-      "corte-parcial": "🔌",
-      "cable-caido": "🪛",
-      "medidor-quemado": "🔥",
-      "baja-tension": "📉",
-      "poste-danado": "🏚️",
-    };
-    const icono = iconos[reporte.tipo] || "📋";
+    const estadoClass = estado === "resuelto" ? "resuelto"
+      : estado.includes("rev") || estado.includes("proceso") ? "en-proceso"
+      : "pendiente";
 
     const div = document.createElement("div");
     div.className = "reporte-card";
+    div.dataset.estado = estado;
+
     div.innerHTML = `
       <div class="reporte-header">
         <div class="reporte-tipo">
           <span class="reporte-icono">${icono}</span>
           ${reporte.tipo}
         </div>
-        <span class="reporte-estado ${estado.replace(" ", "-")}">${estado}</span>
+        <span class="reporte-estado ${estadoClass}">${estado}</span>
       </div>
 
       <p class="reporte-descripcion">${reporte.descripcion}</p>
 
       <div class="reporte-meta">
         <span>📍 ${reporte.ubicacion}</span>
-        <span>🏘️ ${reporte.zona}</span>
+        <span>🏘️ ${reporte.zona || "—"}</span>
         <span>🕐 ${fecha}</span>
         <span class="reporte-prioridad prioridad-${prioridad}">🚨 ${prioridad}</span>
       </div>
@@ -122,15 +139,10 @@ async function eliminarReporte(id) {
   if (!confirmar) return;
 
   try {
-    const res = await fetch(`${API}/reportes/${id}`, {
-      method: "DELETE",
-    });
-
-    if (!res.ok) throw new Error("Error eliminando reporte");
-
+    const res = await fetch(`${API}/reportes/${id}`, { method: "DELETE" });
+    if (!res.ok) throw new Error("Error eliminando");
     cargarReportes();
   } catch (error) {
-    console.error("Error eliminando:", error);
     alert("Error eliminando reporte");
   }
 }
@@ -146,5 +158,5 @@ if (filtroEstadoSelect) {
   });
 }
 
+window.editarReporte   = editarReporte;
 window.eliminarReporte = eliminarReporte;
-window.editarReporte = editarReporte;
