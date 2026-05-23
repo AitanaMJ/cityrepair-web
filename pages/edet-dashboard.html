@@ -55,21 +55,23 @@
   </section>
 
   <!-- FILTROS -->
-  <section class="card" style="margin-top:20px; padding:16px;">
-    <header class="card-head">Filtros Avanzados</header>
+  <section class="filtros-section">
+    <div class="filtros-header">
+      <span class="filtros-title">⚙️ Filtros Avanzados</span>
+    </div>
 
-    <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:end; margin-top:12px;">
+    <div class="filtros-grid">
 
-      <div>
-        <label>Estado de resolución</label>
+      <div class="filtro-item">
+        <label>Estado</label>
         <select id="filtroResolucion" class="select">
           <option value="todos">Todos</option>
-          <option value="resuelto">Solo resueltos</option>
-          <option value="no_resuelto">Solo no resueltos</option>
+          <option value="resuelto">Resueltos</option>
+          <option value="no_resuelto">No resueltos</option>
         </select>
       </div>
 
-      <div>
+      <div class="filtro-item">
         <label>Prioridad</label>
         <select id="filtroPrioridad" class="select">
           <option value="todos">Todas</option>
@@ -79,7 +81,7 @@
         </select>
       </div>
 
-      <div>
+      <div class="filtro-item">
         <label>Tipo de problema</label>
         <select id="filtroTipo" class="select">
           <option value="todos">Todos</option>
@@ -93,7 +95,7 @@
         </select>
       </div>
 
-      <div>
+      <div class="filtro-item">
         <label>Ciudad / Zona</label>
         <select id="filtroZona" class="select">
           <option value="todos">Todas</option>
@@ -118,30 +120,22 @@
         </select>
       </div>
 
-      <div>
+      <div class="filtro-item">
         <label>Fecha desde</label>
         <input type="date" id="fechaDesde" class="select">
       </div>
 
-      <div>
+      <div class="filtro-item">
         <label>Fecha hasta</label>
         <input type="date" id="fechaHasta" class="select">
       </div>
 
-      <div style="display:flex; gap:8px;">
-        <button id="btnAplicarFiltros" class="btn-primary">
-          Aplicar filtros
-        </button>
+    </div>
 
-        <button id="btnLimpiarFiltros" class="btn-secondary">
-          Limpiar filtros
-        </button>
-
-        <button id="btnExportarPDF" class="btn-primary">
-          Exportar PDF
-        </button>
-      </div>
-
+    <div class="filtros-actions">
+      <button id="btnAplicarFiltros" class="btn-primary">🔍 Aplicar filtros</button>
+      <button id="btnLimpiarFiltros" class="btn-secondary">✖ Limpiar</button>
+      <button id="btnExportarPDF" class="btn-export">📄 Exportar PDF</button>
     </div>
   </section>
 

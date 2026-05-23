@@ -265,3 +265,59 @@ label {
   transition: background 0.15s ease;
 }
 .btn-perfil:hover { background: #e2e8f0; }
+
+/* ── Filtros rediseñados ── */
+.filtros-section {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--stroke);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+.filtros-header {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f3f4f6;
+}
+.filtros-title {
+  font-size: 1rem; font-weight: 700; color: #111827;
+}
+.filtros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.filtro-item label {
+  display: block; font-size: 0.72rem; font-weight: 600;
+  color: #6b7280; margin-bottom: 5px;
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.filtro-item .select {
+  width: 100%; height: 40px;
+}
+.filtros-actions {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid #f3f4f6;
+}
+.btn-export {
+  height: 40px; padding: 0 18px;
+  background: #6366f1; color: #fff;
+  border: none; border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; transition: background 0.15s;
+}
+.btn-export:hover { background: #4f46e5; }
+
+.btn-excel {
+  height: 40px; padding: 0 18px;
+  background: #16a34a; color: #fff;
+  border: none; border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; transition: background 0.15s;
+}
+.btn-excel:hover { background: #15803d; }

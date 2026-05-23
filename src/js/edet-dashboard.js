@@ -31,9 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     const res  = await fetch(`${API}/reportes`);
     const data = await res.json();
-
     REPORTES_ORIGINALES = data.map(r => ({ ...r, fecha: new Date(r.fecha) }));
-
     aplicarFiltros();
   } catch (err) {
     console.error("Error cargando reportes:", err);
@@ -98,7 +96,6 @@ async function cambiarEstado(id, nuevoEstado) {
       body: JSON.stringify({ estado: nuevoEstado })
     });
     if (!res.ok) throw new Error("Error actualizando estado");
-
     const reporte = REPORTES_ORIGINALES.find(r => r.id == id);
     if (reporte) reporte.estado = nuevoEstado;
     aplicarFiltros();
@@ -124,7 +121,6 @@ function renderTabla(reportes) {
         const prioridad = (r.prioridad || "media").toLowerCase();
         const fecha     = new Date(r.fecha).toLocaleDateString("es-AR");
         const idCorto   = String(r.id).slice(0, 6);
-
         const estadoClass    = estado === "resuelto" ? "estado-ok" : estado.includes("rev") ? "estado-review" : "estado-pendiente";
         const prioridadClass = prioridad === "alta" ? "prioridad-alta" : prioridad === "media" ? "prioridad-media" : "prioridad-baja";
 
@@ -177,7 +173,6 @@ function actualizarCharts(reportes) {
     if (est === "resuelto")       estados.resuelto++;
     else if (est.includes("rev")) estados.revision++;
     else                          estados.pendiente++;
-
     const zona = r.zona || "Sin zona";
     zonas[zona] = (zonas[zona] || 0) + 1;
   });
@@ -205,85 +200,216 @@ function actualizarCharts(reportes) {
 }
 
 /* =======================================================
-   EXPORTAR PDF
+   EXPORTAR PDF (con portada + gráficos + tabla)
 ======================================================= */
-document.getElementById("btnExportarPDF")?.addEventListener("click", () => {
+document.getElementById("btnExportarPDF")?.addEventListener("click", async () => {
   const { jsPDF } = window.jspdf;
-  const doc   = new jsPDF();
+  const doc   = new jsPDF({ orientation: "landscape" });
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();
 
   const reportes = REPORTES_FILTRADOS.length ? REPORTES_FILTRADOS : REPORTES_ORIGINALES;
+  const fechaHoy = new Date().toLocaleDateString("es-AR", {
+    day: "2-digit", month: "long", year: "numeric"
+  });
+
+  // ── PORTADA ──────────────────────────────────────────
+  doc.setFillColor(13, 110, 253);
+  doc.rect(0, 0, pageW, pageH, "F");
+
+  doc.setFillColor(7, 60, 150);
+  doc.rect(0, pageH - 40, pageW, 40, "F");
+
+  doc.setDrawColor(255, 255, 255);
+  doc.setLineWidth(0.3);
+  doc.circle(pageW - 60, 40, 60);
+  doc.circle(pageW - 60, 40, 45);
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(48);
+  doc.setFont("helvetica", "bold");
+  doc.text("⚡", 24, pageH / 2 - 45);
+
+  doc.setFontSize(36);
+  doc.text("CityRepair", 24, pageH / 2 - 10);
+
+  doc.setFontSize(16);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(200, 220, 255);
+  doc.text("Panel de Gestión EDET — Reporte de Incidencias", 24, pageH / 2 + 10);
+
+  doc.setDrawColor(255, 255, 255);
+  doc.setLineWidth(0.5);
+  doc.line(20, pageH / 2 + 20, pageW - 20, pageH / 2 + 20);
+
+  doc.setFontSize(11);
+  doc.setTextColor(255, 255, 255);
+  doc.setFont("helvetica", "normal");
+  doc.text(`Fecha: ${fechaHoy}`, 24, pageH / 2 + 35);
+  doc.text(`Total reportes: ${reportes.length}`, 24, pageH / 2 + 48);
+  doc.text(`Resueltos: ${reportes.filter(r => r.estado === "resuelto").length}`, 24, pageH / 2 + 61);
+  doc.text(`Pendientes: ${reportes.filter(r => (r.estado||"") === "pendiente").length}`, 24, pageH / 2 + 74);
+
+  doc.setFontSize(9);
+  doc.setTextColor(180, 200, 255);
+  doc.text("Documento generado automáticamente por CityRepair © 2025", pageW / 2, pageH - 15, { align: "center" });
+
+  // ── PÁGINA DE GRÁFICOS ───────────────────────────────
+  doc.addPage();
 
   doc.setFillColor(13, 110, 253);
-  doc.rect(0, 0, pageW, 32, "F");
+  doc.rect(0, 0, pageW, 22, "F");
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(18);
+  doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
-  doc.text("CityRepair — Panel EDET", 14, 14);
-  doc.setFontSize(9);
+  doc.text("⚡ CityRepair — Análisis Visual", 14, 14);
+  doc.setFontSize(8);
   doc.setFont("helvetica", "normal");
-  const fecha = new Date().toLocaleDateString("es-AR", { day: "2-digit", month: "long", year: "numeric" });
-  doc.text(`Exportado el ${fecha}  ·  ${reportes.length} reportes`, 14, 24);
+  doc.text(`${reportes.length} reportes`, pageW - 14, 14, { align: "right" });
 
-  let y = 44;
+  doc.setTextColor(17, 24, 39);
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "bold");
+  doc.text("Estado de Reportes", 14, 35);
+
+  const canvasEstado = document.getElementById("chartStatus");
+  if (canvasEstado) {
+    doc.addImage(canvasEstado.toDataURL("image/png"), "PNG", 14, 40, 120, 90);
+  }
+
+  doc.setFontSize(11);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(17, 24, 39);
+  doc.text("Reportes por Zona", 148, 35);
+
+  const canvasZona = document.getElementById("chartZones");
+  if (canvasZona) {
+    doc.addImage(canvasZona.toDataURL("image/png"), "PNG", 148, 40, 130, 90);
+  }
+
+  // Mini resumen debajo
+  const resY = 145;
   doc.setFillColor(240, 244, 255);
-  doc.rect(10, y - 6, pageW - 20, 10, "F");
+  doc.rect(14, resY, pageW - 28, 9, "F");
   doc.setTextColor(30, 64, 175);
   doc.setFontSize(8);
   doc.setFont("helvetica", "bold");
-  doc.text("#", 14, y); doc.text("TIPO", 30, y); doc.text("ZONA", 90, y);
-  doc.text("ESTADO", 130, y); doc.text("PRIORIDAD", 165, y); doc.text("FECHA", 190, y);
+  doc.text("RESUMEN", 18, resY + 6);
+
+  const items = [
+    ["Total", reportes.length],
+    ["Resueltos", reportes.filter(r => r.estado === "resuelto").length],
+    ["Pendientes", reportes.filter(r => (r.estado||"") === "pendiente").length],
+    ["Alta prioridad", reportes.filter(r => (r.prioridad||"").toLowerCase() === "alta").length],
+  ];
+  let rx = 55;
+  items.forEach(([label, val]) => {
+    doc.setTextColor(107, 114, 128);
+    doc.setFont("helvetica", "normal");
+    doc.text(label + ":", rx, resY + 6);
+    doc.setTextColor(17, 24, 39);
+    doc.setFont("helvetica", "bold");
+    doc.text(String(val), rx + 26, resY + 6);
+    rx += 50;
+  });
+
+  doc.setFillColor(13, 110, 253);
+  doc.rect(0, pageH - 12, pageW, 12, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "normal");
+  doc.text("CityRepair © 2025", 14, pageH - 4);
+  doc.text("Página 1 de " + Math.ceil(reportes.length / 25 + 1), pageW - 14, pageH - 4, { align: "right" });
+
+  // ── PÁGINAS DE DATOS ─────────────────────────────────
+  doc.addPage();
+
+  const drawHeader = () => {
+    doc.setFillColor(13, 110, 253);
+    doc.rect(0, 0, pageW, 22, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "bold");
+    doc.text("⚡ CityRepair — Listado de Reportes", 14, 14);
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Exportado el ${fechaHoy}`, pageW - 14, 14, { align: "right" });
+  };
+
+  const drawColHeaders = (y) => {
+    doc.setFillColor(240, 244, 255);
+    doc.rect(10, y - 6, pageW - 20, 10, "F");
+    doc.setTextColor(30, 64, 175);
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "bold");
+    doc.text("#",         14, y);
+    doc.text("TIPO",      30, y);
+    doc.text("ZONA",      90, y);
+    doc.text("ESTADO",   155, y);
+    doc.text("PRIORIDAD",195, y);
+    doc.text("FECHA",    240, y);
+  };
+
+  drawHeader();
+  let y = 38;
+  drawColHeaders(y);
   y += 8;
 
   reportes.forEach((r, i) => {
     if (y > pageH - 20) {
-      doc.addPage();
+      const p = doc.internal.getCurrentPageInfo().pageNumber;
       doc.setFillColor(13, 110, 253);
-      doc.rect(0, 0, pageW, 18, "F");
+      doc.rect(0, pageH - 12, pageW, 12, "F");
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "bold");
-      doc.text("CityRepair — Panel EDET", 14, 12);
-      y = 30;
-      doc.setFillColor(240, 244, 255);
-      doc.rect(10, y - 6, pageW - 20, 10, "F");
-      doc.setTextColor(30, 64, 175);
       doc.setFontSize(8);
-      doc.setFont("helvetica", "bold");
-      doc.text("#", 14, y); doc.text("TIPO", 30, y); doc.text("ZONA", 90, y);
-      doc.text("ESTADO", 130, y); doc.text("PRIORIDAD", 165, y); doc.text("FECHA", 190, y);
+      doc.setFont("helvetica", "normal");
+      doc.text("CityRepair © 2025", 14, pageH - 4);
+      doc.text(`Página ${p - 1}`, pageW - 14, pageH - 4, { align: "right" });
+
+      doc.addPage();
+      drawHeader();
+      y = 38;
+      drawColHeaders(y);
       y += 8;
     }
 
-    if (i % 2 === 0) { doc.setFillColor(249, 250, 251); doc.rect(10, y - 5, pageW - 20, 9, "F"); }
+    if (i % 2 === 0) {
+      doc.setFillColor(249, 250, 251);
+      doc.rect(10, y - 5, pageW - 20, 9, "F");
+    }
 
-    const estado    = (r.estado    || "pendiente").toLowerCase();
-    const prioridad = (r.prioridad || "media").toLowerCase();
+    const estado    = (r.estado    || "PENDIENTE").toUpperCase();
+    const prioridad = (r.prioridad || "MEDIA").toUpperCase();
 
     doc.setFontSize(8); doc.setFont("helvetica", "normal");
-    doc.setTextColor(100, 116, 139); doc.text(`${i + 1}`, 14, y);
-    doc.setTextColor(17, 24, 39);   doc.text((r.tipo || "Sin tipo").slice(0, 22), 30, y);
-    doc.text((r.zona || "—").slice(0, 20), 90, y);
+    doc.setTextColor(100, 116, 139);
+    doc.text(`${i + 1}`, 14, y);
 
-    if (estado === "resuelto")       doc.setTextColor(22, 163, 74);
-    else if (estado.includes("rev")) doc.setTextColor(217, 119, 6);
-    else                             doc.setTextColor(59, 130, 246);
-    doc.setFont("helvetica", "bold"); doc.text(estado, 130, y);
+    doc.setTextColor(17, 24, 39);
+    doc.text((r.tipo || "Sin tipo").slice(0, 28), 30, y);
+    doc.text((r.zona || "—").slice(0, 28), 90, y);
 
-    if (prioridad === "alta")        doc.setTextColor(220, 38, 38);
-    else if (prioridad === "media")  doc.setTextColor(180, 100, 0);
-    else                             doc.setTextColor(22, 163, 74);
-    doc.text(prioridad, 165, y);
+    if (estado === "RESUELTO")           doc.setTextColor(22, 163, 74);
+    else if (estado.includes("REV"))     doc.setTextColor(217, 119, 6);
+    else                                 doc.setTextColor(59, 130, 246);
+    doc.setFont("helvetica", "bold");
+    doc.text(estado, 155, y);
 
-    doc.setTextColor(107, 114, 128); doc.setFont("helvetica", "normal");
-    doc.text(new Date(r.fecha).toLocaleDateString("es-AR"), 190, y);
+    if (prioridad === "ALTA")            doc.setTextColor(220, 38, 38);
+    else if (prioridad === "MEDIA")      doc.setTextColor(180, 100, 0);
+    else                                 doc.setTextColor(22, 163, 74);
+    doc.text(prioridad, 195, y);
+
+    doc.setTextColor(107, 114, 128);
+    doc.setFont("helvetica", "normal");
+    doc.text(new Date(r.fecha).toLocaleDateString("es-AR"), 240, y);
+
     y += 10;
   });
 
-  // Pie de página con número en TODAS las páginas
-  const totalPaginas = doc.internal.getNumberOfPages();
-  for (let p = 1; p <= totalPaginas; p++) {
+  // Pie en todas las páginas de datos
+  const totalPages = doc.internal.getNumberOfPages();
+  for (let p = 3; p <= totalPages; p++) {
     doc.setPage(p);
     doc.setFillColor(13, 110, 253);
     doc.rect(0, pageH - 12, pageW, 12, "F");
@@ -291,10 +417,10 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", () => {
     doc.setFontSize(8);
     doc.setFont("helvetica", "normal");
     doc.text("CityRepair © 2025 — Documento generado automáticamente", 14, pageH - 4);
-    doc.text(`Página ${p} de ${totalPaginas}`, pageW - 14, pageH - 4, { align: "right" });
+    doc.text(`Página ${p - 1} de ${totalPages - 1}`, pageW - 14, pageH - 4, { align: "right" });
   }
 
-  doc.save(`reportes-edet.pdf`);
+  doc.save("reportes-edet.pdf");
 });
 
 /* =======================================================
