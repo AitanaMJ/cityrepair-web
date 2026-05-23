@@ -34,19 +34,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     REPORTES_ORIGINALES = data.map(r => ({ ...r, fecha: new Date(r.fecha) }));
 
-    // Poblar select de zona dinámicamente con las zonas reales
-    if (filtroZona) {
-      const zonas = [...new Set(
-        REPORTES_ORIGINALES.map(r => r.zona).filter(Boolean)
-      )].sort();
-      zonas.forEach(z => {
-        const opt = document.createElement("option");
-        opt.value = z;
-        opt.textContent = z;
-        filtroZona.appendChild(opt);
-      });
-    }
-
     aplicarFiltros();
   } catch (err) {
     console.error("Error cargando reportes:", err);
