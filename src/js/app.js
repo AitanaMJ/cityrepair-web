@@ -274,39 +274,7 @@ import { getAuth, getRole, isLoggedIn, logout } from "./auth.js";
 
   if (mapEl) initMap();
 
-  // =====================================================================
-  //                     Envío del formulario de Reporte
-  // =====================================================================
-  document.addEventListener("DOMContentLoaded", () => {
-    const formDom = document.getElementById("form-reporte");
-    if (!formDom) return;
-
-    formDom.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      if (getRole() !== "citizen") {
-        redirectToLogin("/pages/reportar.html");
-        return;
-      }
-
-      const tipoProblemaEl = document.querySelector("#tipo");
-      const direccionEl    = document.querySelector("#direccion");
-      const descripcionEl  = document.querySelector("#descripcion");
-
-      const tipoProblema = tipoProblemaEl ? tipoProblemaEl.value.trim() : "";
-      const direccion    = direccionEl ? direccionEl.value.trim() : "";
-      const descripcion  = descripcionEl ? descripcionEl.value.trim() : "";
-
-      if (!tipoProblema) { mostrarAlerta("Por favor selecciona un tipo de problema", "danger"); return; }
-      if (!direccion)    { mostrarAlerta("Por favor ingresa una dirección o usa tu ubicación", "danger"); return; }
-      if (!descripcion)  { mostrarAlerta("Por favor describe el problema", "danger"); return; }
-
-      mostrarAlerta("✅ Reporte enviado con éxito", "success");
-      formDom.reset();
-
-      window.location.href = "/pages/mis-reportes.html";
-    });
-  });
+  // Envío del formulario manejado por reportar.js
 
   // =====================================================================
   //                            DRAWER LATERAL
