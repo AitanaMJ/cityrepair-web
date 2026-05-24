@@ -11,26 +11,17 @@ let reportesUsuario = [];
 async function cargarReportes() {
   try {
     const session = JSON.parse(localStorage.getItem("cr_auth"));
-
-    if (!session) {
-      window.location.href = "./login.html";
-      return;
-    }
+    if (!session) { window.location.href = "./login.html"; return; }
 
     const res = await fetch(`${API}/mis-reportes/${session.id}`);
-
     if (!res.ok) throw new Error("Error obteniendo reportes");
 
     const data = await res.json();
-
-    reportesUsuario = data.sort(
-      (a, b) => new Date(b.fecha) - new Date(a.fecha)
-    );
+    reportesUsuario = data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
     renderReportes();
-
-  } catch (error) {
-    console.error("Error cargando reportes:", error);
+  } catch (err) {
+    console.error("Error:", err);
     contenedor.innerHTML = `<p class="error-msg">Error cargando reportes</p>`;
   }
 }
@@ -38,15 +29,14 @@ async function cargarReportes() {
 /* =========================
    ACTUALIZAR PILLS
 ========================= */
-function actualizarPills(lista) {
+function actualizarPills() {
   const elPendiente = document.getElementById("resumen-pendiente");
+  const elRevision  = document.getElementById("resumen-enproceso");
   const elResuelto  = document.getElementById("resumen-resuelto");
 
-  const pendientes = reportesUsuario.filter(r => (r.estado || "pendiente") === "pendiente").length;
-  const resueltos  = reportesUsuario.filter(r => r.estado === "resuelto").length;
-
-  if (elPendiente) elPendiente.textContent = `Pendientes: ${pendientes}`;
-  if (elResuelto)  elResuelto.textContent  = `Resueltos: ${resueltos}`;
+  if (elPendiente) elPendiente.textContent = "Pendientes: "  + reportesUsuario.filter(r => (r.estado || "pendiente") === "pendiente").length;
+  if (elRevision)  elRevision.textContent  = "En revisión: " + reportesUsuario.filter(r => (r.estado || "").toLowerCase().includes("rev")).length;
+  if (elResuelto)  elResuelto.textContent  = "Resueltos: "   + reportesUsuario.filter(r => r.estado === "resuelto").length;
 }
 
 /* =========================
@@ -55,15 +45,17 @@ function actualizarPills(lista) {
 function renderReportes(filtro = "todos") {
   contenedor.innerHTML = "";
 
+  actualizarPills();
+
   let lista = reportesUsuario;
 
   if (filtro !== "todos") {
-    lista = lista.filter(r =>
-      (r.estado || "pendiente").toLowerCase() === filtro.toLowerCase()
-    );
+    lista = lista.filter(r => {
+      const est = (r.estado || "pendiente").toLowerCase();
+      if (filtro === "en revision") return est.includes("rev");
+      return est === filtro;
+    });
   }
-
-  actualizarPills(lista);
 
   if (lista.length === 0) {
     contenedor.innerHTML = `<p class="empty-msg">No hay reportes</p>`;
@@ -87,7 +79,7 @@ function renderReportes(filtro = "todos") {
     });
 
     const estadoClass = estado === "resuelto" ? "resuelto"
-      : estado.includes("rev") || estado.includes("proceso") ? "en-proceso"
+      : estado.includes("rev") ? "en-proceso"
       : "pendiente";
 
     const div = document.createElement("div");
@@ -135,14 +127,12 @@ function editarReporte(id) {
    ELIMINAR REPORTE
 ========================= */
 async function eliminarReporte(id) {
-  const confirmar = confirm("¿Eliminar este reporte?");
-  if (!confirmar) return;
-
+  if (!confirm("¿Eliminar este reporte?")) return;
   try {
     const res = await fetch(`${API}/reportes/${id}`, { method: "DELETE" });
     if (!res.ok) throw new Error("Error eliminando");
     cargarReportes();
-  } catch (error) {
+  } catch (err) {
     alert("Error eliminando reporte");
   }
 }
@@ -152,11 +142,9 @@ async function eliminarReporte(id) {
 ========================= */
 document.addEventListener("DOMContentLoaded", cargarReportes);
 
-if (filtroEstadoSelect) {
-  filtroEstadoSelect.addEventListener("change", (e) => {
-    renderReportes(e.target.value);
-  });
-}
+filtroEstadoSelect?.addEventListener("change", (e) => {
+  renderReportes(e.target.value);
+});
 
 window.editarReporte   = editarReporte;
 window.eliminarReporte = eliminarReporte;
