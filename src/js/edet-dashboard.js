@@ -1,3 +1,5 @@
+const LOGO_B64 = "data:image/png;base64,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";
+
 const API = "http://localhost:3000/api";
 
 /* =======================================================
@@ -225,13 +227,13 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", async () =>
   doc.circle(pageW - 60, 40, 60);
   doc.circle(pageW - 60, 40, 45);
 
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(48);
-  doc.setFont("helvetica", "bold");
-  doc.text("⚡", 24, pageH / 2 - 45);
+  // Logo del proyecto
+  doc.addImage(LOGO_B64, "PNG", 24, pageH / 2 - 60, 20, 20);
 
+  doc.setTextColor(255, 255, 255);
   doc.setFontSize(36);
-  doc.text("CityRepair", 24, pageH / 2 - 10);
+  doc.setFont("helvetica", "bold");
+  doc.text("CityRepair", 48, pageH / 2 - 45);
 
   doc.setFontSize(16);
   doc.setFont("helvetica", "normal");
@@ -262,7 +264,8 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", async () =>
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
-  doc.text("⚡ CityRepair — Análisis Visual", 14, 14);
+  doc.addImage(LOGO_B64, "PNG", 14, 4, 12, 12);
+  doc.text("CityRepair — Análisis Visual", 29, 14);
   doc.setFontSize(8);
   doc.setFont("helvetica", "normal");
   doc.text(`${reportes.length} reportes`, pageW - 14, 14, { align: "right" });
@@ -330,7 +333,8 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", async () =>
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(11);
     doc.setFont("helvetica", "bold");
-    doc.text("⚡ CityRepair — Listado de Reportes", 14, 14);
+    doc.addImage(LOGO_B64, "PNG", 14, 4, 12, 12);
+  doc.text("CityRepair — Listado de Reportes", 29, 14);
     doc.setFontSize(8);
     doc.setFont("helvetica", "normal");
     doc.text(`Exportado el ${fechaHoy}`, pageW - 14, 14, { align: "right" });
