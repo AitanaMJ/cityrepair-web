@@ -136,25 +136,32 @@
 
     <div class="filtros-actions">
       <button id="btnAplicarFiltros" class="btn-primary">🔍 Aplicar filtros</button>
-      <button id="btnLimpiarFiltros" class="btn-secondary">✖ Limpiar Filtros</button>
-      <button id="btnExportarPDF" class="btn-export">📄 Exportar Reportes</button>
+      <button id="btnLimpiarFiltros" class="btn-secondary">✖ Limpiar</button>
+      <button id="btnExportarPDF" class="btn-export">📄 Exportar PDF</button>
     </div>
   </section>
 
-  <!-- GRÁFICOS -->
+  <!-- GRÁFICOS fila 1 -->
   <section class="edash-charts">
     <article class="card">
       <header class="card-head">Estado de Reportes</header>
-      <div class="chart-wrapper">
-        <canvas id="chartStatus"></canvas>
-      </div>
+      <div class="chart-wrapper"><canvas id="chartStatus"></canvas></div>
     </article>
-
     <article class="card">
       <header class="card-head">Reportes por Zona</header>
-      <div class="chart-wrapper">
-        <canvas id="chartZones"></canvas>
-      </div>
+      <div class="chart-wrapper"><canvas id="chartZones"></canvas></div>
+    </article>
+  </section>
+
+  <!-- GRÁFICOS fila 2 -->
+  <section class="edash-charts">
+    <article class="card">
+      <header class="card-head">Tipos de Problema</header>
+      <div class="chart-wrapper"><canvas id="chartTipos"></canvas></div>
+    </article>
+    <article class="card">
+      <header class="card-head">Reportes por Prioridad</header>
+      <div class="chart-wrapper"><canvas id="chartPrioridad"></canvas></div>
     </article>
   </section>
 
@@ -164,6 +171,7 @@
     <div id="edet-reportes-container">
       <p style="padding:12px;">Cargando reportes...</p>
     </div>
+    <div id="paginado-container" class="paginado"></div>
   </section>
 
 </main>

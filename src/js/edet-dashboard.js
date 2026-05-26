@@ -1,11 +1,12 @@
-const LOGO_B64 = "data:image/png;base64,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";
-
+const LOGO_B64 = "data:image/png;base64,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"; // se reemplazará con el logo real
 const API = "http://localhost:3000/api";
+const POR_PAGINA = 10;
 
 /* =======================================================
    ELEMENTOS
 ======================================================= */
 const contenedor        = document.getElementById("edet-reportes-container");
+const paginadoEl        = document.getElementById("paginado-container");
 const kpiTotal          = document.getElementById("kpiTotal");
 const kpiOk             = document.getElementById("kpiOk");
 const kpiReview         = document.getElementById("kpiReview");
@@ -20,11 +21,16 @@ const btnAplicarFiltros = document.getElementById("btnAplicarFiltros");
 const btnLimpiarFiltros = document.getElementById("btnLimpiarFiltros");
 const ctxEstado         = document.getElementById("chartStatus");
 const ctxZona           = document.getElementById("chartZones");
+const ctxTipos          = document.getElementById("chartTipos");
+const ctxPrioridad      = document.getElementById("chartPrioridad");
 
 let REPORTES_ORIGINALES = [];
 let REPORTES_FILTRADOS  = [];
 let CHART_ESTADOS       = null;
 let CHART_ZONA          = null;
+let CHART_TIPOS         = null;
+let CHART_PRIORIDAD     = null;
+let paginaActual        = 1;
 
 /* =======================================================
    CARGAR DESDE BACKEND
@@ -54,25 +60,19 @@ function aplicarFiltros() {
   const desde      = fechaDesde?.value       || "";
   const hasta      = fechaHasta?.value       || "";
 
-  if (resolucion === "resuelto")
-    filtrados = filtrados.filter(r => r.estado === "resuelto");
-  if (resolucion === "no_resuelto")
-    filtrados = filtrados.filter(r => r.estado !== "resuelto");
-  if (prioridad !== "todos")
-    filtrados = filtrados.filter(r => (r.prioridad || "").toLowerCase() === prioridad);
-  if (tipo !== "todos")
-    filtrados = filtrados.filter(r => (r.tipo || "").toLowerCase() === tipo);
-  if (zona !== "todos")
-    filtrados = filtrados.filter(r => (r.zona || "") === zona);
-  if (desde)
-    filtrados = filtrados.filter(r => new Date(r.fecha) >= new Date(desde));
-  if (hasta)
-    filtrados = filtrados.filter(r => new Date(r.fecha) <= new Date(hasta));
+  if (resolucion === "resuelto")     filtrados = filtrados.filter(r => r.estado === "resuelto");
+  if (resolucion === "no_resuelto")  filtrados = filtrados.filter(r => r.estado !== "resuelto");
+  if (prioridad !== "todos")         filtrados = filtrados.filter(r => (r.prioridad || "").toLowerCase() === prioridad);
+  if (tipo !== "todos")              filtrados = filtrados.filter(r => (r.tipo || "").toLowerCase() === tipo);
+  if (zona !== "todos")              filtrados = filtrados.filter(r => (r.zona || "") === zona);
+  if (desde) filtrados = filtrados.filter(r => new Date(r.fecha) >= new Date(desde));
+  if (hasta) filtrados = filtrados.filter(r => new Date(r.fecha) <= new Date(hasta));
 
   REPORTES_FILTRADOS = filtrados;
-  renderTabla(filtrados);
+  paginaActual = 1;
   actualizarKPIs(filtrados);
   actualizarCharts(filtrados);
+  renderPagina();
 }
 
 btnAplicarFiltros?.addEventListener("click", aplicarFiltros);
@@ -86,6 +86,56 @@ btnLimpiarFiltros?.addEventListener("click", () => {
   if (fechaHasta)       fechaHasta.value        = "";
   aplicarFiltros();
 });
+
+/* =======================================================
+   PAGINADO
+======================================================= */
+function renderPagina() {
+  const total  = REPORTES_FILTRADOS.length;
+  const inicio = (paginaActual - 1) * POR_PAGINA;
+  const fin    = inicio + POR_PAGINA;
+  const pagina = REPORTES_FILTRADOS.slice(inicio, fin);
+
+  renderTabla(pagina);
+  renderPaginado(total);
+}
+
+function renderPaginado(total) {
+  if (!paginadoEl) return;
+  const totalPaginas = Math.ceil(total / POR_PAGINA);
+  if (totalPaginas <= 1) { paginadoEl.innerHTML = ""; return; }
+
+  let html = "";
+
+  // Botón Anterior
+  html += `<button class="prev-next" onclick="irPagina(${paginaActual - 1})" ${paginaActual === 1 ? "disabled" : ""}>← Anterior</button>`;
+
+  // Números de página
+  for (let i = 1; i <= totalPaginas; i++) {
+    if (
+      i === 1 || i === totalPaginas ||
+      (i >= paginaActual - 2 && i <= paginaActual + 2)
+    ) {
+      html += `<button class="${i === paginaActual ? "activa" : ""}" onclick="irPagina(${i})">${i}</button>`;
+    } else if (i === paginaActual - 3 || i === paginaActual + 3) {
+      html += `<button disabled>...</button>`;
+    }
+  }
+
+  // Botón Siguiente
+  html += `<button class="prev-next" onclick="irPagina(${paginaActual + 1})" ${paginaActual === totalPaginas ? "disabled" : ""}>Siguiente →</button>`;
+
+  paginadoEl.innerHTML = html;
+}
+
+function irPagina(n) {
+  const totalPaginas = Math.ceil(REPORTES_FILTRADOS.length / POR_PAGINA);
+  if (n < 1 || n > totalPaginas) return;
+  paginaActual = n;
+  renderPagina();
+  document.querySelector(".card:last-of-type")?.scrollIntoView({ behavior: "smooth" });
+}
+window.irPagina = irPagina;
 
 /* =======================================================
    CAMBIAR ESTADO
@@ -125,7 +175,6 @@ function renderTabla(reportes) {
         const idCorto   = String(r.id).slice(0, 6);
         const estadoClass    = estado === "resuelto" ? "estado-ok" : estado.includes("rev") ? "estado-review" : "estado-pendiente";
         const prioridadClass = prioridad === "alta" ? "prioridad-alta" : prioridad === "media" ? "prioridad-media" : "prioridad-baja";
-
         return `
           <div class="reporte-card ${estadoClass}">
             <div class="reporte-header">
@@ -167,20 +216,42 @@ function actualizarKPIs(reportes) {
    CHARTS
 ======================================================= */
 function actualizarCharts(reportes) {
+  // ── Estado ──
   const estados = { pendiente: 0, revision: 0, resuelto: 0 };
-  const zonas   = {};
-
   reportes.forEach(r => {
     const est = (r.estado || "pendiente").toLowerCase();
     if (est === "resuelto")       estados.resuelto++;
     else if (est.includes("rev")) estados.revision++;
     else                          estados.pendiente++;
+  });
+
+  // ── Zonas ──
+  const zonas = {};
+  reportes.forEach(r => {
     const zona = r.zona || "Sin zona";
     zonas[zona] = (zonas[zona] || 0) + 1;
   });
 
-  if (CHART_ESTADOS) CHART_ESTADOS.destroy();
-  if (CHART_ZONA)    CHART_ZONA.destroy();
+  // ── Tipos ──
+  const tipos = {};
+  reportes.forEach(r => {
+    const tipo = r.tipo || "otros";
+    tipos[tipo] = (tipos[tipo] || 0) + 1;
+  });
+
+  // ── Prioridades ──
+  const prioridades = { alta: 0, media: 0, baja: 0 };
+  reportes.forEach(r => {
+    const p = (r.prioridad || "media").toLowerCase();
+    if (p === "alta")      prioridades.alta++;
+    else if (p === "baja") prioridades.baja++;
+    else                   prioridades.media++;
+  });
+
+  if (CHART_ESTADOS)   CHART_ESTADOS.destroy();
+  if (CHART_ZONA)      CHART_ZONA.destroy();
+  if (CHART_TIPOS)     CHART_TIPOS.destroy();
+  if (CHART_PRIORIDAD) CHART_PRIORIDAD.destroy();
 
   CHART_ESTADOS = new Chart(ctxEstado, {
     type: "doughnut",
@@ -188,7 +259,7 @@ function actualizarCharts(reportes) {
       labels: ["Pendiente", "En revisión", "Resuelto"],
       datasets: [{ data: [estados.pendiente, estados.revision, estados.resuelto], backgroundColor: ["#3b82f6", "#ec4899", "#f97316"] }]
     },
-    options: { responsive: true, maintainAspectRatio: false }
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "top" } } }
   });
 
   CHART_ZONA = new Chart(ctxZona, {
@@ -197,12 +268,33 @@ function actualizarCharts(reportes) {
       labels: Object.keys(zonas),
       datasets: [{ label: "Reportes", data: Object.values(zonas), backgroundColor: "#3b82f6" }]
     },
-    options: { responsive: true, maintainAspectRatio: false }
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+  });
+
+  CHART_TIPOS = new Chart(ctxTipos, {
+    type: "bar",
+    data: {
+      labels: Object.keys(tipos),
+      datasets: [{ label: "Cantidad", data: Object.values(tipos), backgroundColor: "#6366f1" }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: "y",
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  CHART_PRIORIDAD = new Chart(ctxPrioridad, {
+    type: "doughnut",
+    data: {
+      labels: ["Alta", "Media", "Baja"],
+      datasets: [{ data: [prioridades.alta, prioridades.media, prioridades.baja], backgroundColor: ["#dc2626", "#f59e0b", "#16a34a"] }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: "top" } } }
   });
 }
 
 /* =======================================================
-   EXPORTAR PDF (con portada + gráficos + tabla)
+   EXPORTAR PDF
 ======================================================= */
 document.getElementById("btnExportarPDF")?.addEventListener("click", async () => {
   const { jsPDF } = window.jspdf;
@@ -211,94 +303,72 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", async () =>
   const pageH = doc.internal.pageSize.getHeight();
 
   const reportes = REPORTES_FILTRADOS.length ? REPORTES_FILTRADOS : REPORTES_ORIGINALES;
-  const fechaHoy = new Date().toLocaleDateString("es-AR", {
-    day: "2-digit", month: "long", year: "numeric"
-  });
+  const fechaHoy = new Date().toLocaleDateString("es-AR", { day: "2-digit", month: "long", year: "numeric" });
 
-  // ── PORTADA ──────────────────────────────────────────
+  // ── PORTADA ──
   doc.setFillColor(13, 110, 253);
   doc.rect(0, 0, pageW, pageH, "F");
-
   doc.setFillColor(7, 60, 150);
   doc.rect(0, pageH - 40, pageW, 40, "F");
-
   doc.setDrawColor(255, 255, 255);
   doc.setLineWidth(0.3);
   doc.circle(pageW - 60, 40, 60);
   doc.circle(pageW - 60, 40, 45);
 
-  // Logo del proyecto
-  doc.addImage(LOGO_B64, "PNG", 24, pageH / 2 - 60, 20, 20);
-
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(36);
   doc.setFont("helvetica", "bold");
-  doc.text("CityRepair", 48, pageH / 2 - 45);
-
+  doc.text("CityRepair", 24, pageH / 2 - 10);
   doc.setFontSize(16);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(200, 220, 255);
   doc.text("Panel de Gestión EDET — Reporte de Incidencias", 24, pageH / 2 + 10);
-
   doc.setDrawColor(255, 255, 255);
-  doc.setLineWidth(0.5);
   doc.line(20, pageH / 2 + 20, pageW - 20, pageH / 2 + 20);
-
   doc.setFontSize(11);
   doc.setTextColor(255, 255, 255);
-  doc.setFont("helvetica", "normal");
   doc.text(`Fecha: ${fechaHoy}`, 24, pageH / 2 + 35);
   doc.text(`Total reportes: ${reportes.length}`, 24, pageH / 2 + 48);
   doc.text(`Resueltos: ${reportes.filter(r => r.estado === "resuelto").length}`, 24, pageH / 2 + 61);
   doc.text(`Pendientes: ${reportes.filter(r => (r.estado||"") === "pendiente").length}`, 24, pageH / 2 + 74);
-
   doc.setFontSize(9);
   doc.setTextColor(180, 200, 255);
   doc.text("Documento generado automáticamente por CityRepair © 2025", pageW / 2, pageH - 15, { align: "center" });
 
-  // ── PÁGINA DE GRÁFICOS ───────────────────────────────
+  // ── PÁGINA GRÁFICOS ──
   doc.addPage();
-
   doc.setFillColor(13, 110, 253);
   doc.rect(0, 0, pageW, 22, "F");
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.addImage(LOGO_B64, "PNG", 14, 4, 12, 12);
-  doc.text("CityRepair — Análisis Visual", 29, 14);
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11); doc.setFont("helvetica", "bold");
+  doc.text("CityRepair — Análisis Visual", 14, 14);
+  doc.setFontSize(8); doc.setFont("helvetica", "normal");
   doc.text(`${reportes.length} reportes`, pageW - 14, 14, { align: "right" });
 
   doc.setTextColor(17, 24, 39);
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.text("Estado de Reportes", 14, 35);
-
+  doc.setFontSize(10); doc.setFont("helvetica", "bold");
+  doc.text("Estado de Reportes", 14, 32);
   const canvasEstado = document.getElementById("chartStatus");
-  if (canvasEstado) {
-    doc.addImage(canvasEstado.toDataURL("image/png"), "PNG", 14, 40, 120, 90);
-  }
+  if (canvasEstado) doc.addImage(canvasEstado.toDataURL("image/png"), "PNG", 14, 36, 90, 70);
 
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(17, 24, 39);
-  doc.text("Reportes por Zona", 148, 35);
-
+  doc.text("Reportes por Zona", 112, 32);
   const canvasZona = document.getElementById("chartZones");
-  if (canvasZona) {
-    doc.addImage(canvasZona.toDataURL("image/png"), "PNG", 148, 40, 130, 90);
-  }
+  if (canvasZona) doc.addImage(canvasZona.toDataURL("image/png"), "PNG", 112, 36, 90, 70);
 
-  // Mini resumen debajo
-  const resY = 145;
+  doc.text("Tipos de Problema", 14, 115);
+  const canvasTipos = document.getElementById("chartTipos");
+  if (canvasTipos) doc.addImage(canvasTipos.toDataURL("image/png"), "PNG", 14, 119, 90, 70);
+
+  doc.text("Reportes por Prioridad", 112, 115);
+  const canvasPrioridad = document.getElementById("chartPrioridad");
+  if (canvasPrioridad) doc.addImage(canvasPrioridad.toDataURL("image/png"), "PNG", 112, 119, 90, 70);
+
+  // Resumen
+  const resY = 196;
   doc.setFillColor(240, 244, 255);
   doc.rect(14, resY, pageW - 28, 9, "F");
-  doc.setTextColor(30, 64, 175);
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "bold");
+  doc.setTextColor(30, 64, 175); doc.setFontSize(8); doc.setFont("helvetica", "bold");
   doc.text("RESUMEN", 18, resY + 6);
-
   const items = [
     ["Total", reportes.length],
     ["Resueltos", reportes.filter(r => r.estado === "resuelto").length],
@@ -307,51 +377,37 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", async () =>
   ];
   let rx = 55;
   items.forEach(([label, val]) => {
-    doc.setTextColor(107, 114, 128);
-    doc.setFont("helvetica", "normal");
+    doc.setTextColor(107, 114, 128); doc.setFont("helvetica", "normal");
     doc.text(label + ":", rx, resY + 6);
-    doc.setTextColor(17, 24, 39);
-    doc.setFont("helvetica", "bold");
+    doc.setTextColor(17, 24, 39); doc.setFont("helvetica", "bold");
     doc.text(String(val), rx + 26, resY + 6);
     rx += 50;
   });
 
   doc.setFillColor(13, 110, 253);
   doc.rect(0, pageH - 12, pageW, 12, "F");
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "normal");
+  doc.setTextColor(255, 255, 255); doc.setFontSize(8); doc.setFont("helvetica", "normal");
   doc.text("CityRepair © 2025", 14, pageH - 4);
-  doc.text("Página 1 de " + Math.ceil(reportes.length / 25 + 1), pageW - 14, pageH - 4, { align: "right" });
 
-  // ── PÁGINAS DE DATOS ─────────────────────────────────
+  // ── PÁGINAS DATOS ──
   doc.addPage();
 
   const drawHeader = () => {
     doc.setFillColor(13, 110, 253);
     doc.rect(0, 0, pageW, 22, "F");
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "bold");
-    doc.addImage(LOGO_B64, "PNG", 14, 4, 12, 12);
-  doc.text("CityRepair — Listado de Reportes", 29, 14);
-    doc.setFontSize(8);
-    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11); doc.setFont("helvetica", "bold");
+    doc.text("CityRepair — Listado de Reportes", 14, 14);
+    doc.setFontSize(8); doc.setFont("helvetica", "normal");
     doc.text(`Exportado el ${fechaHoy}`, pageW - 14, 14, { align: "right" });
   };
 
   const drawColHeaders = (y) => {
     doc.setFillColor(240, 244, 255);
     doc.rect(10, y - 6, pageW - 20, 10, "F");
-    doc.setTextColor(30, 64, 175);
-    doc.setFontSize(8);
-    doc.setFont("helvetica", "bold");
-    doc.text("#",         14, y);
-    doc.text("TIPO",      30, y);
-    doc.text("ZONA",      90, y);
-    doc.text("ESTADO",   155, y);
-    doc.text("PRIORIDAD",195, y);
-    doc.text("FECHA",    240, y);
+    doc.setTextColor(30, 64, 175); doc.setFontSize(8); doc.setFont("helvetica", "bold");
+    doc.text("#", 14, y); doc.text("TIPO", 30, y); doc.text("ZONA", 90, y);
+    doc.text("ESTADO", 155, y); doc.text("PRIORIDAD", 195, y); doc.text("FECHA", 240, y);
   };
 
   drawHeader();
@@ -361,65 +417,43 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", async () =>
 
   reportes.forEach((r, i) => {
     if (y > pageH - 20) {
-      const p = doc.internal.getCurrentPageInfo().pageNumber;
       doc.setFillColor(13, 110, 253);
       doc.rect(0, pageH - 12, pageW, 12, "F");
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(8);
-      doc.setFont("helvetica", "normal");
+      doc.setTextColor(255, 255, 255); doc.setFontSize(8); doc.setFont("helvetica", "normal");
       doc.text("CityRepair © 2025", 14, pageH - 4);
-      doc.text(`Página ${p - 1}`, pageW - 14, pageH - 4, { align: "right" });
-
-      doc.addPage();
-      drawHeader();
-      y = 38;
-      drawColHeaders(y);
-      y += 8;
+      doc.addPage(); drawHeader(); y = 38; drawColHeaders(y); y += 8;
     }
-
-    if (i % 2 === 0) {
-      doc.setFillColor(249, 250, 251);
-      doc.rect(10, y - 5, pageW - 20, 9, "F");
-    }
+    if (i % 2 === 0) { doc.setFillColor(249, 250, 251); doc.rect(10, y - 5, pageW - 20, 9, "F"); }
 
     const estado    = (r.estado    || "PENDIENTE").toUpperCase();
     const prioridad = (r.prioridad || "MEDIA").toUpperCase();
 
     doc.setFontSize(8); doc.setFont("helvetica", "normal");
-    doc.setTextColor(100, 116, 139);
-    doc.text(`${i + 1}`, 14, y);
-
-    doc.setTextColor(17, 24, 39);
-    doc.text((r.tipo || "Sin tipo").slice(0, 28), 30, y);
+    doc.setTextColor(100, 116, 139); doc.text(`${i + 1}`, 14, y);
+    doc.setTextColor(17, 24, 39); doc.text((r.tipo || "Sin tipo").slice(0, 28), 30, y);
     doc.text((r.zona || "—").slice(0, 28), 90, y);
 
     if (estado === "RESUELTO")           doc.setTextColor(22, 163, 74);
     else if (estado.includes("REV"))     doc.setTextColor(217, 119, 6);
     else                                 doc.setTextColor(59, 130, 246);
-    doc.setFont("helvetica", "bold");
-    doc.text(estado, 155, y);
+    doc.setFont("helvetica", "bold"); doc.text(estado, 155, y);
 
     if (prioridad === "ALTA")            doc.setTextColor(220, 38, 38);
     else if (prioridad === "MEDIA")      doc.setTextColor(180, 100, 0);
     else                                 doc.setTextColor(22, 163, 74);
     doc.text(prioridad, 195, y);
 
-    doc.setTextColor(107, 114, 128);
-    doc.setFont("helvetica", "normal");
+    doc.setTextColor(107, 114, 128); doc.setFont("helvetica", "normal");
     doc.text(new Date(r.fecha).toLocaleDateString("es-AR"), 240, y);
-
     y += 10;
   });
 
-  // Pie en todas las páginas de datos
   const totalPages = doc.internal.getNumberOfPages();
   for (let p = 3; p <= totalPages; p++) {
     doc.setPage(p);
     doc.setFillColor(13, 110, 253);
     doc.rect(0, pageH - 12, pageW, 12, "F");
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(8);
-    doc.setFont("helvetica", "normal");
+    doc.setTextColor(255, 255, 255); doc.setFontSize(8); doc.setFont("helvetica", "normal");
     doc.text("CityRepair © 2025 — Documento generado automáticamente", 14, pageH - 4);
     doc.text(`Página ${p - 1} de ${totalPages - 1}`, pageW - 14, pageH - 4, { align: "right" });
   }

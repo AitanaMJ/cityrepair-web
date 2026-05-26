@@ -321,3 +321,43 @@ label {
   cursor: pointer; transition: background 0.15s;
 }
 .btn-excel:hover { background: #15803d; }
+
+/* ── Paginado estilo Google ── */
+.paginado {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  padding: 20px 0 8px;
+  flex-wrap: wrap;
+}
+.paginado button {
+  min-width: 36px; height: 36px;
+  padding: 0 10px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  color: #0d6efd;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.paginado button:hover { background: #e8f0fe; }
+.paginado button.activa {
+  background: #0d6efd;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 50%;
+}
+.paginado button.prev-next {
+  border-radius: 8px;
+  color: #374151;
+  font-weight: 600;
+}
+.paginado button.prev-next:hover { background: #f3f4f6; }
+.paginado button:disabled {
+  color: #9ca3af;
+  cursor: default;
+  background: transparent;
+}
