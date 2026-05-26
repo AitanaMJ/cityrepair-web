@@ -120,23 +120,24 @@
 
     <!-- Resumen de estados -->
     <div class="myreports-summary">
-      <span class="summary-pill summary-pendiente" id="resumen-pendiente">
-        Pendientes: 0
-      </span>
-      <span class="summary-pill summary-enproceso" id="resumen-enproceso">
-        En revisión: 0
-      </span>
-      <span class="summary-pill summary-resuelto" id="resumen-resuelto">
-        Resueltos: 0
-      </span>
+      <span class="summary-pill summary-pendiente" id="resumen-pendiente">Pendientes: 0</span>
+      <span class="summary-pill summary-enproceso" id="resumen-enproceso">En revisión: 0</span>
+      <span class="summary-pill summary-resuelto" id="resumen-resuelto">Resueltos: 0</span>
+    </div>
+
+    <!-- Filtro de fechas -->
+    <div class="myreports-fechas">
+      <label>Desde: <input type="date" id="fecha-desde" class="fecha-input"></label>
+      <label>Hasta: <input type="date" id="fecha-hasta" class="fecha-input"></label>
+      <button id="btn-aplicar-fecha" class="btn-fecha">🔍 Buscar</button>
+      <button id="btn-limpiar-fecha" class="btn-fecha-limpiar">✖ Limpiar Filtros</button>
     </div>
 
     <!-- Lista de reportes -->
-    <div class="row g-4" id="lista-reportes">
-      <div class="col-12">
-        <p class="text-center text-muted mt-5">Cargando reportes...</p>
-      </div>
-    </div>
+    <div id="lista-reportes"></div>
+
+    <!-- Paginado -->
+    <div id="paginado-mis-reportes" class="paginado"></div>
 
     <!-- mensaje cuando no haya reportes -->
     <p id="sin-reportes" class="text-center text-muted mt-5" style="display:none;">

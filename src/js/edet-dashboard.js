@@ -306,9 +306,9 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", async () =>
   const fechaHoy = new Date().toLocaleDateString("es-AR", { day: "2-digit", month: "long", year: "numeric" });
 
   // ── PORTADA ──
-  doc.setFillColor(13, 110, 253);
+  doc.setFillColor(30, 41, 59);
   doc.rect(0, 0, pageW, pageH, "F");
-  doc.setFillColor(7, 60, 150);
+  doc.setFillColor(15, 23, 42);
   doc.rect(0, pageH - 40, pageW, 40, "F");
   doc.setDrawColor(255, 255, 255);
   doc.setLineWidth(0.3);
@@ -340,7 +340,7 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", async () =>
 
   // ── PÁGINA GRÁFICOS ──
   doc.addPage();
-  doc.setFillColor(13, 110, 253);
+  doc.setFillColor(30, 41, 59);
   doc.rect(0, 0, pageW, 22, "F");
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(11); doc.setFont("helvetica", "bold");
@@ -388,7 +388,7 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", async () =>
     rx += 50;
   });
 
-  doc.setFillColor(13, 110, 253);
+  doc.setFillColor(30, 41, 59);
   doc.rect(0, pageH - 12, pageW, 12, "F");
   doc.setTextColor(255, 255, 255); doc.setFontSize(8); doc.setFont("helvetica", "normal");
   doc.text("CityRepair © 2025", 14, pageH - 4);
@@ -397,7 +397,7 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", async () =>
   doc.addPage();
 
   const drawHeader = () => {
-    doc.setFillColor(13, 110, 253);
+    doc.setFillColor(30, 41, 59);
     doc.rect(0, 0, pageW, 22, "F");
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(11); doc.setFont("helvetica", "bold");
@@ -422,7 +422,7 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", async () =>
 
   reportes.forEach((r, i) => {
     if (y > pageH - 20) {
-      doc.setFillColor(13, 110, 253);
+      doc.setFillColor(30, 41, 59);
       doc.rect(0, pageH - 12, pageW, 12, "F");
       doc.setTextColor(255, 255, 255); doc.setFontSize(8); doc.setFont("helvetica", "normal");
       doc.text("CityRepair © 2025", 14, pageH - 4);
@@ -456,7 +456,7 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", async () =>
   const totalPages = doc.internal.getNumberOfPages();
   for (let p = 3; p <= totalPages; p++) {
     doc.setPage(p);
-    doc.setFillColor(13, 110, 253);
+    doc.setFillColor(30, 41, 59);
     doc.rect(0, pageH - 12, pageW, 12, "F");
     doc.setTextColor(255, 255, 255); doc.setFontSize(8); doc.setFont("helvetica", "normal");
     doc.text("CityRepair © 2025 — Documento generado automáticamente", 14, pageH - 4);
