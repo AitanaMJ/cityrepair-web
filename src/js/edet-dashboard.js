@@ -315,10 +315,13 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", async () =>
   doc.circle(pageW - 60, 40, 60);
   doc.circle(pageW - 60, 40, 45);
 
+  // Logo en portada
+  doc.addImage(LOGO_B64, "PNG", 24, pageH / 2 - 60, 20, 20);
+
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(36);
   doc.setFont("helvetica", "bold");
-  doc.text("CityRepair", 24, pageH / 2 - 10);
+  doc.text("CityRepair", 50, pageH / 2 - 45);
   doc.setFontSize(16);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(200, 220, 255);
@@ -341,7 +344,8 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", async () =>
   doc.rect(0, 0, pageW, 22, "F");
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(11); doc.setFont("helvetica", "bold");
-  doc.text("CityRepair — Análisis Visual", 14, 14);
+  doc.addImage(LOGO_B64, "PNG", 14, 5, 12, 12);
+  doc.text("CityRepair — Análisis Visual", 29, 14);
   doc.setFontSize(8); doc.setFont("helvetica", "normal");
   doc.text(`${reportes.length} reportes`, pageW - 14, 14, { align: "right" });
 
@@ -397,7 +401,8 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", async () =>
     doc.rect(0, 0, pageW, 22, "F");
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(11); doc.setFont("helvetica", "bold");
-    doc.text("CityRepair — Listado de Reportes", 14, 14);
+    doc.addImage(LOGO_B64, "PNG", 14, 5, 12, 12);
+  doc.text("CityRepair — Listado de Reportes", 29, 14);
     doc.setFontSize(8); doc.setFont("helvetica", "normal");
     doc.text(`Exportado el ${fechaHoy}`, pageW - 14, 14, { align: "right" });
   };
