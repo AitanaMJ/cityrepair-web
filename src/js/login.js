@@ -74,25 +74,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
       console.log("Usuario logueado:", data.user);
 
-      // ✅ REDIRIGIR ADMINS AL DASHBOARD
-      if (data.user.role === "admin") {
-        showToast("Inicio de sesión exitoso", "success", "Bienvenido");
-        setTimeout(() => {
-          window.location.href = "edet-dashboard.html";
-        }, TOAST_DURATION);
-        return;
-      }
-
       showToast("Inicio de sesión exitoso", "success", "Bienvenido");
 
       const TOAST_DURATION = 4000;
 
       setTimeout(() => setLoading(false), TOAST_DURATION - 300);
 
-      // 🔥 REDIRECCIÓN SEGÚN ROL
+      // ✅ REDIRECCIÓN SEGÚN ROL
       setTimeout(() => {
 
-        if (data.user.role === "tecnico") {
+        if (data.user.role === "admin") {
+          window.location.href = "edet-dashboard.html";
+        } else if (data.user.role === "tecnico") {
           window.location.href = "tecnico-dashboard.html";
         } else {
           window.location.href = "mis-reportes.html";
