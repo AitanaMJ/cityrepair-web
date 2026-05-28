@@ -194,6 +194,7 @@ function renderTabla(reportes) {
                 <option value="en revision" ${estado === "en revision" ? "selected" : ""}>En revisión</option>
                 <option value="resuelto"    ${estado === "resuelto"    ? "selected" : ""}>Resuelto</option>
               </select>
+              <button class="btn-asignar" onclick="abrirModalAsignar(${r.id})">👷 Asignar técnico</button>
             </div>
           </div>
         `;
@@ -465,6 +466,101 @@ document.getElementById("btnExportarPDF")?.addEventListener("click", async () =>
 
   doc.save("reportes-edet.pdf");
 });
+
+/* =======================================================
+   MODAL ASIGNAR TÉCNICO
+======================================================= */
+
+// Crear modal al cargar la página
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.createElement("div");
+  modal.id = "modal-asignar";
+  modal.style.cssText = `
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);
+    z-index:1000; align-items:center; justify-content:center;
+  `;
+  modal.innerHTML = `
+    <div style="background:#fff; border-radius:16px; padding:28px; width:360px; box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+      <h3 style="margin:0 0 16px; font-family:'DM Sans',sans-serif; font-size:1.1rem; color:#111827;">👷 Asignar Técnico</h3>
+      <label style="font-size:0.82rem; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.04em;">Seleccioná un técnico</label>
+      <select id="select-tecnico" style="width:100%; margin-top:6px; margin-bottom:16px; height:40px; padding:0 12px; border-radius:10px; border:1.5px solid #e5e7eb; font-family:'DM Sans',sans-serif; font-size:0.9rem;">
+        <option value="">Cargando técnicos...</option>
+      </select>
+      <div style="display:flex; gap:10px;">
+        <button onclick="confirmarAsignar()" style="flex:1; height:40px; background:#0d6efd; color:#fff; border:none; border-radius:10px; font-family:'DM Sans',sans-serif; font-weight:600; cursor:pointer;">Asignar</button>
+        <button onclick="cerrarModal()" style="flex:1; height:40px; background:#fff; color:#374151; border:1.5px solid #e5e7eb; border-radius:10px; font-family:'DM Sans',sans-serif; font-weight:600; cursor:pointer;">Cancelar</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  cargarTecnicos();
+});
+
+let reporteIdSeleccionado = null;
+
+async function cargarTecnicos() {
+  try {
+    const res  = await fetch(`${API}/tecnicos`);
+    const data = await res.json();
+    const sel  = document.getElementById("select-tecnico");
+    if (!sel) return;
+    if (data.length === 0) {
+      sel.innerHTML = `<option value="">No hay técnicos disponibles</option>`;
+      return;
+    }
+    sel.innerHTML = data.map(t => `<option value="${t.email}">${t.email}</option>`).join("");
+  } catch (err) {
+    console.error("Error cargando técnicos:", err);
+  }
+}
+
+function abrirModalAsignar(reporteId) {
+  reporteIdSeleccionado = reporteId;
+  const modal = document.getElementById("modal-asignar");
+  if (modal) modal.style.display = "flex";
+}
+window.abrirModalAsignar = abrirModalAsignar;
+
+function cerrarModal() {
+  const modal = document.getElementById("modal-asignar");
+  if (modal) modal.style.display = "none";
+  reporteIdSeleccionado = null;
+}
+window.cerrarModal = cerrarModal;
+
+async function confirmarAsignar() {
+  const tecnico = document.getElementById("select-tecnico")?.value;
+  if (!tecnico) { alert("Seleccioná un técnico"); return; }
+
+  try {
+    const res = await fetch(`${API}/reportes/${reporteIdSeleccionado}/asignar`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tecnico_email: tecnico })
+    });
+    if (!res.ok) throw new Error("Error asignando");
+
+    // También cambiar estado a "en revision"
+    await fetch(`${API}/reportes/${reporteIdSeleccionado}/estado`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ estado: "en revision" })
+    });
+
+    const reporte = REPORTES_ORIGINALES.find(r => r.id == reporteIdSeleccionado);
+    if (reporte) {
+      reporte.tecnico_email = tecnico;
+      reporte.estado = "en revision";
+    }
+
+    cerrarModal();
+    aplicarFiltros();
+    alert(`✅ Reporte asignado a ${tecnico}`);
+  } catch (err) {
+    alert("Error al asignar técnico");
+  }
+}
+window.confirmarAsignar = confirmarAsignar;
 
 /* =======================================================
    LOGOUT

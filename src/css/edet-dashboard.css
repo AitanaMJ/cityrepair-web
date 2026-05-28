@@ -361,3 +361,23 @@ label {
   cursor: default;
   background: transparent;
 }
+
+/* Botón asignar técnico */
+.btn-asignar {
+  width: 100%;
+  margin-top: 6px;
+  padding: 7px 0;
+  background: #fff;
+  color: #6366f1;
+  border: 1.5px solid #6366f1;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-asignar:hover {
+  background: #6366f1;
+  color: #fff;
+}
