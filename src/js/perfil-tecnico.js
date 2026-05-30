@@ -1,7 +1,8 @@
-// perfil-tecnico.js
-// ===============================
+// perfil-tecnico.js — Perfil del técnico con stats dinámicos
 
-document.addEventListener("DOMContentLoaded", () => {
+import { API } from "./api.js";
+
+document.addEventListener("DOMContentLoaded", async () => {
   const sessionRaw = localStorage.getItem("cr_auth");
   const session = sessionRaw ? JSON.parse(sessionRaw) : null;
 
@@ -10,54 +11,49 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // ===============================
-  // ELEMENTOS DEL DOM
-  // ===============================
-  const fotoEl = document.getElementById("perfilFoto");
-  const nombreEl = document.getElementById("perfilNombre");
-  const emailEl = document.getElementById("perfilEmail");
-  const uidEl = document.getElementById("perfilUid");
-
-  // ===============================
-  // FUNCIÓN: generar avatar automático
-  // ===============================
-  function generarAvatar(nombreCompleto) {
-    if (!nombreCompleto) return "TD";
-
-    const partes = nombreCompleto.trim().split(" ");
-    let iniciales = partes[0][0];
-
-    if (partes.length > 1) {
-      iniciales += partes[1][0];
-    }
-
-    return iniciales.toUpperCase();
-  }
-
-  // ===============================
-  // DATOS DESDE SESSION
-  // ===============================
   const nombre = session.nombre || session.email.split("@")[0] || "Técnico";
   const correo = session.email || "";
-  const avatar = generarAvatar(nombre);
+  const iniciales = nombre.trim().split(" ").map(p => p[0]).join("").slice(0, 2).toUpperCase();
 
-  // ===============================
-  // PINTAR PERFIL
-  // ===============================
-  if (fotoEl) {
-    fotoEl.src = `https://ui-avatars.com/api/?name=${avatar}&background=2563eb&color=fff&size=256&bold=true`;
+  // --- Pintar datos básicos ---
+  const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+  setEl("perfilNombre",  nombre);
+  setEl("perfilEmail",   correo);
+  setEl("infoNombre",    nombre);
+  setEl("infoEmail",     correo);
+  setEl("infoUid",       session.id || session.uid || "local-user");
+
+  const avatarEl = document.getElementById("perfilAvatar");
+  if (avatarEl) avatarEl.textContent = iniciales;
+
+  // Navbar
+  const navAvatar = document.querySelector("[data-user-avatar]");
+  const navName   = document.querySelector("[data-user-name]");
+  if (navAvatar) navAvatar.textContent = iniciales;
+  if (navName)   navName.textContent   = nombre;
+
+  // --- Stats desde backend ---
+  try {
+    const res  = await fetch(`${API}/reportes/tecnico/${encodeURIComponent(correo)}`);
+    const data = await res.json();
+
+    if (res.ok && Array.isArray(data)) {
+      const total     = data.length;
+      const revision  = data.filter(r => (r.estado || "").toLowerCase().includes("rev")).length;
+      const resueltos = data.filter(r => (r.estado || "").toLowerCase() === "resuelto").length;
+
+      setEl("statAsignados",  total);
+      setEl("statRevision",   revision);
+      setEl("statResueltos",  resueltos);
+    }
+  } catch (_) {
+    ["statAsignados", "statRevision", "statResueltos"].forEach(id => setEl(id, "—"));
   }
 
-  if (nombreEl) nombreEl.textContent = nombre;
-  if (emailEl) emailEl.textContent = correo;
-  if (uidEl) uidEl.textContent = session.uid || "local-user";
-
-  // ===============================
-  // ACTUALIZAR NAVBAR
-  // ===============================
-  const navbarAvatar = document.querySelector("[data-user-avatar]");
-  const navbarName = document.querySelector("[data-user-name]");
-
-  if (navbarAvatar) navbarAvatar.textContent = avatar;
-  if (navbarName) navbarName.textContent = nombre;
+  // --- Botón cerrar sesión del perfil ---
+  document.getElementById("btnLogoutPerfil")?.addEventListener("click", () => {
+    localStorage.removeItem("cr_auth");
+    window.location.href = "./login.html";
+  });
 });
