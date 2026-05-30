@@ -538,7 +538,10 @@ async function confirmarAsignar() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ tecnico_email: tecnico })
     });
-    if (!res.ok) throw new Error("Error asignando");
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error || `Error del servidor (${res.status})`);
+    }
 
     // También cambiar estado a "en revision"
     await fetch(`${API}/reportes/${reporteIdSeleccionado}/estado`, {
@@ -557,7 +560,7 @@ async function confirmarAsignar() {
     aplicarFiltros();
     alert(`✅ Reporte asignado a ${tecnico}`);
   } catch (err) {
-    alert("Error al asignar técnico");
+    alert(`❌ Error al asignar técnico: ${err.message}`);
   }
 }
 window.confirmarAsignar = confirmarAsignar;

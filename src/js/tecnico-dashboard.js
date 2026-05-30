@@ -35,11 +35,20 @@ async function cargarReportes() {
   try {
     const res  = await fetch(`${API}/reportes/tecnico/${encodeURIComponent(emailTecnico)}`);
     const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || `Error del servidor (${res.status})`);
+    }
+
+    if (!Array.isArray(data)) {
+      throw new Error("La respuesta del servidor no es válida");
+    }
+
     reportesTecnico = data.map(r => ({ ...r, fecha: new Date(r.fecha) }));
     aplicarFiltros();
   } catch (err) {
     console.error("Error:", err);
-    listaEl.innerHTML = `<p style="color:#dc2626; padding:16px;">Error cargando reportes</p>`;
+    if (listaEl) listaEl.innerHTML = `<p style="color:#dc2626; padding:16px;">Error cargando reportes: ${err.message}</p>`;
   }
 }
 
