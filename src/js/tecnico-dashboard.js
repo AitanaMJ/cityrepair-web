@@ -56,7 +56,8 @@ async function cargarReportes() {
    FILTROS
 ========================= */
 function aplicarFiltros() {
-  let lista = [...reportesTecnico];
+  // Solo mostrar reportes NO resueltos (los resueltos vuelven al EDET admin)
+  let lista = reportesTecnico.filter(r => r.estado !== "resuelto");
 
   const estado = filtroEstadoEl?.value || "todos";
   const prio   = filtroPrioEl?.value   || "todos";
@@ -108,9 +109,30 @@ function renderReportes(reportes) {
   if (!listaEl) return;
 
   if (reportes.length === 0) {
-    listaEl.innerHTML = `<p class="muted" style="padding:20px; text-align:center; color:#9ca3af;">No hay reportes asignados.</p>`;
+    listaEl.innerHTML = `
+      <div class="tec-empty-state">
+        <div class="tec-empty-icon">🎉</div>
+        <h3>¡Sin pendientes!</h3>
+        <p>No tenés reportes activos asignados en este momento.</p>
+      </div>`;
     return;
   }
+
+  const prioConfig = {
+    alta:  { bg: "#fee2e2", color: "#b91c1c", dot: "#ef4444", label: "🔴 Alta" },
+    media: { bg: "#fef3c7", color: "#92400e", dot: "#f59e0b", label: "🟡 Media" },
+    baja:  { bg: "#dcfce7", color: "#166534", dot: "#22c55e", label: "🟢 Baja" },
+  };
+
+  const stateConfig = {
+    "en revision": { bg: "#fef3c7", color: "#92400e", border: "#f59e0b", icon: "🔄" },
+    "pendiente":   { bg: "#dbeafe", color: "#1d4ed8", border: "#3b82f6", icon: "📋" },
+  };
+
+  const typeIcons = {
+    "corte": "⚡", "baja-tension": "🔌", "transformador": "🔧",
+    "luminaria": "💡", "cable": "🔗", "medidor": "⚙️", "poste": "🪝"
+  };
 
   listaEl.innerHTML = reportes.map(r => {
     const estado    = (r.estado || "pendiente").toLowerCase();
@@ -119,36 +141,44 @@ function renderReportes(reportes) {
       day: "2-digit", month: "short", year: "numeric"
     });
 
-    const estadoColor = estado === "resuelto" ? "#16a34a" : estado.includes("rev") ? "#d97706" : "#3b82f6";
-    const prioColor   = prioridad === "alta" ? "#dc2626" : prioridad === "media" ? "#d97706" : "#16a34a";
-    const prioBg      = prioridad === "alta" ? "#fee2e2" : prioridad === "media" ? "#fef3c7" : "#dcfce7";
+    const prio  = prioConfig[prioridad]  || prioConfig.baja;
+    const state = stateConfig[estado]    || stateConfig.pendiente;
+    const tipoKey = Object.keys(typeIcons).find(k => (r.tipo || "").toLowerCase().includes(k));
+    const icon  = typeIcons[tipoKey] || "🛠️";
 
     return `
-      <div style="background:#fff; border-radius:14px; padding:18px; margin-bottom:12px;
-                  border:1px solid #f0f0f0; border-left:5px solid ${estadoColor};
-                  box-shadow:0 2px 8px rgba(0,0,0,0.06);">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <strong style="font-size:0.95rem; color:#111827; text-transform:capitalize;">${r.tipo || "Reporte"}</strong>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <span style="background:${prioBg}; color:${prioColor}; padding:2px 10px; border-radius:999px; font-size:0.72rem; font-weight:700;">${prioridad}</span>
-            <span style="background:#f3f4f6; color:#374151; padding:2px 10px; border-radius:999px; font-size:0.72rem; font-weight:700; text-transform:capitalize;">${estado}</span>
+      <div class="tec-report-card" style="border-left-color:${state.border}">
+        <div class="tec-card-header">
+          <div class="tec-card-title">
+            <span class="tec-type-icon">${icon}</span>
+            <div>
+              <strong class="tec-tipo">${r.tipo || "Reporte"}</strong>
+              <span class="tec-id">#${r.id}</span>
+            </div>
+          </div>
+          <div class="tec-badges">
+            <span class="tec-badge" style="background:${prio.bg};color:${prio.color}">
+              <span class="tec-dot" style="background:${prio.dot}"></span>${prioridad}
+            </span>
+            <span class="tec-badge" style="background:${state.bg};color:${state.color}">
+              ${state.icon} ${estado}
+            </span>
           </div>
         </div>
-        <p style="font-size:0.85rem; color:#4b5563; margin:0 0 8px;">${r.descripcion || ""}</p>
-        <div style="font-size:0.78rem; color:#9ca3af; display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+
+        <p class="tec-desc">${r.descripcion || "Sin descripción"}</p>
+
+        <div class="tec-meta">
           <span>📍 ${r.zona || "—"}</span>
-          <span>🕐 ${fecha}</span>
+          <span>🗓️ ${fecha}</span>
         </div>
-        <div style="display:flex; gap:8px;">
-          <button onclick="cambiarEstadoTec(${r.id}, 'en revision')"
-            style="flex:1; padding:7px; background:#fff; color:#d97706; border:1.5px solid #d97706;
-                   border-radius:8px; font-family:'DM Sans',sans-serif; font-size:0.82rem; font-weight:600; cursor:pointer;">
+
+        <div class="tec-actions">
+          <button onclick="cambiarEstadoTec(${r.id}, 'en revision')" class="tec-btn-revision">
             🔄 En revisión
           </button>
-          <button onclick="cambiarEstadoTec(${r.id}, 'resuelto')"
-            style="flex:1; padding:7px; background:#16a34a; color:#fff; border:none;
-                   border-radius:8px; font-family:'DM Sans',sans-serif; font-size:0.82rem; font-weight:600; cursor:pointer;">
-            ✅ Resuelto
+          <button onclick="cambiarEstadoTec(${r.id}, 'resuelto')" class="tec-btn-resolver">
+            ✅ Marcar como resuelto
           </button>
         </div>
       </div>

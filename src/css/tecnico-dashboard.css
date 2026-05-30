@@ -532,3 +532,186 @@ body.edet-body {
   font-weight: 700;
   font-size: 15px;
 }
+/* =============================
+   TARJETAS REDISEÑADAS
+   ============================= */
+
+.tec-report-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #f0f0f0;
+  border-left: 5px solid #3b82f6;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.07);
+  padding: 20px;
+  margin-bottom: 14px;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.tec-report-card:hover {
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.13);
+  transform: translateY(-1px);
+}
+
+/* Cabecera de la tarjeta */
+.tec-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.tec-card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tec-type-icon {
+  font-size: 1.4rem;
+  width: 40px;
+  height: 40px;
+  background: #f3f4f6;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tec-tipo {
+  display: block;
+  font-size: 0.97rem;
+  color: #111827;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.tec-id {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+/* Badges */
+.tec-badges {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.tec-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  letter-spacing: 0.01em;
+}
+
+.tec-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* Descripción */
+.tec-desc {
+  font-size: 0.87rem;
+  color: #4b5563;
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+/* Meta info */
+.tec-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
+  color: #9ca3af;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+/* Botones de acción */
+.tec-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.tec-btn-revision,
+.tec-btn-resolver {
+  flex: 1;
+  padding: 9px 14px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  border: none;
+}
+
+.tec-btn-revision {
+  background: #fff;
+  color: #d97706;
+  border: 2px solid #f59e0b;
+}
+
+.tec-btn-revision:hover {
+  background: #fef3c7;
+}
+
+.tec-btn-resolver {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.tec-btn-resolver:hover {
+  background: #15803d;
+  transform: scale(1.01);
+}
+
+/* Estado vacío */
+.tec-empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: #6b7280;
+}
+
+.tec-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.tec-empty-state h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.tec-empty-state p {
+  font-size: 0.87rem;
+}
+
+@media (max-width: 600px) {
+  .tec-card-header {
+    flex-direction: column;
+  }
+  .tec-badges {
+    justify-content: flex-start;
+  }
+  .tec-actions {
+    flex-direction: column;
+  }
+}

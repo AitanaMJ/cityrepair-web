@@ -51,7 +51,11 @@ document.addEventListener("DOMContentLoaded", async () => {
    FILTROS
 ======================================================= */
 function aplicarFiltros() {
-  let filtrados = [...REPORTES_ORIGINALES];
+  // Base: solo mostrar reportes sin técnico asignado O ya resueltos
+  // Los "en revisión" con técnico asignado van al dashboard del técnico
+  let filtrados = REPORTES_ORIGINALES.filter(r =>
+    !r.tecnico_email || r.estado === "resuelto"
+  );
 
   const resolucion = filtroResolucion?.value || "todos";
   const prioridad  = filtroPrioridad?.value  || "todos";
