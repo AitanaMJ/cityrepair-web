@@ -62,7 +62,10 @@ document.addEventListener("DOMContentLoaded", () => {
       await minDelay(1000);
 
       if (!res.ok) {
-        throw new Error(data.error || "Error al iniciar sesión");
+        const msg = res.status === 403
+          ? data.error  // "Cuenta desactivada. Contactá al administrador."
+          : "Correo o contraseña incorrectos";
+        throw new Error(msg);
       }
 
       // ✅ Guardar sesión
@@ -97,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error al iniciar sesión:", error);
 
       showToast(
-        "Correo o contraseña incorrectos",
+        error.message || "Correo o contraseña incorrectos",
         "danger",
         "Error"
       );

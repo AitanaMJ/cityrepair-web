@@ -25,9 +25,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
 
       if (!res.ok) {
-        window.mostrarAlerta?.("Credenciales inválidas", "danger", {
-          titulo: "Error de acceso"
-        });
+        const msg = res.status === 403
+          ? data.error
+          : "Credenciales inválidas";
+        window.mostrarAlerta?.(msg, "danger", { titulo: "Acceso denegado" });
         return;
       }
 

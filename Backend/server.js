@@ -43,6 +43,12 @@ app.post("/api/login", (req, res) => {
         });
       }
 
+      if (user.activo === 0) {
+        return res.status(403).json({
+          error: "Cuenta desactivada. Contactá al administrador."
+        });
+      }
+
       res.json({ user });
     }
   );
@@ -291,10 +297,44 @@ app.put("/api/reportes/:id", (req, res) => {
 ========================= */
 app.get("/api/tecnicos", (req, res) => {
   db.query(
-    "SELECT id, email FROM usuarios WHERE role = 'tecnico'",
+    "SELECT id, email, activo FROM usuarios WHERE role = 'tecnico'",
     (err, results) => {
       if (err) return res.status(500).json({ error: "Error obteniendo técnicos" });
       res.json(results);
+    }
+  );
+});
+
+/* =========================
+   OBTENER TODOS LOS USUARIOS
+========================= */
+app.get("/api/usuarios", (req, res) => {
+  db.query(
+    "SELECT id, email, role, activo FROM usuarios",
+    (err, results) => {
+      if (err) return res.status(500).json({ error: "Error obteniendo usuarios" });
+      res.json(results);
+    }
+  );
+});
+
+/* =========================
+   DESACTIVAR / REACTIVAR USUARIO
+========================= */
+app.put("/api/usuarios/:id/estado", (req, res) => {
+  const { id } = req.params;
+  const { activo } = req.body; // 0 = desactivar, 1 = reactivar
+
+  if (activo !== 0 && activo !== 1) {
+    return res.status(400).json({ error: "Valor de 'activo' inválido" });
+  }
+
+  db.query(
+    "UPDATE usuarios SET activo = ? WHERE id = ?",
+    [activo, id],
+    (err) => {
+      if (err) return res.status(500).json({ error: "Error actualizando usuario" });
+      res.json({ ok: true, activo });
     }
   );
 });
