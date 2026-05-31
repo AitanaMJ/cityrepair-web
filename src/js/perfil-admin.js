@@ -1,6 +1,6 @@
 // perfil-admin.js — Perfil del administrador con stats dinámicos
 
-import { API } from "./api.js";
+const API = "http://localhost:3000/api";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const session = JSON.parse(localStorage.getItem("cr_auth") || "null");
@@ -14,10 +14,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const nombre   = session.nombre || email.split("@")[0] || "Admin";
   const iniciales = nombre.trim().split(" ").map(p => p[0]).join("").slice(0, 2).toUpperCase();
 
-  // Helpers
   const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
 
-  // Datos básicos
   setEl("perfilNombre", nombre);
   setEl("perfilEmail",  email);
   setEl("infoNombre",   nombre);
@@ -33,22 +31,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     const data = await res.json();
 
     if (res.ok && Array.isArray(data)) {
-      const total      = data.length;
-      const pendientes = data.filter(r => (r.estado || "").toLowerCase() === "pendiente").length;
-      const revision   = data.filter(r => (r.estado || "").toLowerCase().includes("rev")).length;
-      const resueltos  = data.filter(r => (r.estado || "").toLowerCase() === "resuelto").length;
-
-      setEl("statTotal",      total);
-      setEl("statPendientes", pendientes);
-      setEl("statRevision",   revision);
-      setEl("statResueltos",  resueltos);
+      setEl("statTotal",      data.length);
+      setEl("statPendientes", data.filter(r => (r.estado || "").toLowerCase() === "pendiente").length);
+      setEl("statRevision",   data.filter(r => (r.estado || "").toLowerCase().includes("rev")).length);
+      setEl("statResueltos",  data.filter(r => (r.estado || "").toLowerCase() === "resuelto").length);
     }
-  } catch (_) {
-    ["statTotal", "statPendientes", "statRevision", "statResueltos"]
-      .forEach(id => setEl(id, "—"));
+  } catch (e) {
+    console.error("Error cargando stats:", e);
   }
 
-  // Cerrar sesión
   const logout = () => {
     localStorage.removeItem("cr_auth");
     window.location.href = "./login.html";
