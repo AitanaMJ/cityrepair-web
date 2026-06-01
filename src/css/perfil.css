@@ -1,80 +1,346 @@
-/* ===== Contenedor general ===== */
-.perfil-container {
-  max-width: 1100px;
-  margin: 40px auto;
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
+* { box-sizing: border-box; }
+body { font-family: 'DM Sans', sans-serif; background: #f8fafc; margin: 0; }
+
+/* =========================================
+   LAYOUT
+   ========================================= */
+.citizen-perfil-main {
+  max-width: 700px;
+  margin: 32px auto;
+  padding: 0 16px 48px;
   display: flex;
-  gap: 30px;
-  padding: 20px;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* =========================================
+   HERO CARD
+   ========================================= */
+.citizen-hero-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(15,23,42,0.09);
+  overflow: hidden;
+}
+
+.citizen-hero-banner {
+  height: 110px;
+  background: linear-gradient(135deg, #0d9488 0%, #0891b2 60%, #06b6d4 100%);
+  position: relative;
+}
+
+.citizen-hero-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.07'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.citizen-hero-body {
+  padding: 0 28px 28px;
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
-/* ===== Card principal ===== */
-.perfil-card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  text-align: center;
-  flex: 1 1 280px;
+.citizen-avatar-wrapper {
+  position: relative;
+  margin-top: -42px;
+  flex-shrink: 0;
 }
 
-.perfil-foto {
-  width: 130px;
-  height: 130px;
-  border-radius: 100%;
-  object-fit: cover;
-  margin-bottom: 12px;
-  border: 3px solid #ddd;
-}
-
-.perfil-nombre {
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-.perfil-email {
-  color: #555;
-  margin-bottom: 14px;
-}
-
-/* Botón */
-.btn-primary {
-  background: #0d6efd;
+.citizen-avatar-circle {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0d9488, #06b6d4);
   color: #fff;
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: .2s;
+  font-size: 2rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #fff;
+  box-shadow: 0 4px 14px rgba(13,148,136,0.3);
+  letter-spacing: 1px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
 }
 
-.btn-primary:hover {
-  background: #0b5ed7;
+.citizen-status-dot {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 16px;
+  height: 16px;
+  background: #22c55e;
+  border-radius: 50%;
+  border: 3px solid #fff;
 }
 
-/* ===== Card info ===== */
-.perfil-info {
+.citizen-hero-info {
+  padding-top: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+.citizen-hero-name {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 4px;
+  text-transform: capitalize;
+}
+
+.citizen-hero-email {
+  font-size: 0.87rem;
+  color: #6b7280;
+  margin: 0 0 10px;
+}
+
+.citizen-hero-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.citizen-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.citizen-tag--teal  { background: #ccfbf1; color: #0f766e; }
+.citizen-tag--green { background: #dcfce7; color: #16a34a; }
+
+/* =========================================
+   STATS
+   ========================================= */
+.citizen-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.citizen-stat-card {
   background: #fff;
-  padding: 20px;
+  border-radius: 16px;
+  padding: 18px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 2px 12px rgba(15,23,42,0.07);
+  transition: transform 0.15s ease;
+}
+
+.citizen-stat-card:hover { transform: translateY(-2px); }
+
+.citizen-stat-icon {
+  width: 44px;
+  height: 44px;
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  flex: 2 1 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
 }
 
-.perfil-info h3 {
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-  font-weight: bold;
+.citizen-stat-label {
+  font-size: 0.72rem;
+  color: #6b7280;
+  font-weight: 600;
+  margin: 0 0 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-.perfil-info p {
+.citizen-stat-num {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+  line-height: 1;
+}
+
+/* =========================================
+   INFO CARD
+   ========================================= */
+.citizen-info-card,
+.citizen-acciones-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 24px 28px;
+  box-shadow: 0 2px 12px rgba(15,23,42,0.07);
+}
+
+.citizen-section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.citizen-section-title i { color: #0d9488; font-size: 1.1rem; }
+
+.citizen-info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.citizen-info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: #f9fafb;
+  border-radius: 10px;
+  gap: 12px;
+}
+
+.citizen-info-label {
+  font-size: 0.83rem;
+  color: #6b7280;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+}
+
+.citizen-info-label i { color: #9ca3af; }
+
+.citizen-info-val {
+  font-size: 0.87rem;
+  color: #111827;
+  font-weight: 600;
+  text-align: right;
+  word-break: break-all;
+}
+
+.citizen-info-muted {
+  color: #9ca3af;
+  font-weight: 400;
+  font-size: 0.78rem;
+}
+
+/* =========================================
+   ACCIONES
+   ========================================= */
+.citizen-acciones-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.citizen-accion-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 18px;
+  border-radius: 12px;
+  font-family: 'DM Sans', sans-serif;
   font-size: 0.9rem;
-  padding: 4px 0;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  transition: all 0.18s ease;
 }
 
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-  .perfil-container {
-    flex-direction: column;
-  }
+.citizen-accion-btn--primary {
+  background: #1d4ed8;
+  color: #fff;
+}
+.citizen-accion-btn--primary:hover { background: #1e40af; transform: translateY(-1px); }
+
+.citizen-accion-btn--teal {
+  background: #0d9488;
+  color: #fff;
+}
+.citizen-accion-btn--teal:hover { background: #0f766e; transform: translateY(-1px); }
+
+.citizen-accion-btn--gray {
+  background: #f3f4f6;
+  color: #374151;
+}
+.citizen-accion-btn--gray:hover { background: #e5e7eb; }
+
+.citizen-accion-btn--danger {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+.citizen-accion-btn--danger:hover { background: #fecaca; }
+
+/* =========================================
+   ZONA PELIGROSA
+   ========================================= */
+.citizen-baja-card {
+  background: #fff;
+  border: 1.5px solid #fecaca;
+  border-radius: 16px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.citizen-baja-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+.citizen-baja-icon { font-size: 1.4rem; color: #f59e0b; flex-shrink: 0; margin-top: 2px; }
+
+.citizen-baja-info strong { display: block; font-size: 0.92rem; color: #111827; margin-bottom: 4px; }
+.citizen-baja-info p { font-size: 0.82rem; color: #6b7280; margin: 0; line-height: 1.4; }
+
+.citizen-baja-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 20px;
+  background: #fff;
+  color: #dc2626;
+  border: 1.5px solid #dc2626;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.87rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+.citizen-baja-btn:hover { background: #dc2626; color: #fff; }
+
+/* =========================================
+  RESPONSIVE
+   ========================================= */
+@media (max-width: 560px) {
+  .citizen-stats-row     { grid-template-columns: 1fr; }
+  .citizen-acciones-grid { grid-template-columns: 1fr; }
+  .citizen-hero-body     { flex-direction: column; align-items: flex-start; }
+  .citizen-info-item     { flex-direction: column; align-items: flex-start; }
+  .citizen-info-val      { text-align: left; }
+  .citizen-baja-card     { flex-direction: column; }
 }

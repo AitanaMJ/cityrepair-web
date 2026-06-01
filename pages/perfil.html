@@ -4,141 +4,173 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mi Perfil • CityRepair</title>
-
-  <!-- Estilos -->
   <link rel="stylesheet" href="../src/css/styles.css">
   <link rel="stylesheet" href="../src/css/perfil.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 <body>
 
-  <!-- ===== NAVBAR ===== -->
-  <header class="navbar">
-    <div class="container">
-      <div class="brand-left">
-        <div class="avatar-sm">E</div>
-        <div class="brand-txt">
-          <span class="brand-title">CityRepair</span>
-          <span class="brand-sub">Sistema de Reportes EDET</span>
-        </div>
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="container">
+    <div class="brand-left">
+      <img src="../src/img/favicon.png" class="logo-sm" alt="CityRepair">
+      <div class="brand-txt">
+        <span class="brand-title">CityRepair</span>
+        <span class="brand-sub">Sistema de Reportes EDET</span>
       </div>
-
-      <nav class="nav-right">
-        <a class="nav-item" href="../index.html"><i class="bi bi-house"></i> Inicio</a>
-         <a class="nav-item active" href="./reportar.html">
-          <span class="icon"><i class="bi bi-flag"></i></span> Reportar
-        </a>
-        <a class="nav-item" href="./mis-reportes.html"><i class="bi bi-clipboard2-check"></i> Mis reportes</a>
-
-        <a class="nav-item" href="./contacto.html"><i class="bi bi-telephone"></i> Contacto</a>
-
-
-        <!-- botón Acceder (solo sin sesión) -->
-      <a class="nav-item" href="./login.html" data-login-link>
-        <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
-      </a>
-
-      <!-- perfil del usuario (solo con sesión) -->
+    </div>
+    <nav class="nav-right">
+      <a class="nav-item" href="../index.html"><i class="bi bi-house"></i> Inicio</a>
+      <a class="nav-item" href="./reportar.html"><i class="bi bi-flag"></i> Reportar</a>
+      <a class="nav-item" href="./mis-reportes.html"><i class="bi bi-clipboard2-check"></i> Mis reportes</a>
+      <a class="nav-item" href="./contacto.html"><i class="bi bi-telephone"></i> Contacto</a>
+      <a class="nav-item" href="./login.html" data-login-link><i class="bi bi-box-arrow-in-right"></i> Acceder</a>
       <div class="nav-item user-pill" id="userMenuBtn" data-user-panel hidden>
-        <img src="" alt="avatar" class="user-avatar" data-user-avatar>
+        <div class="avatar-sm" data-user-avatar>U</div>
         <span data-user-name></span>
-
-        <!-- 🔽 ESTE ES EL MENÚ DESPLEGABLE -->
+        <i class="bi bi-caret-down-fill icon-dropdown"></i>
         <div class="user-dropdown" id="userDropdown" hidden>
-          <button id="goProfile">Mi perfil</button>
-          <button id="logoutFromMenu">Cerrar sesión</button>
+          <a href="./perfil.html" class="dropdown-btn"><i class="bi bi-person-circle"></i> Mi Perfil</a>
+          <button id="logoutFromMenu"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</button>
         </div>
       </div>
-
-      <button class="hamburger" id="openDrawer" aria-label="Abrir menú">
-        <i class="bi bi-list"></i>
-      </button>
     </nav>
   </div>
   <div class="navbar-divider"></div>
 </header>
 
-       
-   <!-- ===== DRAWER MÓVIL ===== -->
-  <div class="drawer-overlay" id="drawerOverlay"></div>
+<main class="citizen-perfil-main">
 
-<aside class="drawer" id="drawer" aria-hidden="true">
-  <button class="drawer-close" id="closeDrawer" aria-label="Cerrar">×</button>
-
-  <div class="drawer-header">
-    <div class="avatar-sm">E</div>
-    <div class="brand-txt">
-      <span class="brand-title">CityRepair</span>
-      <span class="brand-sub">Sistema de Reportes EDET</span>
+  <!-- HERO CARD -->
+  <div class="citizen-hero-card">
+    <div class="citizen-hero-banner"></div>
+    <div class="citizen-hero-body">
+      <div class="citizen-avatar-wrapper">
+        <div class="citizen-avatar-circle" id="perfilAvatar">U</div>
+        <span class="citizen-status-dot"></span>
+      </div>
+      <div class="citizen-hero-info">
+        <h1 id="nombrePerfil" class="citizen-hero-name">—</h1>
+        <p id="emailPerfil" class="citizen-hero-email">—</p>
+        <div class="citizen-hero-tags">
+          <span class="citizen-tag citizen-tag--teal">
+            <i class="bi bi-person-check"></i> Ciudadano
+          </span>
+          <span class="citizen-tag citizen-tag--green">
+            <i class="bi bi-circle-fill" style="font-size:.55rem"></i> Activo
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <nav class="drawer-nav">
-    <a class="drawer-link" href="../index.html">Inicio</a>
-    <a class="drawer-link" href="./reportar.html" data-auth="citizen">Reportar</a>
-    <a class="drawer-link active" href="./mis-reportes.html" data-auth="citizen">Mis Reportes</a>
-    <a class="drawer-link" href="./contacto.html">Contacto</a>
-
-    <!-- ACCEDER (solo cuando NO hay sesión) -->
-    <a class="drawer-link" href="./login.html" data-login-link id="drawerLogin">Acceder</a>
-
-    <!-- DATOS DEL USUARIO (solo cuando hay sesión) -->
-    <div class="drawer-link" data-user-panel hidden>
-      <span data-user-name></span>
+  <!-- STATS -->
+  <div class="citizen-stats-row">
+    <div class="citizen-stat-card">
+      <div class="citizen-stat-icon" style="background:#ccfbf1;color:#0d9488">
+        <i class="bi bi-clipboard2-data"></i>
+      </div>
+      <div>
+        <p class="citizen-stat-label">Total reportes</p>
+        <p class="citizen-stat-num" id="perfilTotalReportes">0</p>
+      </div>
     </div>
+    <div class="citizen-stat-card">
+      <div class="citizen-stat-icon" style="background:#dbeafe;color:#1d4ed8">
+        <i class="bi bi-hourglass-split"></i>
+      </div>
+      <div>
+        <p class="citizen-stat-label">Pendientes</p>
+        <p class="citizen-stat-num" id="perfilPendientes">0</p>
+      </div>
+    </div>
+    <div class="citizen-stat-card">
+      <div class="citizen-stat-icon" style="background:#dcfce7;color:#16a34a">
+        <i class="bi bi-check-circle"></i>
+      </div>
+      <div>
+        <p class="citizen-stat-label">Resueltos</p>
+        <p class="citizen-stat-num" id="perfilResueltos">0</p>
+      </div>
+    </div>
+  </div>
 
-    <!-- MI PERFIL (solo cuando hay sesión) -->
-    <a class="drawer-link" href="./perfil.html" data-user-panel hidden>
-      Mi perfil
-    </a>
+  <!-- INFO DE LA CUENTA -->
+  <div class="citizen-info-card">
+    <h2 class="citizen-section-title">
+      <i class="bi bi-person-lines-fill"></i> Información de la cuenta
+    </h2>
+    <div class="citizen-info-grid">
+      <div class="citizen-info-item">
+        <span class="citizen-info-label"><i class="bi bi-person"></i> Nombre</span>
+        <span class="citizen-info-val" id="infoNombre">—</span>
+      </div>
+      <div class="citizen-info-item">
+        <span class="citizen-info-label"><i class="bi bi-envelope"></i> Email</span>
+        <span class="citizen-info-val" id="infoEmail">—</span>
+      </div>
+      <div class="citizen-info-item">
+        <span class="citizen-info-label"><i class="bi bi-shield"></i> Rol</span>
+        <span class="citizen-info-val">Ciudadano</span>
+      </div>
+      <div class="citizen-info-item">
+        <span class="citizen-info-label"><i class="bi bi-calendar-check"></i> Último inicio</span>
+        <span class="citizen-info-val" id="perfilUltimoLogin">—</span>
+      </div>
+      <div class="citizen-info-item">
+        <span class="citizen-info-label"><i class="bi bi-hash"></i> ID de sesión</span>
+        <span class="citizen-info-val citizen-info-muted" id="perfilUID">—</span>
+      </div>
+    </div>
+  </div>
 
-    <!-- CERRAR SESIÓN (solo cuando hay sesión) -->
-    <button class="drawer-link" id="drawerLogout" data-logout hidden>
-      Cerrar sesión
+  <!-- ACCIONES -->
+  <div class="citizen-acciones-card">
+    <h2 class="citizen-section-title">
+      <i class="bi bi-lightning-charge"></i> Acciones rápidas
+    </h2>
+    <div class="citizen-acciones-grid">
+      <a href="./mis-reportes.html" class="citizen-accion-btn citizen-accion-btn--primary">
+        <i class="bi bi-clipboard2-check"></i>
+        <span>Mis reportes</span>
+      </a>
+      <a href="./reportar.html" class="citizen-accion-btn citizen-accion-btn--teal">
+        <i class="bi bi-flag"></i>
+        <span>Nuevo reporte</span>
+      </a>
+      <button id="btnCambiarFoto" class="citizen-accion-btn citizen-accion-btn--gray">
+        <i class="bi bi-camera"></i>
+        <span>Cambiar foto</span>
+      </button>
+      <button id="btnLogout" class="citizen-accion-btn citizen-accion-btn--danger">
+        <i class="bi bi-box-arrow-right"></i>
+        <span>Cerrar sesión</span>
+      </button>
+    </div>
+    <input type="file" id="inputFoto" accept="image/*" hidden>
+  </div>
+
+  <!-- DAR DE BAJA -->
+  <div class="citizen-baja-card">
+    <div class="citizen-baja-info">
+      <i class="bi bi-exclamation-triangle-fill citizen-baja-icon"></i>
+      <div>
+        <strong>Dar de baja mi cuenta</strong>
+        <p>Tu cuenta quedará desactivada y no podrás iniciar sesión. Podés contactar al soporte para reactivarla.</p>
+      </div>
+    </div>
+    <button id="btnDarBaja" class="citizen-baja-btn">
+      <i class="bi bi-person-x"></i> Dar de baja
     </button>
-  </nav>
-</aside>
+  </div>
 
-  <!-- ===== CONTENIDO ===== -->
-  <main class="perfil-container">
+</main>
 
-    <!-- Card de datos principales -->
-    <section class="perfil-card">
-      <img id="fotoPerfil" class="perfil-foto" src="" onerror="this.style.display='none'">
-
-      <h2 id="nombrePerfil" class="perfil-nombre">Cargando...</h2>
-      <p id="emailPerfil" class="perfil-email">---</p>
-
-      <button id="btnCambiarFoto" class="btn-primary">Cambiar foto</button>
-      <input type="file" id="inputFoto" accept="image/*" hidden>
-    </section>
-
-    <!-- Card de información -->
-    <section class="perfil-info">
-      <h3>Información de la cuenta</h3>
-
-      <p><strong>UID:</strong> <span id="perfilUID"></span></p>
-      <p><strong>Cuenta creada:</strong> <span id="perfilCreacion"></span></p>
-      <p><strong>Último inicio:</strong> <span id="perfilUltimoLogin"></span></p>
-
-      <hr>
-
-      <h3>Mis estadísticas</h3>
-
-      <p><strong>Total de reportes:</strong> <span id="perfilTotalReportes">0</span></p>
-      <p><strong>Pendientes:</strong> <span id="perfilPendientes">0</span></p>
-      <p><strong>Resueltos:</strong> <span id="perfilResueltos">0</span></p>
-
-    </section>
-
-  </main>
 <script type="module" src="../src/js/app.js"></script>
-
 <script type="module" src="../src/js/navbar-auth.js"></script>
 <script type="module" src="../src/js/logout.js"></script>
 <script type="module" src="../src/js/profile-menu.js"></script>
-
-<!-- lógica de la página de perfil -->
 <script type="module" src="../src/js/perfil.js"></script>
 
 </body>

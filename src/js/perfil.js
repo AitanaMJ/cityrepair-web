@@ -1,100 +1,96 @@
-// src/js/perfil.js
-// ===============================
-// PERFIL DE USUARIO - SIN FIREBASE
-// ===============================
+// perfil.js — Perfil del ciudadano
 
-document.addEventListener("DOMContentLoaded", () => {
-  const sessionRaw = localStorage.getItem("cr_auth");
-  const session = sessionRaw ? JSON.parse(sessionRaw) : null;
+const API = "http://localhost:3000/api";
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const session = JSON.parse(localStorage.getItem("cr_auth") || "null");
 
   if (!session || session.role !== "citizen") {
     window.location.href = "./login.html";
     return;
   }
 
-  // ==== Elementos del DOM ====
-  const fotoPerfil = document.getElementById("fotoPerfil");
-  const nombrePerfil = document.getElementById("nombrePerfil");
-  const emailPerfil = document.getElementById("emailPerfil");
+  const email    = session.email || "";
+  const nombre   = session.nombre || email.split("@")[0] || "Usuario";
+  const iniciales = nombre.trim().split(" ").map(p => p[0]).join("").slice(0, 2).toUpperCase();
 
-  const uidPerfil = document.getElementById("perfilUID");
-  const creacionPerfil = document.getElementById("perfilCreacion");
-  const ultimoLoginPerfil = document.getElementById("perfilUltimoLogin");
+  const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
 
-  const totalReportesEl = document.getElementById("perfilTotalReportes");
-  const pendientesEl = document.getElementById("perfilPendientes");
-  const resueltosEl = document.getElementById("perfilResueltos");
+  // Datos básicos
+  setEl("nombrePerfil",     nombre);
+  setEl("emailPerfil",      email);
+  setEl("infoNombre",       nombre);
+  setEl("infoEmail",        email);
+  setEl("perfilUID",        session.id || "local-user");
+  setEl("perfilUltimoLogin", new Date().toLocaleString("es-AR"));
 
-  const btnCambiarFoto = document.getElementById("btnCambiarFoto");
-  const inputFoto = document.getElementById("inputFoto");
-
-  // ===============================
-  // DATOS BÁSICOS DESDE SESSION
-  // ===============================
-  if (session.photoURL) {
-    fotoPerfil.src = session.photoURL;
-  } else {
-    fotoPerfil.style.display = "none";
-  }
-  nombrePerfil.textContent = session.nombre || "Usuario";
-  emailPerfil.textContent = session.email || "";
-
-  uidPerfil.textContent = session.uid || "local-user";
-  creacionPerfil.textContent = session.creationTime || "N/A";
-  ultimoLoginPerfil.textContent = session.lastLogin || new Date().toLocaleString();
-
-  // ===============================
-  // ESTADÍSTICAS DESDE localStorage
-  // ===============================
-  const reportes = JSON.parse(localStorage.getItem("cr_reportes")) || [];
-
-  let total = 0;
-  let pendientes = 0;
-  let resueltos = 0;
-
-  reportes.forEach((rep) => {
-    if (rep.usuarioId === session.uid) {
-      total++;
-
-      const estado = (rep.estado || "pendiente").toLowerCase();
-      if (estado === "pendiente") pendientes++;
-      if (estado === "resuelto") resueltos++;
+  const avatarEl = document.getElementById("perfilAvatar");
+  if (avatarEl) {
+    if (session.photoURL) {
+      avatarEl.style.backgroundImage = `url(${session.photoURL})`;
+      avatarEl.style.backgroundSize  = "cover";
+      avatarEl.textContent = "";
+    } else {
+      avatarEl.textContent = iniciales;
     }
+  }
+
+  // Stats desde backend
+  try {
+    const res  = await fetch(`${API}/mis-reportes/${session.id}`);
+    const data = await res.json();
+    if (res.ok && Array.isArray(data)) {
+      setEl("perfilTotalReportes", data.length);
+      setEl("perfilPendientes",    data.filter(r => (r.estado||"").toLowerCase() === "pendiente").length);
+      setEl("perfilResueltos",     data.filter(r => (r.estado||"").toLowerCase() === "resuelto").length);
+    }
+  } catch(e) { console.error(e); }
+
+  // Cambiar foto
+  const btnFoto  = document.getElementById("btnCambiarFoto");
+  const inputFoto = document.getElementById("inputFoto");
+  btnFoto?.addEventListener("click", () => inputFoto.click());
+  inputFoto?.addEventListener("change", (e) => {
+    const archivo = e.target.files[0];
+    if (!archivo) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const base64 = ev.target.result;
+      session.photoURL = base64;
+      localStorage.setItem("cr_auth", JSON.stringify(session));
+      if (avatarEl) {
+        avatarEl.style.backgroundImage = `url(${base64})`;
+        avatarEl.style.backgroundSize  = "cover";
+        avatarEl.textContent = "";
+      }
+      alert("✅ Foto actualizada correctamente.");
+    };
+    reader.readAsDataURL(archivo);
   });
 
-  totalReportesEl.textContent = total;
-  pendientesEl.textContent = pendientes;
-  resueltosEl.textContent = resueltos;
+  // Cerrar sesión
+  document.getElementById("btnLogout")?.addEventListener("click", () => {
+    localStorage.removeItem("cr_auth");
+    window.location.href = "./login.html";
+  });
 
-  // ===============================
-  // CAMBIO DE FOTO (base64 local)
-  // ===============================
-  if (btnCambiarFoto && inputFoto) {
-    btnCambiarFoto.addEventListener("click", () => inputFoto.click());
-
-    inputFoto.addEventListener("change", (e) => {
-      const archivo = e.target.files[0];
-      if (!archivo) return;
-
-      const reader = new FileReader();
-
-      reader.onload = function (event) {
-        const base64 = event.target.result;
-
-        // actualizar sesión
-        session.photoURL = base64;
-        localStorage.setItem("cr_auth", JSON.stringify(session));
-
-        fotoPerfil.src = base64;
-
-        if (typeof window.mostrarAlerta === "function") {
-          window.mostrarAlerta("Foto actualizada correctamente.", "success");
-        } else {
-          alert("Foto actualizada correctamente.");
-        }
-      };
-
-      reader.readAsDataURL(archivo);
-    });
-  }
+  // Dar de baja
+  document.getElementById("btnDarBaja")?.addEventListener("click", async () => {
+    if (!session.id) { alert("No se encontró tu ID de usuario."); return; }
+    const ok = confirm("¿Seguro que querés dar de baja tu cuenta?\nNo podrás iniciar sesión hasta contactar al soporte.");
+    if (!ok) return;
+    try {
+      const res = await fetch(`${API}/usuarios/${session.id}/estado`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ activo: 0 })
+      });
+      if (!res.ok) throw new Error();
+      alert("Tu cuenta ha sido desactivada.");
+      localStorage.removeItem("cr_auth");
+      window.location.href = "./login.html";
+    } catch {
+      alert("❌ Error al dar de baja la cuenta.");
+    }
+  });
 });
