@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const sessionRaw = localStorage.getItem("cr_auth");
   const session = sessionRaw ? JSON.parse(sessionRaw) : null;
 
-  if (!session || session.role !== "usuario") {
+  if (!session || session.role !== "citizen") {
     window.location.href = "./login.html";
     return;
   }
@@ -31,7 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // ===============================
   // DATOS BÁSICOS DESDE SESSION
   // ===============================
-  fotoPerfil.src = session.photoURL || "../src/img/default-avatar.png";
+  if (session.photoURL) {
+    fotoPerfil.src = session.photoURL;
+  } else {
+    fotoPerfil.style.display = "none";
+  }
   nombrePerfil.textContent = session.nombre || "Usuario";
   emailPerfil.textContent = session.email || "";
 

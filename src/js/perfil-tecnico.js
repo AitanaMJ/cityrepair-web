@@ -43,26 +43,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     localStorage.removeItem("cr_auth");
     window.location.href = "./login.html";
   });
-
-  // Dar de baja propia cuenta
-  document.getElementById("btnDarBaja")?.addEventListener("click", async () => {
-    if (!session.id) { alert("No se encontró tu ID de usuario."); return; }
-
-    const ok = confirm("¿Seguro que querés dar de baja tu cuenta?\nNo podrás iniciar sesión hasta que un administrador la reactive.");
-    if (!ok) return;
-
-    try {
-      const res = await fetch(`${API}/usuarios/${session.id}/estado`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ activo: 0 })
-      });
-      if (!res.ok) throw new Error();
-      alert("Tu cuenta ha sido desactivada.");
-      localStorage.removeItem("cr_auth");
-      window.location.href = "./login.html";
-    } catch {
-      alert("❌ Error al dar de baja la cuenta.");
-    }
-  });
 });
