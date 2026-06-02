@@ -1,131 +1,111 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CityRepair – Iniciar Sesión</title>
-  <!-- Reutiliza los estilos globales -->
-  <link rel="stylesheet" href="../src/css/styles.css" />
-  <!-- Estilos específicos del login (opcional) -->
-  <link rel="stylesheet" href="../src/css/login.css" />
+  <link rel="stylesheet" href="../src/css/login.css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 <body>
-<!-- ===== NAVBAR (mismo que index) ===== -->
-<header class="navbar">
-  <div class="container">
-    <div class="brand-left">
-      
-      <div class="avatar-sm">E</div>
-      
-      <div class="brand-txt">
-        <span class="brand-title">CityRepair</span>
-        <span class="brand-sub">Sistema de Reportes EDET</span>
+
+<div class="auth-layout">
+
+  <!-- PANEL IZQUIERDO -->
+  <div class="auth-panel-left">
+    <div class="auth-brand">
+      <img src="../src/img/favicon.png" class="auth-logo" alt="CityRepair">
+      <h1 class="auth-brand-title">CityRepair</h1>
+      <p class="auth-brand-sub">Sistema de Reportes EDET</p>
+    </div>
+    <div class="auth-left-body">
+      <h2>Reportá. Seguí. Resolvé.</h2>
+      <p>Gestioná los problemas de infraestructura eléctrica de tu ciudad desde un solo lugar.</p>
+      <ul class="auth-features">
+        <li><i class="bi bi-lightning-charge-fill"></i> Reportes en tiempo real</li>
+        <li><i class="bi bi-people-fill"></i> Seguimiento por técnicos</li>
+        <li><i class="bi bi-shield-check-fill"></i> Sistema seguro y confiable</li>
+      </ul>
+    </div>
+    <div class="auth-left-footer">
+      <a href="../index.html"><i class="bi bi-arrow-left"></i> Volver al inicio</a>
+    </div>
+  </div>
+
+  <!-- PANEL DERECHO -->
+  <div class="auth-panel-right">
+    <div class="auth-form-wrapper">
+
+      <div class="auth-form-header">
+        <h2>Bienvenido de vuelta</h2>
+        <p>Ingresá a tu cuenta para continuar</p>
       </div>
-    </div>
 
-    <nav class="nav-right">
-      <a class="nav-item " href="../index.html">
-        <span class="icon"><i class="bi bi-house"></i></span> Inicio
-      </a>
-      <a class="nav-item" href="reportar.html">
-        <span class="icon"><i class="bi bi-flag"></i></span> Reportar
-      </a>
-      <a class="nav-item" href="mis-reportes.html">
-        <span class="icon"><i class="bi bi-clipboard2-check"></i></span> Mis Reportes
-      </a>
-      <a class="nav-item" href="contacto.html">
-        <span class="icon"><i class="bi bi-telephone"></i></span> Contacto
-      </a>
+      <!-- Toast de error -->
+      <div id="authToast" class="auth-toast" hidden>
+        <i class="bi bi-x-circle-fill"></i>
+        <span id="authToastMsg"></span>
+      </div>
 
-      <a class="nav-item active" href="login.html">
-        <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
-      </a>
-    </nav>
-      
+      <form id="loginForm" novalidate>
 
-    <button class="hamburger" id="openDrawer" aria-label="Abrir menú">
-      <i class="bi bi-list"></i>
-    </button>
-  </div>
-  <div class="navbar-divider"></div>
-</header>
-
-<!-- Drawer para móvil (usa las clases que ya estiliza styles.css) -->
-<div class="drawer-overlay" id="drawerOverlay"></div>
-<aside class="drawer" id="drawer" aria-hidden="true">
-  <button class="drawer-close" id="closeDrawer" aria-label="Cerrar">×</button>
-  <div class="drawer-header">
-    <div class="avatar-sm">E</div>
-    <div class="brand-txt">
-      <span class="brand-title">CityRepair</span>
-      <span class="brand-sub">Sistema de Reportes EDET</span>
-    </div>
-  </div>
-  <nav class="drawer-nav">
-    <a class="drawer-link" href="../index.html"></i> Inicio</a>
-    <a class="drawer-link" href="./reportar.html"></i> Reportar</a>
-    <a class="drawer-link" href="./mis-reportes.html"></i> Mis Reportes</a>
-    <a class="drawer-link" href="./contacto.html"></i> Contacto</a>
-    
-  </nav>
-</aside>
-
-  <!-- ======= HERO (igual estilo del inicio) ======= -->
-  <section class="hero">
-    <div class="container hero-inner">
-      <div class="avatar-lg">E</div>
-      <h1>CityRepair</h1>
-      <p class="subtitle">Sistema de Reportes EDET</p>
-    </div>
-  </section>
-
-  <!-- ======= CARD LOGIN ======= -->
-<main class="container">
-  <section class="auth-wrap">
-    <div class="auth-card">
-      <h2 class="auth-title">Iniciar Sesión</h2>
-      <p class="auth-sub">Accede a tu cuenta para gestionar reportes</p>
-
-      <form id="loginForm" class="auth-form" action="#" novalidate>
-        <label class="field">
-          <span>Correo Electrónico</span>
-          <input type="email" id="email" name="email" placeholder="tu@correo.com" autocomplete="email" required />
-        </label>
-
-        <label class="field">
-          <span>Contraseña</span>
-          <input type="password" id="password" name="password" placeholder="Tu contraseña" autocomplete="current-password" required />
-        </label>
-
-        <div class="row-between">
-          <label class="checkbox">
-            <input type="checkbox" name="remember" /> <span>Recordarme</span>
-          </label>
-          <a class="link" href="#" id="forgotPassLink">¿Olvidaste tu contraseña?</a>
+        <div class="auth-field">
+          <label for="email">Correo electrónico</label>
+          <div class="auth-input-wrap">
+            <i class="bi bi-envelope auth-input-icon"></i>
+            <input type="email" id="email" name="email"
+              placeholder="tu@correo.com" autocomplete="email" required/>
+          </div>
         </div>
 
-        <button type="submit" class="btn btn-primary-auth">Iniciar Sesión</button>
+        <div class="auth-field">
+          <label for="password">Contraseña</label>
+          <div class="auth-input-wrap">
+            <i class="bi bi-lock auth-input-icon"></i>
+            <input type="password" id="password" name="password"
+              placeholder="Tu contraseña" autocomplete="current-password" required/>
+            <button type="button" class="auth-toggle-pass" id="togglePass" tabindex="-1">
+              <i class="bi bi-eye" id="togglePassIcon"></i>
+            </button>
+          </div>
+        </div>
 
-        <div class="divider"><span></span><em>o</em><span></span></div>
+        <div class="auth-row-between">
+          <label class="auth-checkbox">
+            <input type="checkbox" name="remember"/> <span>Recordarme</span>
+          </label>
+          <a href="#" class="auth-link" id="forgotPassLink">¿Olvidaste tu contraseña?</a>
+        </div>
 
-        <p class="auth-foot">
-          ¿No tienes cuenta? <a class="link" href="register.html">Regístrate aquí</a>
-        </p>
+        <button type="submit" class="auth-btn" id="btnLogin">
+          <span>Iniciar Sesión</span>
+          <i class="bi bi-arrow-right"></i>
+        </button>
 
-        <p class="auth-back">
-          <a class="link" href="../index.html">← Volver al inicio</a>
-        </p>
       </form>
+
+      <p class="auth-footer-link">
+        ¿No tenés cuenta? <a href="./register.html" class="auth-link">Registrate aquí</a>
+      </p>
+
     </div>
-  </section>
-</main>
+  </div>
 
-  <footer class="footer"></footer>
+</div>
 
-  <!-- JS global (maneja el drawer y guarda con checks el resto) -->
-  <script type="module" src="../src/js/app.js"></script>
-  <script type="module" src="../src/js/login.js"></script>
-  <script type="module" src="../src/js/forgot-password.js"></script>
+<script type="module" src="../src/js/app.js"></script>
+<script type="module" src="../src/js/login.js"></script>
+<script type="module" src="../src/js/forgot-password.js"></script>
+<script>
+  // Toggle password
+  document.getElementById("togglePass")?.addEventListener("click", () => {
+    const input = document.getElementById("password");
+    const icon  = document.getElementById("togglePassIcon");
+    const show  = input.type === "password";
+    input.type  = show ? "text" : "password";
+    icon.className = show ? "bi bi-eye-slash" : "bi bi-eye";
+  });
+</script>
+
 </body>
 </html>

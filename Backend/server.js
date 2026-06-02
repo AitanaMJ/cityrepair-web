@@ -11,7 +11,7 @@ app.use(express.json());
    REGISTER
 ========================= */
 app.post("/api/register", (req, res) => {
-  let { email, password } = req.body;
+  let { email, password, role, nombre } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({ error: "Email y contraseña son obligatorios" });
@@ -19,8 +19,8 @@ app.post("/api/register", (req, res) => {
 
   email    = email.trim().toLowerCase();
   password = password.trim();
+  role     = ["citizen", "tecnico"].includes(role) ? role : "citizen";
 
-  // Verificar si el email ya existe
   db.query("SELECT id FROM usuarios WHERE email = ?", [email], (err, results) => {
     if (err) return res.status(500).json({ error: "Error del servidor" });
 
@@ -28,15 +28,14 @@ app.post("/api/register", (req, res) => {
       return res.status(409).json({ error: "Este correo ya está registrado" });
     }
 
-    // Insertar nuevo usuario con rol citizen
     db.query(
-      "INSERT INTO usuarios (email, password, role, activo) VALUES (?, ?, 'citizen', 1)",
-      [email, password],
+      "INSERT INTO usuarios (email, password, role, activo) VALUES (?, ?, ?, 1)",
+      [email, password, role],
       (err, result) => {
         if (err) return res.status(500).json({ error: "Error al registrar usuario" });
         res.status(201).json({
           ok: true,
-          user: { id: result.insertId, email, role: "citizen" }
+          user: { id: result.insertId, email, role }
         });
       }
     );
