@@ -8,6 +8,42 @@ app.use(cors());
 app.use(express.json());
 
 /* =========================
+   REGISTER
+========================= */
+app.post("/api/register", (req, res) => {
+  let { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email y contraseña son obligatorios" });
+  }
+
+  email    = email.trim().toLowerCase();
+  password = password.trim();
+
+  // Verificar si el email ya existe
+  db.query("SELECT id FROM usuarios WHERE email = ?", [email], (err, results) => {
+    if (err) return res.status(500).json({ error: "Error del servidor" });
+
+    if (results.length > 0) {
+      return res.status(409).json({ error: "Este correo ya está registrado" });
+    }
+
+    // Insertar nuevo usuario con rol citizen
+    db.query(
+      "INSERT INTO usuarios (email, password, role, activo) VALUES (?, ?, 'citizen', 1)",
+      [email, password],
+      (err, result) => {
+        if (err) return res.status(500).json({ error: "Error al registrar usuario" });
+        res.status(201).json({
+          ok: true,
+          user: { id: result.insertId, email, role: "citizen" }
+        });
+      }
+    );
+  });
+});
+
+/* =========================
    LOGIN
 ========================= */
 app.post("/api/login", (req, res) => {
