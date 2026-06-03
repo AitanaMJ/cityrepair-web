@@ -381,3 +381,23 @@ label {
   background: #6366f1;
   color: #fff;
 }
+
+/* ── Botón comunicar al usuario ── */
+.btn-comunicar {
+  background: #16a34a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  height: 32px;
+  padding: 0 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'DM Sans', sans-serif;
+  transition: 0.15s ease;
+  white-space: nowrap;
+}
+.btn-comunicar:hover { background: #15803d; }

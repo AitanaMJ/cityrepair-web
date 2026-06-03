@@ -252,26 +252,26 @@ app.get("/api/reportes/tecnico/:email", (req, res) => {
    CAMBIAR ESTADO
 ========================= */
 app.put("/api/reportes/:id/estado", (req, res) => {
-
   const { id } = req.params;
   const { estado } = req.body;
 
-  db.query(
-    "UPDATE reportes SET estado = ? WHERE id = ?",
-    [estado, id],
-    (err) => {
+  // Verificar que el reporte no esté ya resuelto
+  db.query("SELECT estado FROM reportes WHERE id = ?", [id], (err, results) => {
+    if (err) return res.status(500).json({ error: "Error verificando estado" });
+    if (!results.length) return res.status(404).json({ error: "Reporte no encontrado" });
 
-      if (err) {
-        return res.status(500).json({
-          error: "Error actualizando estado"
-        });
-      }
-
-      res.json({
-        message: "Estado actualizado"
-      });
+    if (results[0].estado === "resuelto") {
+      return res.status(403).json({ error: "El reporte ya está resuelto y no puede modificarse" });
     }
-  );
+
+    db.query("UPDATE reportes SET estado = ?, fecha_resuelto = IF(? = 'resuelto', NOW(), fecha_resuelto) WHERE id = ?",
+      [estado, estado, id],
+      (err) => {
+        if (err) return res.status(500).json({ error: "Error actualizando estado" });
+        res.json({ message: "Estado actualizado" });
+      }
+    );
+  });
 });
 
 /* =========================
@@ -370,6 +370,66 @@ app.put("/api/usuarios/:id/estado", (req, res) => {
     (err) => {
       if (err) return res.status(500).json({ error: "Error actualizando usuario" });
       res.json({ ok: true, activo });
+    }
+  );
+});
+
+/* =========================
+   NOTIFICACIONES
+========================= */
+
+// Obtener IDs de reportes que ya tienen notificación enviada
+app.get("/api/notificaciones/reportes-notificados", (req, res) => {
+  db.query(
+    "SELECT DISTINCT reporte_id FROM notificaciones",
+    (err, results) => {
+      if (err) return res.status(500).json({ error: "Error" });
+      res.json(results.map(r => r.reporte_id));
+    }
+  );
+});
+
+// Enviar notificación al usuario
+app.post("/api/notificaciones", (req, res) => {
+  const { usuario_id, reporte_id, mensaje } = req.body;
+  if (!usuario_id || !reporte_id || !mensaje) {
+    return res.status(400).json({ error: "Faltan datos" });
+  }
+  db.query(
+    "INSERT INTO notificaciones (usuario_id, reporte_id, mensaje) VALUES (?, ?, ?)",
+    [usuario_id, reporte_id, mensaje],
+    (err, result) => {
+      if (err) return res.status(500).json({ error: "Error enviando notificación" });
+      res.status(201).json({ ok: true, id: result.insertId });
+    }
+  );
+});
+
+// Obtener notificaciones de un usuario
+app.get("/api/notificaciones/:usuario_id", (req, res) => {
+  const { usuario_id } = req.params;
+  db.query(
+    `SELECT n.*, r.tipo as reporte_tipo, r.zona as reporte_zona
+     FROM notificaciones n
+     LEFT JOIN reportes r ON r.id = n.reporte_id
+     WHERE n.usuario_id = ?
+     ORDER BY n.fecha DESC`,
+    [usuario_id],
+    (err, results) => {
+      if (err) return res.status(500).json({ error: "Error obteniendo notificaciones" });
+      res.json(results);
+    }
+  );
+});
+
+// Marcar notificación como leída
+app.put("/api/notificaciones/:id/leer", (req, res) => {
+  db.query(
+    "UPDATE notificaciones SET leida = 1 WHERE id = ?",
+    [req.params.id],
+    (err) => {
+      if (err) return res.status(500).json({ error: "Error actualizando notificación" });
+      res.json({ ok: true });
     }
   );
 });

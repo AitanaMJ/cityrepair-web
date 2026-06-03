@@ -25,7 +25,10 @@ async function cargarReportes() {
     if (!res.ok) throw new Error("Error obteniendo reportes");
 
     const data = await res.json();
-    reportesUsuario = data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+    // Ocultar resueltos — van al buzón de notificaciones del perfil
+    reportesUsuario = data
+      .filter(r => (r.estado || "").toLowerCase() !== "resuelto")
+      .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
     aplicarFiltros();
   } catch (err) {

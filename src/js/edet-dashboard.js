@@ -26,6 +26,7 @@ const ctxPrioridad      = document.getElementById("chartPrioridad");
 
 let REPORTES_ORIGINALES = [];
 let REPORTES_FILTRADOS  = [];
+let REPORTES_NOTIFICADOS = new Set(); // IDs de reportes con notificación ya enviada
 let CHART_ESTADOS       = null;
 let CHART_ZONA          = null;
 let CHART_TIPOS         = null;
@@ -37,9 +38,17 @@ let paginaActual        = 1;
 ======================================================= */
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    const res  = await fetch(`${API}/reportes`);
-    const data = await res.json();
-    REPORTES_ORIGINALES = data.map(r => ({ ...r, fecha: new Date(r.fecha) }));
+    const [resReportes, resNotif] = await Promise.all([
+      fetch(`${API}/reportes`),
+      fetch(`${API}/notificaciones/reportes-notificados`)
+    ]);
+
+    const data  = await resReportes.json();
+    const notif = await resNotif.json();
+
+    REPORTES_ORIGINALES  = data.map(r => ({ ...r, fecha: new Date(r.fecha) }));
+    REPORTES_NOTIFICADOS = new Set(notif);
+
     aplicarFiltros();
   } catch (err) {
     console.error("Error cargando reportes:", err);
@@ -179,6 +188,8 @@ function renderTabla(reportes) {
         const idCorto   = String(r.id).slice(0, 6);
         const estadoClass    = estado === "resuelto" ? "estado-ok" : estado.includes("rev") ? "estado-review" : "estado-pendiente";
         const prioridadClass = prioridad === "alta" ? "prioridad-alta" : prioridad === "media" ? "prioridad-media" : "prioridad-baja";
+        const esResuelto = estado === "resuelto";
+
         return `
           <div class="reporte-card ${estadoClass}">
             <div class="reporte-header">
@@ -193,12 +204,31 @@ function renderTabla(reportes) {
               ${r.descripcion ? `<p class="desc-label">${r.descripcion}</p>` : ""}
             </div>
             <div class="reporte-acciones">
-              <select onchange="cambiarEstado(${r.id}, this.value)">
-                <option value="pendiente"   ${estado === "pendiente"   ? "selected" : ""}>Pendiente</option>
-                <option value="en revision" ${estado === "en revision" ? "selected" : ""}>En revisión</option>
-                <option value="resuelto"    ${estado === "resuelto"    ? "selected" : ""}>Resuelto</option>
-              </select>
-              <button class="btn-asignar" onclick="abrirModalAsignar(${r.id})">👷 Asignar técnico</button>
+              ${esResuelto
+                ? (() => {
+                    const yaNotificado = REPORTES_NOTIFICADOS.has(r.id);
+                    return `<select disabled style="opacity:0.5;cursor:not-allowed;">
+                       <option>✅ Resuelto</option>
+                     </select>
+                     ${yaNotificado
+                       ? `<button class="btn-comunicar" disabled
+                            style="opacity:0.5;cursor:not-allowed;background:#9ca3af;"
+                            title="Ya se envió una notificación para este reporte">
+                            ✉️ Notificación enviada
+                          </button>`
+                       : `<button class="btn-comunicar" id="btn-comunicar-${r.id}"
+                            onclick="abrirModalComunicar(${r.id}, ${r.usuario_id})">
+                            📩 Comunicar al usuario
+                          </button>`
+                     }`;
+                  })()
+                : `<select onchange="cambiarEstado(${r.id}, this.value)">
+                     <option value="pendiente"   ${estado === "pendiente"   ? "selected" : ""}>Pendiente</option>
+                     <option value="en revision" ${estado === "en revision" ? "selected" : ""}>En revisión</option>
+                     <option value="resuelto"    ${estado === "resuelto"    ? "selected" : ""}>Resuelto</option>
+                   </select>
+                   <button class="btn-asignar" onclick="abrirModalAsignar(${r.id})">👷 Asignar técnico</button>`
+              }
             </div>
           </div>
         `;
@@ -568,6 +598,101 @@ async function confirmarAsignar() {
   }
 }
 window.confirmarAsignar = confirmarAsignar;
+
+/* =======================================================
+   MODAL COMUNICAR AL USUARIO
+======================================================= */
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.createElement("div");
+  modal.id = "modal-comunicar";
+  modal.style.cssText = `display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);
+    z-index:1000; align-items:center; justify-content:center;`;
+  modal.innerHTML = `
+    <div style="background:#fff; border-radius:16px; padding:28px; width:420px;
+                box-shadow:0 8px 32px rgba(0,0,0,0.2); font-family:'DM Sans',sans-serif;">
+      <h3 style="margin:0 0 6px; font-size:1.1rem; color:#111827;">📩 Comunicar al usuario</h3>
+      <p style="margin:0 0 16px; font-size:0.85rem; color:#6b7280;">
+        Escribí un mensaje que le llegará al buzón del ciudadano.
+      </p>
+      <label style="font-size:0.82rem; font-weight:600; color:#374151;">Mensaje</label>
+      <textarea id="textoComunicar" rows="4"
+        placeholder="Ej: Tu reporte de Corte-Total fue resuelto satisfactoriamente. El técnico restableció el servicio el día de hoy."
+        style="width:100%; margin-top:6px; margin-bottom:16px; padding:10px 12px;
+               border:1.5px solid #e5e7eb; border-radius:10px; font-family:'DM Sans',sans-serif;
+               font-size:0.9rem; resize:vertical; outline:none;"></textarea>
+      <div style="display:flex; gap:10px;">
+        <button onclick="enviarComunicacion()"
+          style="flex:1; height:40px; background:#16a34a; color:#fff; border:none;
+                 border-radius:10px; font-family:'DM Sans',sans-serif; font-weight:700; cursor:pointer;">
+          ✉️ Enviar mensaje
+        </button>
+        <button onclick="cerrarModalComunicar()"
+          style="flex:1; height:40px; background:#fff; color:#374151;
+                 border:1.5px solid #e5e7eb; border-radius:10px;
+                 font-family:'DM Sans',sans-serif; font-weight:600; cursor:pointer;">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+});
+
+let _comunicarReporteId = null;
+let _comunicarUsuarioId = null;
+
+function abrirModalComunicar(reporteId, usuarioId) {
+  _comunicarReporteId = reporteId;
+  _comunicarUsuarioId = usuarioId;
+  document.getElementById("textoComunicar").value = "";
+  const modal = document.getElementById("modal-comunicar");
+  if (modal) modal.style.display = "flex";
+}
+window.abrirModalComunicar = abrirModalComunicar;
+
+function cerrarModalComunicar() {
+  const modal = document.getElementById("modal-comunicar");
+  if (modal) modal.style.display = "none";
+  _comunicarReporteId = null;
+  _comunicarUsuarioId = null;
+}
+window.cerrarModalComunicar = cerrarModalComunicar;
+
+async function enviarComunicacion() {
+  const mensaje = document.getElementById("textoComunicar")?.value.trim();
+  if (!mensaje) { alert("Escribí un mensaje antes de enviar."); return; }
+  if (!_comunicarUsuarioId) { alert("No se pudo identificar al usuario."); return; }
+
+  try {
+    const res = await fetch(`${API}/notificaciones`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        usuario_id: _comunicarUsuarioId,
+        reporte_id: _comunicarReporteId,
+        mensaje
+      })
+    });
+    if (!res.ok) throw new Error();
+
+    // Marcar como notificado y deshabilitar el botón inmediatamente
+    REPORTES_NOTIFICADOS.add(_comunicarReporteId);
+    const btn = document.getElementById(`btn-comunicar-${_comunicarReporteId}`);
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "✉️ Notificación enviada";
+      btn.style.opacity = "0.5";
+      btn.style.cursor  = "not-allowed";
+      btn.style.background = "#9ca3af";
+    }
+
+    cerrarModalComunicar();
+    alert("✅ Mensaje enviado al usuario correctamente.");
+  } catch {
+    alert("❌ Error al enviar el mensaje.");
+  }
+}
+window.enviarComunicacion = enviarComunicacion;
 
 /* =======================================================
    LOGOUT

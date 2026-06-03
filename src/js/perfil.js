@@ -46,6 +46,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   } catch(e) { console.error(e); }
 
+  // Buzón de notificaciones
+  await cargarBuzon(session.id);
+
   // Cambiar foto
   const btnFoto  = document.getElementById("btnCambiarFoto");
   const inputFoto = document.getElementById("inputFoto");
@@ -94,3 +97,84 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 });
+
+async function cargarBuzon(usuarioId) {
+  const contenedor = document.getElementById("listaBuzon");
+  const badge      = document.getElementById("badgeNoLeidas");
+  if (!contenedor) return;
+
+  try {
+    const res  = await fetch(`${API}/notificaciones/${usuarioId}`);
+    const data = await res.json();
+
+    if (!res.ok || !Array.isArray(data) || data.length === 0) {
+      contenedor.innerHTML = `
+        <div style="text-align:center; padding:24px 0; color:#9ca3af;">
+          <div style="font-size:2rem; margin-bottom:8px;">📭</div>
+          <p style="font-size:0.87rem;">No tenés notificaciones todavía.</p>
+        </div>`;
+      return;
+    }
+
+    const noLeidas = data.filter(n => !n.leida).length;
+    if (noLeidas > 0) {
+      badge.textContent = noLeidas;
+      badge.style.display = "inline-block";
+    }
+
+    contenedor.innerHTML = data.map(n => {
+      const fecha  = new Date(n.fecha).toLocaleString("es-AR", { day:"2-digit", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit" });
+      const leida  = n.leida;
+      return `
+        <div id="notif-${n.id}" style="
+          display:flex; gap:14px; align-items:flex-start;
+          padding:14px; border-radius:12px; margin-bottom:10px;
+          background:${leida ? "#f9fafb" : "#eff6ff"};
+          border:1px solid ${leida ? "#f0f0f0" : "#bfdbfe"};
+          transition:background 0.2s;">
+          <div style="font-size:1.4rem; flex-shrink:0;">${leida ? "📬" : "📩"}</div>
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span style="font-size:0.78rem; font-weight:700; color:#1d4ed8;">
+                Reporte #${n.reporte_id} — ${n.reporte_tipo || ""}
+              </span>
+              <span style="font-size:0.72rem; color:#9ca3af;">${fecha}</span>
+            </div>
+            <p style="margin:0 0 8px; font-size:0.87rem; color:#374151; line-height:1.5;">${n.mensaje}</p>
+            ${!leida ? `<button onclick="marcarLeida(${n.id})"
+              style="font-size:0.78rem; color:#1d4ed8; background:none; border:none;
+                     cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:600; padding:0;">
+              ✓ Marcar como leída
+            </button>` : `<span style="font-size:0.75rem; color:#9ca3af;">✓ Leída</span>`}
+          </div>
+        </div>`;
+    }).join("");
+  } catch(e) {
+    contenedor.innerHTML = `<p style="color:#dc2626; font-size:0.87rem;">Error cargando notificaciones.</p>`;
+  }
+}
+
+window.marcarLeida = async function(id) {
+  try {
+    await fetch(`${API}/notificaciones/${id}/leer`, { method: "PUT" });
+    const el = document.getElementById(`notif-${id}`);
+    if (el) {
+      el.style.background = "#f9fafb";
+      el.style.borderColor = "#f0f0f0";
+      el.querySelector("button")?.replaceWith(Object.assign(document.createElement("span"), {
+        style: "font-size:0.75rem; color:#9ca3af;",
+        textContent: "✓ Leída"
+      }));
+      el.querySelector("div")?.childNodes[0]?.replaceWith(
+        Object.assign(document.createTextNode(""), { textContent: "📬" })
+      );
+    }
+    // Actualizar badge
+    const badge = document.getElementById("badgeNoLeidas");
+    if (badge) {
+      const actual = parseInt(badge.textContent) - 1;
+      if (actual <= 0) badge.style.display = "none";
+      else badge.textContent = actual;
+    }
+  } catch(e) { console.error(e); }
+};
