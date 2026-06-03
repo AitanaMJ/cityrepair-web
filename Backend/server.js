@@ -135,17 +135,12 @@ app.post("/api/reportes", (req, res) => {
    TODOS LOS REPORTES
 ========================= */
 app.get("/api/reportes", (req, res) => {
-
   db.query(
-    "SELECT * FROM reportes",
+    `SELECT r.*, u.email AS usuario_email
+     FROM reportes r
+     LEFT JOIN usuarios u ON u.id = r.usuario_id`,
     (err, results) => {
-
-      if (err) {
-        return res.status(500).json({
-          error: "Error obteniendo reportes"
-        });
-      }
-
+      if (err) return res.status(500).json({ error: "Error obteniendo reportes" });
       res.json(results);
     }
   );

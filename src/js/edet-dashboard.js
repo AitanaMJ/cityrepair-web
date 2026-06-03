@@ -201,6 +201,7 @@ function renderTabla(reportes) {
               <p class="estado-label">${estado}</p>
               <p class="fecha-label">${fecha}</p>
               ${r.zona ? `<p class="fecha-label">📍 ${r.zona}</p>` : ""}
+              ${r.usuario_email ? `<p class="fecha-label">👤 ${r.usuario_email}</p>` : ""}
               ${r.descripcion ? `<p class="desc-label">${r.descripcion}</p>` : ""}
             </div>
             <div class="reporte-acciones">
