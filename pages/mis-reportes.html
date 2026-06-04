@@ -99,20 +99,33 @@
   </nav>
 </aside>
 
+  <!-- ===== HERO ===== -->
+  <section style="background:linear-gradient(160deg,#eff6ff 0%,#f8fafc 60%);border-bottom:1px solid #e5e7eb;padding:28px 0 20px;">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:6px;background:#dbeafe;color:#1d4ed8;font-size:0.75rem;font-weight:700;padding:4px 12px;border-radius:999px;margin-bottom:10px;text-transform:uppercase;">
+          <i class="bi bi-clipboard2-check-fill"></i> Mis Reportes
+        </div>
+        <h1 class="page-title" style="margin:0 0 4px;font-size:1.7rem;font-weight:800;color:#0f172a;"></h1>
+        <p style="margin:0;font-size:0.9rem;color:#6b7280;">Seguí el estado de tus reportes enviados</p>
+      </div>
+      <a href="./reportar.html" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:7px;padding:10px 20px;background:#1d4ed8;color:#fff;border-radius:12px;text-decoration:none;font-weight:700;font-size:0.9rem;white-space:nowrap;">
+        <i class="bi bi-plus-circle"></i> Nuevo reporte
+      </a>
+    </div>
+  </section>
+
   <!-- ===== CONTENIDO ===== -->
   <main class="container myreports">
     <!-- Cabecera + filtros -->
     <div class="myreports-header">
-      <h1 class="page-title"></h1>
-
       <div class="myreports-filters">
         <label for="filtro-estado">
-          Filtrar por estado:
+          Filtrar:
           <select id="filtro-estado">
-            <option value="todos" selected>Reportes</option>
+            <option value="todos" selected>Todos los reportes</option>
             <option value="pendiente">Pendiente</option>
             <option value="en revision">En revisión</option>
-            <option value="resuelto">Resuelto</option>
           </select>
         </label>
       </div>
