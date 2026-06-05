@@ -6,7 +6,29 @@ document.addEventListener("DOMContentLoaded", () => {
   let isSubmitting = false;
 
   const showToast = (msg, tipo = "info", titulo = "") => {
-    if (typeof window.mostrarAlerta === "function") {
+    // Usar el toast integrado en el HTML del login
+    const toast = document.getElementById("authToast");
+    const msgEl = document.getElementById("authToastMsg");
+
+    if (toast && msgEl) {
+      msgEl.textContent = msg;
+      // Color según tipo
+      if (tipo === "danger" || tipo === "error") {
+        toast.style.background = "#fee2e2";
+        toast.style.color = "#991b1b";
+        toast.style.borderColor = "#fecaca";
+      } else if (tipo === "warn") {
+        toast.style.background = "#fffbeb";
+        toast.style.color = "#92400e";
+        toast.style.borderColor = "#fde68a";
+      } else if (tipo === "success") {
+        toast.style.background = "#f0fdf4";
+        toast.style.color = "#166534";
+        toast.style.borderColor = "#bbf7d0";
+      }
+      toast.removeAttribute("hidden");
+      setTimeout(() => toast.setAttribute("hidden", ""), 6000);
+    } else if (typeof window.mostrarAlerta === "function") {
       window.mostrarAlerta(msg, tipo, { titulo });
     } else {
       alert(msg);
@@ -63,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (!res.ok) {
         const msg = res.status === 403
-          ? data.error  // "Cuenta desactivada. Contactá al administrador."
+          ? "⛔ Cuenta suspendida. Contactá al administrador de EDET."
           : "Correo o contraseña incorrectos";
         throw new Error(msg);
       }

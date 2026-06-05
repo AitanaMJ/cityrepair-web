@@ -50,7 +50,7 @@ async function cargarTecnicos() {
   if (!contenedor) return;
 
   try {
-    const res  = await fetch(`${API}/tecnicos`);
+    const res  = await fetch(`${API}/tecnicos/todos`);
     const data = await res.json();
 
     if (!res.ok || !Array.isArray(data) || data.length === 0) {

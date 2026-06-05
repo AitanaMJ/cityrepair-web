@@ -323,9 +323,22 @@ app.put("/api/reportes/:id", (req, res) => {
 });
 
 /* =========================
-   OBTENER TÉCNICOS
+   OBTENER TÉCNICOS ACTIVOS (para selector de asignación)
 ========================= */
 app.get("/api/tecnicos", (req, res) => {
+  db.query(
+    "SELECT id, email, activo FROM usuarios WHERE role = 'tecnico' AND activo = 1",
+    (err, results) => {
+      if (err) return res.status(500).json({ error: "Error obteniendo técnicos" });
+      res.json(results);
+    }
+  );
+});
+
+/* =========================
+   OBTENER TODOS LOS TÉCNICOS (para gestión del admin)
+========================= */
+app.get("/api/tecnicos/todos", (req, res) => {
   db.query(
     "SELECT id, email, activo FROM usuarios WHERE role = 'tecnico'",
     (err, results) => {
