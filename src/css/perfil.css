@@ -264,10 +264,10 @@ body { font-family: 'DM Sans', sans-serif; background: #f8fafc; margin: 0; }
 }
 
 .citizen-accion-btn--primary {
-  background: #1d4ed8;
+  background: #003087;
   color: #fff;
 }
-.citizen-accion-btn--primary:hover { background: #1e40af; transform: translateY(-1px); }
+.citizen-accion-btn--primary:hover { background: #002570; transform: translateY(-1px); }
 
 .citizen-accion-btn--teal {
   background: #0d9488;
@@ -334,7 +334,7 @@ body { font-family: 'DM Sans', sans-serif; background: #f8fafc; margin: 0; }
 .citizen-baja-btn:hover { background: #dc2626; color: #fff; }
 
 /* =========================================
-  RESPONSIVE
+   RESPONSIVE
    ========================================= */
 @media (max-width: 560px) {
   .citizen-stats-row     { grid-template-columns: 1fr; }

@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;900&display=swap');
 
 :root {
-  --blue: #0d6efd;
+  --blue: #003087;
   --green: #16a34a;
   --red: #dc2626;
   --yellow: #d97706;
@@ -21,7 +21,7 @@ body { font-family: 'DM Sans', sans-serif; background: #f8fafc; }
   align-items: center;
   padding: 14px 28px;
   background: #fff;
-  border-bottom: 1px solid var(--stroke);
+  border-bottom: 3px solid #003087;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   position: sticky;
   top: 0;
@@ -30,7 +30,7 @@ body { font-family: 'DM Sans', sans-serif; background: #f8fafc; }
 .edet-navbar-brand { display: flex; align-items: center; gap: 12px; }
 .avatar-sm {
   width: 38px; height: 38px;
-  background: linear-gradient(135deg, #0d6efd, #6366f1);
+  background: linear-gradient(135deg, #003087, #6366f1);
   color: #fff; border-radius: 10px;
   display: grid; place-items: center;
   font-weight: 700; font-size: 16px;
@@ -81,10 +81,10 @@ body { font-family: 'DM Sans', sans-serif; background: #f8fafc; }
 .kpi::before {
   content: ''; position: absolute;
   top: 0; left: 0; right: 0; height: 4px;
-  background: linear-gradient(90deg, #0d6efd, #6366f1);
+  background: linear-gradient(90deg, #003087, #6366f1);
 }
 .kpi:nth-child(2)::before { background: linear-gradient(90deg, #16a34a, #22c55e); }
-.kpi:nth-child(3)::before { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
+.kpi:nth-child(3)::before { background: linear-gradient(90deg, #0057B7, #38bdf8); }
 .kpi:nth-child(4)::before { background: linear-gradient(90deg, #dc2626, #f87171); }
 
 .kpi-num {
@@ -92,7 +92,7 @@ body { font-family: 'DM Sans', sans-serif; background: #f8fafc; }
   line-height: 1;
 }
 .kpi-num--green { color: var(--green); }
-.kpi-num--blue  { color: #0ea5e9; }
+.kpi-num--blue  { color: #0057B7; }
 .kpi-num--red   { color: var(--red); }
 .kpi-sub { font-size: 0.82rem; color: var(--muted); font-weight: 500; }
 
@@ -109,7 +109,7 @@ body { font-family: 'DM Sans', sans-serif; background: #f8fafc; }
   font-weight: 700; font-size: 1rem; color: #111827;
   margin-bottom: 16px;
   padding-bottom: 10px;
-  border-bottom: 1px solid var(--stroke);
+  border-bottom: 3px solid #003087;
 }
 
 .select {
@@ -139,7 +139,7 @@ label {
   font-size: 0.85rem; font-weight: 600;
   cursor: pointer; transition: background 0.15s ease;
 }
-.btn-primary:hover { background: #0b5ed7; }
+.btn-primary:hover { background: #002570; }
 
 .btn-secondary {
   height: 40px; padding: 0 18px;
@@ -339,13 +339,13 @@ label {
   background: transparent;
   font-family: 'DM Sans', sans-serif;
   font-size: 0.9rem;
-  color: #0d6efd;
+  color: #003087;
   cursor: pointer;
   transition: background 0.15s ease;
 }
 .paginado button:hover { background: #e8f0fe; }
 .paginado button.activa {
-  background: #0d6efd;
+  background: #003087;
   color: #fff;
   font-weight: 700;
   border-radius: 50%;

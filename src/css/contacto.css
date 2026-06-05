@@ -4,7 +4,7 @@
 
 /* Hero */
 .contacto-hero {
-  background: linear-gradient(160deg, #eff6ff 0%, #f8fafc 60%);
+  background: linear-gradient(160deg, #EBF2FB 0%, #f8fafc 60%);
   border-bottom: 1px solid #e5e7eb;
   padding: 36px 0 28px;
 }
@@ -15,8 +15,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: #EBF2FB;
+  color: #003087;
   font-size: 0.75rem;
   font-weight: 700;
   padding: 4px 14px;
@@ -112,7 +112,7 @@
   border-bottom: 1px solid #f3f4f6;
 }
 
-.contacto-form-title i { color: #1d4ed8; }
+.contacto-form-title i { color: #003087; }
 
 .contacto-form { display: flex; flex-direction: column; gap: 16px; }
 
@@ -170,7 +170,7 @@
 
 .contacto-input-wrap input:focus,
 .contacto-field textarea:focus {
-  border-color: #1d4ed8;
+  border-color: #003087;
   background: #fff;
   box-shadow: 0 0 0 3px rgba(29,78,216,0.1);
 }
@@ -184,7 +184,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 28px;
-  background: linear-gradient(135deg, #1d4ed8, #0ea5e9);
+  background: linear-gradient(135deg, #003087, #0057B7);
   color: #fff;
   border: none;
   border-radius: 12px;

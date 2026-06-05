@@ -16,7 +16,7 @@ body { font-family: 'DM Sans', sans-serif; background: #f8fafc; height: 100dvh; 
    PANEL IZQUIERDO
    ========================================= */
 .auth-panel-left {
-  background: linear-gradient(145deg, #1e3a8a 0%, #1d4ed8 40%, #0ea5e9 100%);
+  background: linear-gradient(145deg, #001a5e 0%, #003087 50%, #0057B7 100%);
   display: flex;
   flex-direction: column;
   padding: 40px 48px;
@@ -225,7 +225,7 @@ body { font-family: 'DM Sans', sans-serif; background: #f8fafc; height: 100dvh; 
 }
 
 .auth-input-wrap input:focus {
-  border-color: #1d4ed8;
+  border-color: #003087;
   background: #fff;
   box-shadow: 0 0 0 3px rgba(29,78,216,0.1);
 }
@@ -279,7 +279,7 @@ body { font-family: 'DM Sans', sans-serif; background: #f8fafc; height: 100dvh; 
 }
 
 .auth-link {
-  color: #1d4ed8;
+  color: #003087;
   text-decoration: none;
   font-size: 0.85rem;
   font-weight: 600;
@@ -293,7 +293,7 @@ body { font-family: 'DM Sans', sans-serif; background: #f8fafc; height: 100dvh; 
 .auth-btn {
   width: 100%;
   height: 48px;
-  background: linear-gradient(135deg, #1d4ed8, #0ea5e9);
+  background: linear-gradient(135deg, #001a5e, #003087);
   color: #fff;
   border: none;
   border-radius: 12px;
@@ -355,13 +355,13 @@ body { font-family: 'DM Sans', sans-serif; background: #f8fafc; height: 100dvh; 
 }
 
 .auth-role-option input[type="radio"]:checked + .auth-role-card {
-  border-color: #1d4ed8;
-  background: #eff6ff;
-  color: #1d4ed8;
+  border-color: #003087;
+  background: #EBF2FB;
+  color: #003087;
 }
 
 .auth-role-option input[type="radio"]:checked + .auth-role-card i {
-  color: #1d4ed8;
+  color: #003087;
 }
 
 .auth-role-card:hover {

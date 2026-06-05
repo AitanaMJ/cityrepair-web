@@ -1,184 +1,275 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CityRepair – Inicio</title>
-  <link rel="stylesheet" href="src/css/styles.css" />
-  <link rel="stylesheet" href="src/css/chat-ia.css" />
+  <title>CityRepair – Sistema de Reportes EDET</title>
+  <link rel="icon" type="image/png" href="src/img/favicon.png">
+  <link rel="stylesheet" href="src/css/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 <body>
-  <!-- ===== NAVBAR ===== -->
-  <header class="navbar">
-    <div class="container">
-      <div class="brand-left">
-        <div class="avatar-sm">E</div>
-        <div class="brand-txt">
-          <span class="brand-title">CityRepair</span>
-          <span class="brand-sub">Sistema de Reportes EDET</span>
+
+<!-- ══ NAVBAR ══ -->
+<header class="navbar">
+  <div class="container">
+    <div class="brand-left">
+      <img src="src/img/favicon.png" class="logo-sm" alt="CityRepair">
+      <div class="brand-txt">
+        <span class="brand-title">CityRepair</span>
+        <span class="brand-sub">Sistema de Reportes EDET</span>
+      </div>
+    </div>
+    <nav class="nav-right">
+      <a class="nav-item active" href="index.html"><i class="bi bi-house"></i> Inicio</a>
+      <a class="nav-item" href="pages/reportar.html"><i class="bi bi-flag"></i> Reportar</a>
+      <a class="nav-item" href="pages/mis-reportes.html"><i class="bi bi-clipboard2-check"></i> Mis Reportes</a>
+      <a class="nav-item" href="pages/contacto.html"><i class="bi bi-telephone"></i> Contacto</a>
+      <a class="nav-item" href="pages/login.html" data-login-link><i class="bi bi-box-arrow-in-right"></i> Acceder</a>
+      <div class="nav-item user-pill" id="userMenuBtn" data-user-panel hidden>
+        <div class="avatar-sm" data-user-avatar>U</div>
+        <span data-user-name></span>
+        <i class="bi bi-caret-down-fill icon-dropdown"></i>
+        <div class="user-dropdown" id="userDropdown" hidden>
+          <a href="pages/perfil.html" class="dropdown-btn"><i class="bi bi-person-circle"></i> Mi Perfil</a>
+          <button id="logoutFromMenu"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</button>
         </div>
       </div>
+      <button class="hamburger" id="openDrawer"><i class="bi bi-list"></i></button>
+    </nav>
+  </div>
+</header>
 
-      <nav class="nav-right">
-        <a class="nav-item active" href="./index.html">
-          <span class="icon"><i class="bi bi-house"></i></span> Inicio
-        </a>
-
-        <!-- Requieren login de ciudadano -->
-        <a class="nav-item" href="/pages/reportar.html" data-auth="citizen">
-          <span class="icon"><i class="bi bi-flag"></i></span> Reportar
-        </a>
-        <a class="nav-item" href="/pages/mis-reportes.html" data-auth="citizen">
-          <span class="icon"><i class="bi bi-clipboard2-check"></i></span> Mis Reportes
-        </a>
-
-        <a class="nav-item" href="/pages/contacto.html">
-          <span class="icon"><i class="bi bi-telephone"></i></span> Contacto
-        </a>
-
-        <!-- botón de acceder (solo sin sesión) -->
-        <a class="nav-item" href="/pages/login.html" data-login-link>
-          <span class="icon"><i class="bi bi-box-arrow-in-right"></i></span> Acceder
-        </a>
-
-        <!-- perfil del usuario (oculto por defecto) -->
-        <div class="nav-item user-pill" data-user-panel hidden id="userMenuBtn">
-          <img src="" alt="avatar" class="user-avatar" data-user-avatar>
-          <span data-user-name></span>
-          <div class="user-dropdown" id="userDropdown" hidden>
-            <button id="goProfile">Mi perfil</button>
-            <button id="logoutFromMenu">Cerrar sesión</button>
-          </div>
-        </div>
-
-        <button class="hamburger" id="openDrawer" aria-label="Abrir menú">
-          <i class="bi bi-list"></i>
-        </button>
-      </nav>
-    </div>
-    <div class="navbar-divider"></div>
-  </header>
-
-  <!-- ===== DRAWER MÓVIL ===== -->
-  <div class="drawer-overlay" id="drawerOverlay"></div>
-
-<aside class="drawer" id="drawer" aria-hidden="true">
-  <button class="drawer-close" id="closeDrawer" aria-label="Cerrar">×</button>
-
+<!-- DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="drawer">
+  <button class="drawer-close" id="closeDrawer">×</button>
   <div class="drawer-header">
-    <div class="avatar-sm">E</div>
+    <img src="src/img/favicon.png" class="logo-sm" alt="" style="filter:brightness(0) invert(1)">
     <div class="brand-txt">
       <span class="brand-title">CityRepair</span>
       <span class="brand-sub">Sistema de Reportes EDET</span>
     </div>
   </div>
-
   <nav class="drawer-nav">
-    <a class="drawer-link" href="../index.html">Inicio</a>
-    <a class="drawer-link" href="./reportar.html" data-auth="citizen">Reportar</a>
-    <a class="drawer-link active" href="./mis-reportes.html" data-auth="citizen">Mis Reportes</a>
-    <a class="drawer-link" href="./contacto.html">Contacto</a>
-
-    <!-- ACCEDER (solo cuando NO hay sesión) -->
-    <a class="drawer-link" href="./login.html" data-login-link id="drawerLogin">Acceder</a>
-
-    <!-- DATOS DEL USUARIO (solo cuando hay sesión) -->
-    <div class="drawer-link" data-user-panel hidden>
-      <span data-user-name></span>
-    </div>
-
-    <!-- MI PERFIL (solo cuando hay sesión) -->
-    <a class="drawer-link" href="./perfil.html" data-user-panel hidden>
-      Mi perfil
-    </a>
-
-    <!-- CERRAR SESIÓN (solo cuando hay sesión) -->
-    <button class="drawer-link" id="drawerLogout" data-logout hidden>
-      Cerrar sesión
-    </button>
+    <a class="drawer-link active" href="index.html"><i class="bi bi-house"></i> Inicio</a>
+    <a class="drawer-link" href="pages/reportar.html"><i class="bi bi-flag"></i> Reportar</a>
+    <a class="drawer-link" href="pages/mis-reportes.html"><i class="bi bi-clipboard2-check"></i> Mis Reportes</a>
+    <a class="drawer-link" href="pages/contacto.html"><i class="bi bi-telephone"></i> Contacto</a>
+    <a class="drawer-link" href="pages/login.html" data-login-link><i class="bi bi-box-arrow-in-right"></i> Acceder</a>
+    <a class="drawer-link" href="pages/perfil.html" data-user-panel hidden><i class="bi bi-person-circle"></i> Mi Perfil</a>
+    <button class="drawer-link" data-logout hidden><i class="bi bi-box-arrow-right"></i> Cerrar sesión</button>
   </nav>
 </aside>
 
-  <!-- ======= HERO ======= -->
-  <section class="hero">
-    <div class="container hero-inner">
-      <span class="hero-badge"><i class="bi bi-lightning-charge-fill"></i> Sistema oficial EDET</span>
-      <div class="avatar-lg"><img src="src/img/favicon.png" style="width:44px;height:44px;object-fit:contain;filter:brightness(0) invert(1)" alt="logo"></div>
-      <h1>CityRepair</h1>
-      <p class="subtitle">Reportá problemas eléctricos en tu zona y seguí su resolución en tiempo real.</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="/pages/reportar.html"><i class="bi bi-flag-fill"></i> Crear reporte</a>
-        <a class="btn btn-ghost" href="/pages/mis-reportes.html"><i class="bi bi-clipboard2-check"></i> Mis reportes</a>
-      </div>
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="container hero-inner">
+    <span class="hero-badge"><i class="bi bi-lightning-charge-fill"></i> EDET · Tucumán, Argentina</span>
+    <div class="avatar-lg">
+      <img src="src/img/favicon.png" style="width:38px;height:38px;object-fit:contain;filter:brightness(0) invert(1)" alt="">
     </div>
-  </section>
-
-  <!-- ======= TARJETAS ======= -->
-  <main class="container">
-    <section class="cards">
-      <article class="card">
-        <div class="card-icon card-icon--green">
-          <i class="bi bi-flag-fill" style="color:#fff;font-size:1.5rem"></i>
-        </div>
-        <h3>Reportar Problema</h3>
-        <p class="muted">Reportá incidencias eléctricas en tu zona rápidamente.</p>
-        <a class="btn btn-green" href="/pages/reportar.html"><i class="bi bi-plus-circle"></i> Crear Reporte</a>
-      </article>
-
-      <article class="card">
-        <div class="card-icon card-icon--blue">
-          <i class="bi bi-clipboard2-check-fill" style="color:#fff;font-size:1.5rem"></i>
-        </div>
-        <h3>Mis Reportes</h3>
-        <p class="muted">Consultá el estado y seguimiento de tus reportes enviados.</p>
-        <a class="btn btn-outline" href="/pages/mis-reportes.html"><i class="bi bi-eye"></i> Ver Reportes</a>
-      </article>
-
-      <article class="card">
-        <div class="card-icon card-icon--blue">
-          <i class="bi bi-telephone-fill" style="color:#fff;font-size:1.5rem"></i>
-        </div>
-        <h3>Contacto Rápido</h3>
-        <p class="muted">Línea directa para emergencias y consultas urgentes.</p>
-        <a class="btn btn-outline" href="/pages/contacto.html"><i class="bi bi-headset"></i> Contactar</a>
-      </article>
-    </section>
-
-
-    
-  </main>
-
-  <footer class="footer"></footer>
-
-  <!-- === CHAT IA FLOTANTE === -->
-<div id="iaWidget">
-  <button id="iaOpenBtn" class="ia-btn">
-    <i class="bi bi-robot"></i>
-  </button>
-
-  <div id="iaChatBox" class="ia-chat hidden">
-    <div class="ia-header">
-      <span>CityRepair IA</span>
-      <button id="iaCloseBtn"><i class="bi bi-x-lg"></i></button>
-    </div>
-
-    <div id="iaMessages" class="ia-messages"></div>
-
-    <div class="ia-input-box">
-      <input id="iaInput" type="text" placeholder="Preguntame algo...">
-      <button id="iaSendBtn"><i class="bi bi-send-fill"></i></button>
+    <h1>CityRepair</h1>
+    <p class="subtitle">Reportá incidencias eléctricas en tu zona y seguí su resolución en tiempo real con nuestro equipo técnico.</p>
+    <div class="hero-actions">
+      <a class="btn btn-white" href="pages/reportar.html"><i class="bi bi-flag-fill"></i> Crear un reporte</a>
+      <a class="btn btn-ghost" href="pages/mis-reportes.html"><i class="bi bi-clipboard2-check"></i> Ver mis reportes</a>
     </div>
   </div>
-</div>
+</section>
 
-<script type="module" src="../src/js/chat-ia.js"></script>
+<!-- ══ ACCESOS RÁPIDOS ══ -->
+<section class="quick-access">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Accesos rápidos</h2>
+      <a href="pages/reportar.html" class="section-link">Ver todos <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="quick-grid">
+      <a href="pages/reportar.html" class="quick-card">
+        <div class="quick-card-icon" style="background:#dbeafe;color:#003087">
+          <i class="bi bi-flag-fill"></i>
+        </div>
+        <h3>Reportar un problema</h3>
+        <p>Informá cortes, fallas en luminarias, transformadores o postes dañados en tu zona.</p>
+        <i class="bi bi-arrow-right quick-card-arrow"></i>
+      </a>
+      <a href="pages/mis-reportes.html" class="quick-card">
+        <div class="quick-card-icon" style="background:#dcfce7;color:#166534">
+          <i class="bi bi-clipboard2-check-fill"></i>
+        </div>
+        <h3>Seguí tu reporte</h3>
+        <p>Consultá el estado de tus reportes enviados y conocé el técnico asignado.</p>
+        <i class="bi bi-arrow-right quick-card-arrow"></i>
+      </a>
+      <a href="pages/contacto.html" class="quick-card">
+        <div class="quick-card-icon" style="background:#fef3c7;color:#92400e">
+          <i class="bi bi-telephone-fill"></i>
+        </div>
+        <h3>Contacto y emergencias</h3>
+        <p>Línea directa con nuestro equipo para consultas y situaciones urgentes.</p>
+        <i class="bi bi-arrow-right quick-card-arrow"></i>
+      </a>
+      <a href="pages/register.html" class="quick-card">
+        <div class="quick-card-icon" style="background:#ede9fe;color:#6d28d9">
+          <i class="bi bi-person-plus-fill"></i>
+        </div>
+        <h3>Registrate</h3>
+        <p>Creá tu cuenta para gestionar reportes y recibir notificaciones de estado.</p>
+        <i class="bi bi-arrow-right quick-card-arrow"></i>
+      </a>
+      <a href="pages/login.html" class="quick-card">
+        <div class="quick-card-icon" style="background:#fce7f3;color:#9d174d">
+          <i class="bi bi-box-arrow-in-right"></i>
+        </div>
+        <h3>Iniciá sesión</h3>
+        <p>Accedé a tu cuenta para ver el historial de tus reportes y notificaciones.</p>
+        <i class="bi bi-arrow-right quick-card-arrow"></i>
+      </a>
+      <a href="pages/contacto.html" class="quick-card">
+        <div class="quick-card-icon" style="background:#ffedd5;color:#c2410c">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+        </div>
+        <h3>Emergencia eléctrica</h3>
+        <p>¿Hay un cable caído o peligro eléctrico? Contactanos de inmediato.</p>
+        <i class="bi bi-arrow-right quick-card-arrow"></i>
+      </a>
+    </div>
+  </div>
+</section>
 
-  <!-- scripts -->
-  <script type="module" src="./src/js/navbar-auth.js"></script>
-  <script type="module" src="./src/js/logout.js"></script>
-  <script type="module" src="./src/js/profile-menu.js"></script>
-  <script type="module" src="../src/js/chat-ia.js"></script>
-  <script type="module" src="../src/js/app.js"></script>
+<!-- ══ MÉTRICAS ══ -->
+<section class="metrics-section">
+  <div class="container">
+    <div class="metrics">
+      <div class="metric">
+        <p class="metric-num metric-num--orange" id="metricTotal">—</p>
+        <p class="metric-sub">Reportes totales</p>
+      </div>
+      <div class="metric">
+        <p class="metric-num" id="metricPendientes">—</p>
+        <p class="metric-sub">En gestión</p>
+      </div>
+      <div class="metric">
+        <p class="metric-num" id="metricResueltos">—</p>
+        <p class="metric-sub">Resueltos</p>
+      </div>
+      <div class="metric">
+        <p class="metric-num metric-num--orange">24/7</p>
+        <p class="metric-sub">Atención técnica</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TIPOS DE PROBLEMA ══ -->
+<main class="container">
+  <div style="padding:48px 0 12px">
+    <div class="section-header">
+      <h2 class="section-title">¿Qué podés reportar?</h2>
+    </div>
+    <div class="cards">
+      <article class="card">
+        <div class="card-icon card-icon--blue">
+          <i class="bi bi-lightning-charge-fill" style="color:#fff"></i>
+        </div>
+        <h3>Cortes de Luz</h3>
+        <p>Reportá cortes totales o parciales del servicio eléctrico en tu zona.</p>
+        <a class="btn btn-outline" href="pages/reportar.html"><i class="bi bi-plus-circle"></i> Reportar</a>
+      </article>
+      <article class="card">
+        <div class="card-icon card-icon--orange">
+          <i class="bi bi-lightbulb-fill" style="color:#fff"></i>
+        </div>
+        <h3>Luminarias</h3>
+        <p>Luminaria apagada, parpadeante o dañada en vía pública o tu cuadra.</p>
+        <a class="btn btn-outline" href="pages/reportar.html"><i class="bi bi-plus-circle"></i> Reportar</a>
+      </article>
+      <article class="card">
+        <div class="card-icon card-icon--green">
+          <i class="bi bi-tools" style="color:#fff"></i>
+        </div>
+        <h3>Infraestructura</h3>
+        <p>Postes dañados, cables caídos, transformadores en mal estado u otros.</p>
+        <a class="btn btn-outline" href="pages/reportar.html"><i class="bi bi-plus-circle"></i> Reportar</a>
+      </article>
+    </div>
+  </div>
+  </main>
+
+<!-- ══ FOOTER ══ -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand-left">
+          <img src="src/img/favicon.png" class="logo-sm" alt="" style="filter:brightness(0) invert(1)">
+          <div class="brand-txt">
+            <span class="brand-title">CityRepair</span>
+            <span class="brand-sub" style="color:rgba(255,255,255,.5)">Sistema de Reportes EDET</span>
+          </div>
+        </div>
+        <p>Plataforma oficial de gestión de reportes de infraestructura eléctrica de EDET para la provincia de Tucumán.</p>
+        <div class="footer-social">
+          <a href="#"><i class="bi bi-facebook"></i></a>
+          <a href="#"><i class="bi bi-instagram"></i></a>
+          <a href="#"><i class="bi bi-twitter-x"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Ciudadanos</h4>
+        <a href="pages/reportar.html">Crear reporte</a>
+        <a href="pages/mis-reportes.html">Mis reportes</a>
+        <a href="pages/register.html">Registrarse</a>
+        <a href="pages/login.html">Iniciar sesión</a>
+      </div>
+      <div class="footer-col">
+        <h4>Soporte</h4>
+        <a href="pages/contacto.html">Contacto</a>
+        <a href="pages/contacto.html">Emergencias</a>
+        <a href="#">Preguntas frecuentes</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <a href="#">0800 666 EDET</a>
+        <a href="#">soporte@edet.com.ar</a>
+        <a href="#">Tucumán, Argentina</a>
+        <a href="#">Lun–Vie: 8:00–20:00</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 CityRepair · EDET S.A. · Todos los derechos reservados</p>
+      <p>Sistema de gestión de reportes v1.0</p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="src/js/app.js"></script>
+<script type="module" src="src/js/navbar-auth.js"></script>
+<script type="module" src="src/js/logout.js"></script>
+<script type="module" src="src/js/profile-menu.js"></script>
+<script>
+  // Métricas
+  fetch("http://localhost:3000/api/reportes")
+    .then(r => r.json())
+    .then(data => {
+      if (!Array.isArray(data)) return;
+      document.getElementById("metricTotal").textContent       = data.length;
+      document.getElementById("metricPendientes").textContent  = data.filter(r => r.estado !== "resuelto").length;
+      document.getElementById("metricResueltos").textContent   = data.filter(r => r.estado === "resuelto").length;
+    }).catch(() => {});
+
+  // Drawer
+  const drawer  = document.getElementById("drawer");
+  const overlay = document.getElementById("drawerOverlay");
+  document.getElementById("openDrawer")?.addEventListener("click", () => {
+    drawer.classList.add("show"); overlay.classList.add("show");
+  });
+  ["closeDrawer", "drawerOverlay"].forEach(id =>
+    document.getElementById(id)?.addEventListener("click", () => {
+      drawer.classList.remove("show"); overlay.classList.remove("show");
+    })
+  );
+</script>
 </body>
 </html>
