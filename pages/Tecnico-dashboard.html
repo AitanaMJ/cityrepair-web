@@ -116,5 +116,59 @@
 <script type="module" src="../src/js/logout.js"></script>
 <script type="module" src="../src/js/tecnico-dashboard.js"></script>
 
+<!-- MODAL: EN REVISIÓN -->
+<div id="modalRevision" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(2px);">
+  <div style="background:#fff;border-radius:18px;padding:28px;width:min(440px,92vw);box-shadow:0 20px 60px rgba(0,0,0,.2);font-family:'DM Sans',sans-serif;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <span style="font-size:1.5rem;">🔄</span>
+      <h3 style="margin:0;font-size:1.05rem;color:#111827;">Marcar en revisión</h3>
+    </div>
+    <p style="margin:0 0 16px;font-size:0.85rem;color:#6b7280;">Explicá brevemente cuál es el problema y por qué podría llevar más tiempo resolverlo. El administrador recibirá este mensaje.</p>
+    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:6px;">Mensaje al administrador</label>
+    <textarea id="textoRevision" rows="4"
+      placeholder="Ej: El transformador tiene daños más extensos de lo esperado. Necesitamos piezas de repuesto que tardarán 2 días en llegar."
+      style="width:100%;padding:10px 12px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.88rem;resize:vertical;outline:none;margin-bottom:18px;"></textarea>
+    <div style="display:flex;gap:10px;">
+      <button onclick="confirmarRevision()"
+        style="flex:1;height:42px;background:#f59e0b;color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;">
+        🔄 Confirmar revisión
+      </button>
+      <button onclick="document.getElementById('modalRevision').style.display='none'"
+        style="flex:1;height:42px;background:#f3f4f6;color:#374151;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.9rem;cursor:pointer;">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: RESUELTO -->
+<div id="modalResolucion" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(2px);">
+  <div style="background:#fff;border-radius:18px;padding:28px;width:min(440px,92vw);box-shadow:0 20px 60px rgba(0,0,0,.2);font-family:'DM Sans',sans-serif;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <span style="font-size:1.5rem;">✅</span>
+      <h3 style="margin:0;font-size:1.05rem;color:#111827;">Marcar como resuelto</h3>
+    </div>
+    <p style="margin:0 0 16px;font-size:0.85rem;color:#6b7280;">Indicá cuántas horas tardaste en resolver este problema. Esta información quedará registrada.</p>
+    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:6px;">Horas de resolución <span style="color:#ef4444">*</span></label>
+    <input type="number" id="horasResolucion" min="1" max="999"
+      placeholder="Ej: 3"
+      style="width:100%;height:42px;padding:0 12px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;margin-bottom:14px;"/>
+    <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:6px;">Nota adicional (opcional)</label>
+    <textarea id="textoResolucion" rows="3"
+      placeholder="Ej: Se reemplazó el fusible y se restableció el servicio correctamente."
+      style="width:100%;padding:10px 12px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.88rem;resize:vertical;outline:none;margin-bottom:18px;"></textarea>
+    <div style="display:flex;gap:10px;">
+      <button onclick="confirmarResolucion()"
+        style="flex:1;height:42px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;">
+        ✅ Confirmar resolución
+      </button>
+      <button onclick="document.getElementById('modalResolucion').style.display='none'"
+        style="flex:1;height:42px;background:#f3f4f6;color:#374151;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.9rem;cursor:pointer;">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

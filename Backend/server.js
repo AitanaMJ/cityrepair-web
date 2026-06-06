@@ -443,6 +443,46 @@ app.put("/api/notificaciones/:id/leer", (req, res) => {
 });
 
 /* =========================
+   MENSAJES TÉCNICO → ADMIN
+========================= */
+app.post("/api/mensajes-admin", (req, res) => {
+  const { tecnico_email, reporte_id, mensaje, tipo, horas } = req.body;
+  if (!tecnico_email || !reporte_id || !mensaje || !tipo) {
+    return res.status(400).json({ error: "Faltan datos" });
+  }
+  db.query(
+    "INSERT INTO mensajes_admin (tecnico_email, reporte_id, mensaje, tipo, horas) VALUES (?, ?, ?, ?, ?)",
+    [tecnico_email, reporte_id, mensaje, tipo, horas || null],
+    (err, result) => {
+      if (err) return res.status(500).json({ error: "Error guardando mensaje" });
+      res.status(201).json({ ok: true, id: result.insertId });
+    }
+  );
+});
+
+app.get("/api/mensajes-admin", (req, res) => {
+  db.query(
+    `SELECT m.*, r.tipo as reporte_tipo
+     FROM mensajes_admin m
+     LEFT JOIN reportes r ON r.id = m.reporte_id
+     ORDER BY m.fecha DESC`,
+    (err, results) => {
+      if (err) return res.status(500).json({ error: "Error obteniendo mensajes" });
+      res.json(results);
+    }
+  );
+});
+
+app.put("/api/mensajes-admin/:id/leer", (req, res) => {
+  db.query("UPDATE mensajes_admin SET leido = 1 WHERE id = ?", [req.params.id],
+    (err) => {
+      if (err) return res.status(500).json({ error: "Error" });
+      res.json({ ok: true });
+    }
+  );
+});
+
+/* =========================
    INICIAR SERVIDOR
 ========================= */
 app.listen(3000, () => {

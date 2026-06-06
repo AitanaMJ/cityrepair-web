@@ -1131,3 +1131,33 @@ body.edet-body {
   .hist-filtro-item { min-width: 100%; }
   .hist-filtro-btns { flex-direction: row; }
 }
+
+/* ── Botón revisión activo (estado: en revisión) ── */
+.tec-btn-revision--activo {
+  background: #f59e0b !important;
+  color: #fff !important;
+  border: 2px solid #f59e0b !important;
+}
+.tec-btn-revision--activo:hover {
+  background: #d97706 !important;
+}
+
+/* ── Botón resolver outline (cuando ya está en revisión) ── */
+.tec-btn-resolver--outline {
+  background: #fff !important;
+  color: #16a34a !important;
+  border: 2px solid #16a34a !important;
+}
+.tec-btn-resolver--outline:hover {
+  background: #dcfce7 !important;
+}
+
+/* ── Fix dropdown texto largo ── */
+.hist-filtro-item select,
+select.filter-select {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 100%;
+}

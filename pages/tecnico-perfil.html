@@ -158,21 +158,25 @@
     <!-- FILTROS -->
     <div class="hist-filtros">
       <div class="hist-filtro-item">
+        <label>Estado</label>
+        <select id="filtroEstadoHist">
+          <option value="">Todos</option>
+          <option value="en revision">En revisión</option>
+          <option value="resuelto">Resueltos</option>
+          <option value="pendiente">Pendiente</option>
+        </select>
+      </div>
+      <div class="hist-filtro-item">
         <label>Tipo de problema</label>
         <select id="filtroTipo">
           <option value="">Todos</option>
           <option value="corte">Corte de luz</option>
-          <option value="luminaria">Luminaria publica apagada</option>
-          <option value="transformador">Transformador con ruido</option>
+          <option value="luminaria">Luminaria</option>
+          <option value="transformador">Transformador</option>
           <option value="cable">Cable caído</option>
           <option value="poste">Poste dañado</option>
           <option value="medidor">Medidor</option>
           <option value="baja">Baja tensión</option>
-          <option value="baja">Obra cerca de los cables</option>
-          <option value="baja">Otros problemas electricos</option>
-
-          
-
         </select>
       </div>
       <div class="hist-filtro-item">

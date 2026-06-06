@@ -401,3 +401,14 @@ label {
   white-space: nowrap;
 }
 .btn-comunicar:hover { background: #15803d; }
+
+/* ── Fix dropdown texto largo ── */
+.filtros-avanzados select,
+.reporte-acciones select {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 100%;
+  appearance: auto;
+}

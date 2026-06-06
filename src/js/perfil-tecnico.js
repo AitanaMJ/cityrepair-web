@@ -38,9 +38,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       setEl("statRevision",  data.filter(r => (r.estado||"").toLowerCase().includes("rev")).length);
       setEl("statResueltos", data.filter(r => (r.estado||"").toLowerCase() === "resuelto").length);
 
-      // Guardar resueltos para el historial
+      // Guardar TODOS los reportes para el historial (no solo resueltos)
       todosResueltos = data
-        .filter(r => (r.estado||"").toLowerCase() === "resuelto")
         .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
       renderHistorial(todosResueltos);
@@ -68,15 +67,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 function aplicarFiltrosHistorial() {
-  const tipo  = document.getElementById("filtroTipo")?.value.toLowerCase()  || "";
-  const desde = document.getElementById("filtroDesde")?.value || "";
-  const hasta = document.getElementById("filtroHasta")?.value || "";
+  const tipo   = document.getElementById("filtroTipo")?.value.toLowerCase()  || "";
+  const estado = document.getElementById("filtroEstadoHist")?.value.toLowerCase() || "";
+  const desde  = document.getElementById("filtroDesde")?.value || "";
+  const hasta  = document.getElementById("filtroHasta")?.value || "";
 
   let filtrados = [...todosResueltos];
 
-  if (tipo)  filtrados = filtrados.filter(r => (r.tipo||"").toLowerCase().includes(tipo));
-  if (desde) filtrados = filtrados.filter(r => new Date(r.fecha) >= new Date(desde));
-  if (hasta) filtrados = filtrados.filter(r => new Date(r.fecha) <= new Date(hasta + "T23:59:59"));
+  if (tipo)   filtrados = filtrados.filter(r => (r.tipo||"").toLowerCase().includes(tipo));
+  if (estado) filtrados = filtrados.filter(r => (r.estado||"").toLowerCase().includes(estado));
+  if (desde)  filtrados = filtrados.filter(r => new Date(r.fecha) >= new Date(desde));
+  if (hasta)  filtrados = filtrados.filter(r => new Date(r.fecha) <= new Date(hasta + "T23:59:59"));
 
   renderHistorial(filtrados);
 }

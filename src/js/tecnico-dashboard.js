@@ -119,18 +119,18 @@ function renderReportes(reportes) {
   }
 
   const prioConfig = {
-    alta:  { bg: "#fee2e2", color: "#b91c1c", dot: "#ef4444", label: "🔴 Alta" },
-    media: { bg: "#fef3c7", color: "#92400e", dot: "#f59e0b", label: "🟡 Media" },
-    baja:  { bg: "#dcfce7", color: "#166534", dot: "#22c55e", label: "🟢 Baja" },
+    alta:  { bg: "#fee2e2", color: "#b91c1c", dot: "#ef4444" },
+    media: { bg: "#fef3c7", color: "#92400e", dot: "#f59e0b" },
+    baja:  { bg: "#dcfce7", color: "#166534", dot: "#22c55e" },
   };
 
   const stateConfig = {
     "en revision": { bg: "#fef3c7", color: "#92400e", border: "#f59e0b", icon: "🔄" },
-    "pendiente":   { bg: "#dbeafe", color: "#1d4ed8", border: "#3b82f6", icon: "📋" },
+    "pendiente":   { bg: "#dbeafe", color: "#003087", border: "#3b82f6", icon: "📋" },
   };
 
   const typeIcons = {
-    "corte": "⚡", "baja-tension": "🔌", "transformador": "🔧",
+    "corte": "⚡", "baja": "🔌", "transformador": "🔧",
     "luminaria": "💡", "cable": "🔗", "medidor": "⚙️", "poste": "🪝"
   };
 
@@ -141,10 +141,28 @@ function renderReportes(reportes) {
       day: "2-digit", month: "short", year: "numeric"
     });
 
-    const prio  = prioConfig[prioridad]  || prioConfig.baja;
-    const state = stateConfig[estado]    || stateConfig.pendiente;
-    const tipoKey = Object.keys(typeIcons).find(k => (r.tipo || "").toLowerCase().includes(k));
-    const icon  = typeIcons[tipoKey] || "🛠️";
+    const prio     = prioConfig[prioridad] || prioConfig.baja;
+    const state    = stateConfig[estado]   || stateConfig.pendiente;
+    const tipoKey  = Object.keys(typeIcons).find(k => (r.tipo || "").toLowerCase().includes(k));
+    const icon     = typeIcons[tipoKey] || "🛠️";
+    const enRevision = estado === "en revision";
+
+    // Botones dinámicos según estado
+    const btnRevision = enRevision
+      ? `<button onclick="cambiarEstadoTec(${r.id}, 'en revision')" class="tec-btn-revision tec-btn-revision--activo">
+           🔄 En revisión
+         </button>`
+      : `<button onclick="abrirModalRevision(${r.id})" class="tec-btn-revision">
+           🔄 En revisión
+         </button>`;
+
+    const btnResolver = enRevision
+      ? `<button onclick="abrirModalResolucion(${r.id})" class="tec-btn-resolver tec-btn-resolver--outline">
+           ✅ Marcar como resuelto
+         </button>`
+      : `<button onclick="abrirModalResolucion(${r.id})" class="tec-btn-resolver">
+           ✅ Marcar como resuelto
+         </button>`;
 
     return `
       <div class="tec-report-card" style="border-left-color:${state.border}">
@@ -174,12 +192,8 @@ function renderReportes(reportes) {
         </div>
 
         <div class="tec-actions">
-          <button onclick="cambiarEstadoTec(${r.id}, 'en revision')" class="tec-btn-revision">
-            🔄 En revisión
-          </button>
-          <button onclick="cambiarEstadoTec(${r.id}, 'resuelto')" class="tec-btn-resolver">
-            ✅ Marcar como resuelto
-          </button>
+          ${btnRevision}
+          ${btnResolver}
         </div>
       </div>
     `;
@@ -187,7 +201,109 @@ function renderReportes(reportes) {
 }
 
 /* =========================
-   CAMBIAR ESTADO
+   MODALES
+========================= */
+// Modal: En revisión → mensaje al admin
+let _modalRevisionId = null;
+
+function abrirModalRevision(reporteId) {
+  _modalRevisionId = reporteId;
+  document.getElementById("textoRevision").value = "";
+  document.getElementById("modalRevision").style.display = "flex";
+}
+window.abrirModalRevision = abrirModalRevision;
+
+async function confirmarRevision() {
+  const mensaje = document.getElementById("textoRevision")?.value.trim();
+  if (!mensaje) { alert("Escribí un mensaje antes de continuar."); return; }
+
+  const session = JSON.parse(localStorage.getItem("cr_auth") || "{}");
+
+  try {
+    // Cambiar estado
+    const res = await fetch(`${API}/reportes/${_modalRevisionId}/estado`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ estado: "en revision" })
+    });
+    if (!res.ok) throw new Error();
+
+    // Enviar mensaje al admin
+    await fetch(`${API}/mensajes-admin`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tecnico_email: session.email || "",
+        reporte_id: _modalRevisionId,
+        mensaje,
+        tipo: "revision"
+      })
+    });
+
+    const r = reportesTecnico.find(x => x.id == _modalRevisionId);
+    if (r) r.estado = "en revision";
+    document.getElementById("modalRevision").style.display = "none";
+    _modalRevisionId = null;
+    aplicarFiltros();
+  } catch {
+    alert("❌ Error al actualizar el estado.");
+  }
+}
+window.confirmarRevision = confirmarRevision;
+
+// Modal: Resuelto → horas de resolución
+let _modalResolucionId = null;
+
+function abrirModalResolucion(reporteId) {
+  _modalResolucionId = reporteId;
+  document.getElementById("horasResolucion").value = "";
+  document.getElementById("textoResolucion").value = "";
+  document.getElementById("modalResolucion").style.display = "flex";
+}
+window.abrirModalResolucion = abrirModalResolucion;
+
+async function confirmarResolucion() {
+  const horas   = parseInt(document.getElementById("horasResolucion")?.value) || 0;
+  const mensaje = document.getElementById("textoResolucion")?.value.trim();
+  if (!horas || horas < 1) { alert("Ingresá la cantidad de horas (mínimo 1)."); return; }
+
+  const session = JSON.parse(localStorage.getItem("cr_auth") || "{}");
+
+  try {
+    // Cambiar estado a resuelto
+    const res = await fetch(`${API}/reportes/${_modalResolucionId}/estado`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ estado: "resuelto" })
+    });
+    if (!res.ok) throw new Error();
+
+    // Enviar mensaje al admin con horas
+    await fetch(`${API}/mensajes-admin`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tecnico_email: session.email || "",
+        reporte_id: _modalResolucionId,
+        mensaje: mensaje || `Reporte resuelto en ${horas} hora${horas > 1 ? "s" : ""}.`,
+        tipo: "resolucion",
+        horas
+      })
+    });
+
+    const r = reportesTecnico.find(x => x.id == _modalResolucionId);
+    if (r) r.estado = "resuelto";
+    document.getElementById("modalResolucion").style.display = "none";
+    _modalResolucionId = null;
+    aplicarFiltros();
+  } catch {
+    alert("❌ Error al marcar como resuelto.");
+  }
+}
+window.confirmarResolucion = confirmarResolucion;
+
+/* =========================
+   CAMBIAR ESTADO (legacy)
 ========================= */
 async function cambiarEstadoTec(id, nuevoEstado) {
   try {
@@ -196,11 +312,11 @@ async function cambiarEstadoTec(id, nuevoEstado) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ estado: nuevoEstado })
     });
-    if (!res.ok) throw new Error("Error");
+    if (!res.ok) throw new Error();
     const r = reportesTecnico.find(x => x.id == id);
     if (r) r.estado = nuevoEstado;
     aplicarFiltros();
-  } catch (err) {
+  } catch {
     alert("Error al cambiar estado");
   }
 }
