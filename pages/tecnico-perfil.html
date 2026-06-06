@@ -149,6 +149,58 @@
     </div>
   </div>
 
+  <!-- HISTORIAL DE REPORTES RESUELTOS -->
+  <div class="perfil-info-card">
+    <h2 class="perfil-section-title">
+      <i class="bi bi-clock-history"></i> Historial de reportes resueltos
+    </h2>
+
+    <!-- FILTROS -->
+    <div class="hist-filtros">
+      <div class="hist-filtro-item">
+        <label>Tipo de problema</label>
+        <select id="filtroTipo">
+          <option value="">Todos</option>
+          <option value="corte">Corte de luz</option>
+          <option value="luminaria">Luminaria publica apagada</option>
+          <option value="transformador">Transformador con ruido</option>
+          <option value="cable">Cable caído</option>
+          <option value="poste">Poste dañado</option>
+          <option value="medidor">Medidor</option>
+          <option value="baja">Baja tensión</option>
+          <option value="baja">Obra cerca de los cables</option>
+          <option value="baja">Otros problemas electricos</option>
+
+          
+
+        </select>
+      </div>
+      <div class="hist-filtro-item">
+        <label>Fecha desde</label>
+        <input type="date" id="filtroDesde"/>
+      </div>
+      <div class="hist-filtro-item">
+        <label>Fecha hasta</label>
+        <input type="date" id="filtroHasta"/>
+      </div>
+      <div class="hist-filtro-item hist-filtro-btns">
+        <button id="btnAplicarFiltros" class="hist-btn-aplicar">
+          <i class="bi bi-funnel"></i> Aplicar
+        </button>
+        <button id="btnLimpiarFiltros" class="hist-btn-limpiar">
+          <i class="bi bi-x"></i> Limpiar
+        </button>
+      </div>
+    </div>
+
+    <!-- LISTA -->
+    <div id="historialResueltos">
+      <p style="text-align:center;color:#9ca3af;padding:20px 0;font-size:0.87rem;">
+        Cargando historial…
+      </p>
+    </div>
+  </div>
+
 
 
 
