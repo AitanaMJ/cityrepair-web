@@ -113,6 +113,13 @@ function renderHistorial(reportes) {
     const prioBg   = r.prioridad === "alta" ? "#fee2e2" :
                      r.prioridad === "media" ? "#fef3c7" : "#dcfce7";
 
+    const estadoBadge = (() => {
+      const e = (r.estado || "pendiente").toLowerCase();
+      if (e === "resuelto")     return { bg: "#dcfce7", color: "#16a34a", icon: "✅", label: "Resuelto" };
+      if (e.includes("rev"))    return { bg: "#fef3c7", color: "#92400e", icon: "🔄", label: "En revisión" };
+      return { bg: "#dbeafe", color: "#003087", icon: "📋", label: "Pendiente" };
+    })();
+
     return `
       <div style="
         display:flex; align-items:center; gap:14px;
@@ -147,8 +154,8 @@ function renderHistorial(reportes) {
         <span style="
           flex-shrink:0; font-size:0.75rem; font-weight:700;
           padding:4px 10px; border-radius:999px;
-          background:#dcfce7; color:#16a34a;">
-          ✅ Resuelto
+          background:${estadoBadge.bg}; color:${estadoBadge.color};">
+          ${estadoBadge.icon} ${estadoBadge.label}
         </span>
       </div>`;
   }).join("");

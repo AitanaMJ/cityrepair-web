@@ -657,29 +657,26 @@ body.edet-body {
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.18s ease;
-  border: none;
+  transition: all 0.15s ease;
 }
 
+/* Revisión: blanco + borde amarillo siempre */
 .tec-btn-revision {
   background: #fff;
   color: #d97706;
   border: 2px solid #f59e0b;
 }
+.tec-btn-revision:hover  { background: #fef3c7; }
+.tec-btn-revision:active { background: #f59e0b; color: #fff; }
 
-.tec-btn-revision:hover {
-  background: #fef3c7;
-}
-
+/* Resolver: blanco + borde verde siempre */
 .tec-btn-resolver {
-  background: #16a34a;
-  color: #ffffff;
+  background: #fff;
+  color: #16a34a;
+  border: 2px solid #16a34a;
 }
-
-.tec-btn-resolver:hover {
-  background: #15803d;
-  transform: scale(1.01);
-}
+.tec-btn-resolver:hover  { background: #dcfce7; }
+.tec-btn-resolver:active { background: #16a34a; color: #fff; }
 
 /* Estado vacío */
 .tec-empty-state {

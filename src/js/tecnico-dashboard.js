@@ -147,22 +147,16 @@ function renderReportes(reportes) {
     const icon     = typeIcons[tipoKey] || "🛠️";
     const enRevision = estado === "en revision";
 
-    // Botones dinámicos según estado
-    const btnRevision = enRevision
-      ? `<button onclick="cambiarEstadoTec(${r.id}, 'en revision')" class="tec-btn-revision tec-btn-revision--activo">
-           🔄 En revisión
-         </button>`
-      : `<button onclick="abrirModalRevision(${r.id})" class="tec-btn-revision">
-           🔄 En revisión
-         </button>`;
+    // Botones — siempre blanco + borde de color
+    const btnRevision = `
+      <button onclick="abrirModalRevision(${r.id})" class="tec-btn-revision">
+        🔄 En revisión
+      </button>`;
 
-    const btnResolver = enRevision
-      ? `<button onclick="abrirModalResolucion(${r.id})" class="tec-btn-resolver tec-btn-resolver--outline">
-           ✅ Marcar como resuelto
-         </button>`
-      : `<button onclick="abrirModalResolucion(${r.id})" class="tec-btn-resolver">
-           ✅ Marcar como resuelto
-         </button>`;
+    const btnResolver = `
+      <button onclick="abrirModalResolucion(${r.id})" class="tec-btn-resolver">
+        ✅ Marcar como resuelto
+      </button>`;
 
     return `
       <div class="tec-report-card" style="border-left-color:${state.border}">
