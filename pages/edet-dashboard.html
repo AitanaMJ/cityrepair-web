@@ -4,64 +4,96 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestión EDET • CityRepair</title>
-
   <link rel="stylesheet" href="../src/css/styles.css">
   <link rel="stylesheet" href="../src/css/edet-dashboard.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
-
 <body>
 
-<header class="edet-navbar">
-  <div class="edet-navbar-brand">
-    <div class="avatar-sm">E</div>
+<!-- NAVBAR -->
+<header class="edash-navbar">
+  <div class="edash-navbar-brand">
+    <img src="../src/img/favicon.png" class="edash-logo" alt="CityRepair">
     <div class="brand-txt">
       <span class="brand-title">CityRepair</span>
       <span class="brand-sub">Panel de Gestión EDET</span>
     </div>
   </div>
-  <div style="display:flex; gap:10px; align-items:center;">
-    <a href="./perfil-admin.html" class="btn-perfil">
+  <div class="edash-navbar-actions">
+    <a href="./perfil-admin.html" class="edash-nav-btn">
       <i class="bi bi-person-circle"></i> Perfil
     </a>
-    <button class="btn-logout" onclick="cerrarSesion()">
-      🚪 Cerrar sesión
+    <button class="edash-nav-btn edash-nav-btn--danger" onclick="cerrarSesion()">
+      <i class="bi bi-box-arrow-right"></i> Cerrar sesión
     </button>
   </div>
 </header>
 
-<main class="container edash">
+<!-- HERO -->
+<div class="edash-hero">
+  <div class="container">
+    <div class="edash-hero-inner">
+      <div>
+        <p class="edash-hero-badge"><i class="bi bi-shield-check-fill"></i> Panel de Administración</p>
+        <h1 class="edash-hero-title">Panel de Gestión EDET</h1>
+        <p class="edash-hero-sub">Gestioná reportes, técnicos y estadísticas del sistema</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <h1 class="edash-title">Panel de Gestión EDET</h1>
+<main class="container edash">
 
   <!-- KPIs -->
   <section class="edash-kpis">
-    <article class="kpi">
-      <div class="kpi-num" id="kpiTotal">0</div>
-      <div class="kpi-sub">Total Reportes</div>
+    <article class="kpi-card">
+      <div class="kpi-icon" style="background:#EBF2FB;color:#003087">
+        <i class="bi bi-clipboard2-data-fill"></i>
+      </div>
+      <div>
+        <div class="kpi-num" id="kpiTotal">0</div>
+        <div class="kpi-sub">Total Reportes</div>
+      </div>
+      <div class="kpi-bar" style="background:linear-gradient(90deg,#003087,#0057B7)"></div>
     </article>
-    <article class="kpi">
-      <div class="kpi-num kpi-num--green" id="kpiOk">0</div>
-      <div class="kpi-sub">Resueltos</div>
+    <article class="kpi-card">
+      <div class="kpi-icon" style="background:#dcfce7;color:#16a34a">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+      <div>
+        <div class="kpi-num kpi-num--green" id="kpiOk">0</div>
+        <div class="kpi-sub">Resueltos</div>
+      </div>
+      <div class="kpi-bar" style="background:linear-gradient(90deg,#16a34a,#22c55e)"></div>
     </article>
-    <article class="kpi">
-      <div class="kpi-num kpi-num--blue" id="kpiReview">0</div>
-      <div class="kpi-sub">En Revisión</div>
+    <article class="kpi-card">
+      <div class="kpi-icon" style="background:#fef3c7;color:#d97706">
+        <i class="bi bi-arrow-repeat"></i>
+      </div>
+      <div>
+        <div class="kpi-num kpi-num--yellow" id="kpiReview">0</div>
+        <div class="kpi-sub">En Revisión</div>
+      </div>
+      <div class="kpi-bar" style="background:linear-gradient(90deg,#d97706,#f59e0b)"></div>
     </article>
-    <article class="kpi">
-      <div class="kpi-num kpi-num--red" id="kpiHigh">0</div>
-      <div class="kpi-sub">Alta Prioridad</div>
+    <article class="kpi-card">
+      <div class="kpi-icon" style="background:#fee2e2;color:#dc2626">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+      </div>
+      <div>
+        <div class="kpi-num kpi-num--red" id="kpiHigh">0</div>
+        <div class="kpi-sub">Alta Prioridad</div>
+      </div>
+      <div class="kpi-bar" style="background:linear-gradient(90deg,#dc2626,#f87171)"></div>
     </article>
   </section>
 
   <!-- FILTROS -->
-  <section class="filtros-section">
-    <div class="filtros-header">
-      <span class="filtros-title">⚙️ Filtros Avanzados</span>
+  <section class="edash-card">
+    <div class="edash-card-title">
+      <i class="bi bi-funnel-fill"></i> Filtros Avanzados
     </div>
-
     <div class="filtros-grid">
-
       <div class="filtro-item">
         <label>Estado</label>
         <select id="filtroResolucion" class="select">
@@ -70,7 +102,6 @@
           <option value="no_resuelto">No resueltos</option>
         </select>
       </div>
-
       <div class="filtro-item">
         <label>Prioridad</label>
         <select id="filtroPrioridad" class="select">
@@ -80,108 +111,92 @@
           <option value="baja">Baja</option>
         </select>
       </div>
-
       <div class="filtro-item">
         <label>Tipo de problema</label>
         <select id="filtroTipo" class="select">
           <option value="todos">Todos</option>
           <option value="corte-total">Corte de luz total</option>
-          <option value="baja-tension">Baja tensión / corte intermitente</option>
-          <option value="poste-danado">Poste dañado / inclinado</option>
-          <option value="cable-caido">Cable caído / suelto</option>
+          <option value="baja-tension">Baja tensión</option>
+          <option value="poste-danado">Poste dañado</option>
+          <option value="cable-caido">Cable caído</option>
           <option value="medidor-quemado">Medidor quemado</option>
-          <option value="luminaria-publica">Luminaria pública apagada</option>
-          <option value="transformador-riesgo">Transformador con ruido / olor raro</option>
-          <option value="obra-cercana">Obra cerca de cables</option>
-          <option value="otros">Otros problemas eléctricos</option>
+          <option value="luminaria-publica">Luminaria pública</option>
+          <option value="transformador-riesgo">Transformador</option>
+          <option value="otros">Otros</option>
         </select>
       </div>
-
       <div class="filtro-item">
         <label>Ciudad / Zona</label>
         <select id="filtroZona" class="select">
           <option value="todos">Todas</option>
           <option value="Banda del Río Salí">Banda del Río Salí</option>
           <option value="Burruyacu">Burruyacu</option>
-          <option value="Chicligasta">Chicligasta</option>
           <option value="Cruz Alta">Cruz Alta</option>
           <option value="Famailla">Famailla</option>
-          <option value="Graneros">Graneros</option>
-          <option value="Juan Bautista Alberdi">Juan Bautista Alberdi</option>
-          <option value="La Cocha">La Cocha</option>
-          <option value="Leales">Leales</option>
           <option value="Lules">Lules</option>
           <option value="Monteros">Monteros</option>
-          <option value="Rio Chico">Rio Chico</option>
           <option value="San Miguel de Tucumán">San Miguel de Tucumán</option>
-          <option value="Simoca">Simoca</option>
-          <option value="Tafi del Valle">Tafi del Valle</option>
           <option value="Tafí Viejo">Tafí Viejo</option>
-          <option value="Trancas">Trancas</option>
           <option value="Yerba Buena">Yerba Buena</option>
         </select>
       </div>
-
       <div class="filtro-item">
         <label>Fecha desde</label>
         <input type="date" id="fechaDesde" class="select">
       </div>
-
       <div class="filtro-item">
         <label>Fecha hasta</label>
         <input type="date" id="fechaHasta" class="select">
       </div>
-
     </div>
-
     <div class="filtros-actions">
-      <button id="btnAplicarFiltros" class="btn-primary">🔍 Aplicar filtros</button>
-      <button id="btnLimpiarFiltros" class="btn-secondary">✖ Limpiar</button>
-      <button id="btnExportarPDF" class="btn-export">📄 Exportar PDF</button>
+      <button id="btnAplicarFiltros" class="edash-btn-primary">
+        <i class="bi bi-search"></i> Aplicar filtros
+      </button>
+      <button id="btnLimpiarFiltros" class="edash-btn-secondary">
+        <i class="bi bi-x-circle"></i> Limpiar
+      </button>
+      <button id="btnExportarPDF" class="edash-btn-export">
+        <i class="bi bi-file-earmark-pdf"></i> Exportar PDF
+      </button>
     </div>
   </section>
 
-  <!-- GRÁFICOS fila 1 -->
+  <!-- GRÁFICOS -->
   <section class="edash-charts">
-    <article class="card">
-      <header class="card-head">Estado de Reportes</header>
+    <article class="edash-card">
+      <div class="edash-card-title"><i class="bi bi-pie-chart-fill"></i> Estado de Reportes</div>
       <div class="chart-wrapper"><canvas id="chartStatus"></canvas></div>
     </article>
-    <article class="card">
-      <header class="card-head">Reportes por Zona</header>
+    <article class="edash-card">
+      <div class="edash-card-title"><i class="bi bi-bar-chart-fill"></i> Reportes por Zona</div>
       <div class="chart-wrapper"><canvas id="chartZones"></canvas></div>
     </article>
   </section>
-
-  <!-- GRÁFICOS fila 2 -->
   <section class="edash-charts">
-    <article class="card">
-      <header class="card-head">Tipos de Problema</header>
+    <article class="edash-card">
+      <div class="edash-card-title"><i class="bi bi-list-ul"></i> Tipos de Problema</div>
       <div class="chart-wrapper"><canvas id="chartTipos"></canvas></div>
     </article>
-    <article class="card">
-      <header class="card-head">Reportes por Prioridad</header>
+    <article class="edash-card">
+      <div class="edash-card-title"><i class="bi bi-flag-fill"></i> Reportes por Prioridad</div>
       <div class="chart-wrapper"><canvas id="chartPrioridad"></canvas></div>
     </article>
   </section>
 
   <!-- LISTADO -->
-  <section class="card">
-    <header class="card-head">Listado de Reportes</header>
+  <section class="edash-card">
+    <div class="edash-card-title"><i class="bi bi-card-list"></i> Listado de Reportes</div>
     <div id="edet-reportes-container">
-      <p style="padding:12px;">Cargando reportes...</p>
+      <p style="padding:12px;color:#9ca3af;">Cargando reportes...</p>
     </div>
     <div id="paginado-container" class="paginado"></div>
   </section>
 
 </main>
 
-<!-- Librerías -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<!-- JS -->
 <script type="module" src="../src/js/edet-dashboard.js"></script>
-
 </body>
 </html>

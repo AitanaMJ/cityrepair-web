@@ -315,3 +315,184 @@ async function cambiarEstadoTec(id, nuevoEstado) {
   }
 }
 window.cambiarEstadoTec = cambiarEstadoTec;
+/* =========================
+   EXPORTAR PDF TÉCNICO
+========================= */
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("btnExportarPDFTec")?.addEventListener("click", exportarPDFTecnico);
+});
+
+async function exportarPDFTecnico() {
+  const session = JSON.parse(localStorage.getItem("cr_auth") || "{}");
+  const correo  = session.email || "";
+  const nombre  = session.nombre || correo.split("@")[0] || "Técnico";
+
+  const resueltos = reportesTecnico.filter(r => (r.estado||"").toLowerCase() === "resuelto");
+
+  if (resueltos.length === 0) {
+    alert("No tenés reportes resueltos para exportar.");
+    return;
+  }
+
+  // Obtener horas desde mensajes_admin
+  let horasMap = {};
+  try {
+    const res  = await fetch(`${API}/mensajes-admin?tecnico=${encodeURIComponent(correo)}`);
+    const msgs = await res.json();
+    if (Array.isArray(msgs)) {
+      msgs.filter(m => m.tipo === "resolucion" && m.horas).forEach(m => {
+        if (!horasMap[m.reporte_id]) horasMap[m.reporte_id] = m.horas;
+      });
+    }
+  } catch(e) { console.error(e); }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+  const W = 210, margin = 14;
+
+  // ── ENCABEZADO ──────────────────────────────
+  doc.setFillColor(0, 48, 135);
+  doc.rect(0, 0, W, 42, "F");
+
+  // Línea decorativa naranja
+  doc.setFillColor(232, 99, 10);
+  doc.rect(0, 42, W, 2, "F");
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(18);
+  doc.setFont("helvetica", "bold");
+  doc.text("Trabajos Resueltos del Técnico", margin, 15);
+
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  doc.text(`Técnico: ${nombre}`, margin, 24);
+  doc.text(`Email: ${correo}`, margin, 31);
+
+  doc.setFontSize(9);
+  doc.setTextColor(200, 220, 255);
+  const hoy = new Date().toLocaleDateString("es-AR", { day:"2-digit", month:"long", year:"numeric" });
+  doc.text(`Generado el ${hoy}`, W - margin, 24, { align: "right" });
+  doc.text(`Total resueltos: ${resueltos.length}`, W - margin, 31, { align: "right" });
+
+  let y = 54;
+
+  // ── TABLA ────────────────────────────────────
+  const cols = [
+    { label: "#",          key: "id",          w: 10, align: "center" },
+    { label: "Tipo",       key: "tipo",         w: 42 },
+    { label: "Zona",       key: "zona",         w: 38 },
+    { label: "Prioridad",  key: "prioridad",    w: 22, align: "center" },
+    { label: "F. Reporte", key: "fecha",        w: 28, align: "center" },
+    { label: "F. Resuelto",key: "fecha_resuelto",w: 28, align: "center" },
+    { label: "Horas",      key: "horas",        w: 18, align: "center" },
+  ];
+  const tableW = cols.reduce((s, c) => s + c.w, 0);
+  const rowH = 9;
+
+  // Header de tabla
+  doc.setFillColor(0, 48, 135);
+  doc.rect(margin, y, tableW, rowH, "F");
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(255, 255, 255);
+
+  let x = margin;
+  cols.forEach(c => {
+    const tx = c.align === "center" ? x + c.w / 2 : x + 2;
+    doc.text(c.label, tx, y + 6, { align: c.align === "center" ? "center" : "left" });
+    x += c.w;
+  });
+  y += rowH;
+
+  // Filas de datos
+  resueltos.forEach((r, i) => {
+    if (y > 262) {
+      doc.addPage();
+      y = 18;
+      // Repetir header
+      doc.setFillColor(0, 48, 135);
+      doc.rect(margin, y, tableW, rowH, "F");
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(255, 255, 255);
+      let hx = margin;
+      cols.forEach(c => {
+        const tx = c.align === "center" ? hx + c.w / 2 : hx + 2;
+        doc.text(c.label, tx, y + 6, { align: c.align === "center" ? "center" : "left" });
+        hx += c.w;
+      });
+      y += rowH;
+    }
+
+    // Fila alterna
+    if (i % 2 === 0) {
+      doc.setFillColor(240, 244, 251);
+      doc.rect(margin, y, tableW, rowH, "F");
+    }
+
+    const prio = (r.prioridad || "baja").toLowerCase();
+    const prioColor = prio === "alta" ? [220,38,38] : prio === "media" ? [217,119,6] : [22,163,74];
+
+    const fechaRep = r.fecha
+      ? new Date(r.fecha).toLocaleDateString("es-AR", { day:"2-digit", month:"2-digit", year:"2-digit" })
+      : "—";
+    const fechaRes = r.fecha_resuelto
+      ? new Date(r.fecha_resuelto).toLocaleDateString("es-AR", { day:"2-digit", month:"2-digit", year:"2-digit" })
+      : "—";
+    const horas = horasMap[r.id] ? `${horasMap[r.id]}h` : "—";
+
+    const vals = [
+      { v: `#${r.id}`,                    align: "center" },
+      { v: (r.tipo || "—").slice(0, 22),  align: "left" },
+      { v: (r.zona || "—").slice(0, 20),  align: "left" },
+      { v: prio.toUpperCase(),            align: "center", color: prioColor },
+      { v: fechaRep,                       align: "center" },
+      { v: fechaRes,                       align: "center" },
+      { v: horas,                          align: "center" },
+    ];
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.8);
+
+    x = margin;
+    vals.forEach((cell, vi) => {
+      const col = cols[vi];
+      const tx  = cell.align === "center" ? x + col.w / 2 : x + 2;
+      doc.setTextColor(...(cell.color || [30, 30, 30]));
+      if (cell.color) doc.setFont("helvetica", "bold");
+      doc.text(String(cell.v), tx, y + 6, { align: cell.align });
+      if (cell.color) doc.setFont("helvetica", "normal");
+      x += col.w;
+    });
+
+    // Borde inferior de fila
+    doc.setDrawColor(210, 218, 235);
+    doc.setLineWidth(0.15);
+    doc.line(margin, y + rowH, margin + tableW, y + rowH);
+    y += rowH;
+  });
+
+  // ── RESUMEN ──────────────────────────────────
+  y += 10;
+  const totalHoras = Object.values(horasMap).reduce((s, h) => s + Number(h), 0);
+
+  doc.setFillColor(240, 244, 251);
+  doc.rect(margin, y - 4, tableW, 12, "F");
+  doc.setDrawColor(0, 48, 135);
+  doc.setLineWidth(0.4);
+  doc.rect(margin, y - 4, tableW, 12, "S");
+
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(0, 48, 135);
+  doc.text(`Total de reportes resueltos: ${resueltos.length}`, margin + 4, y + 4);
+  doc.text(totalHoras > 0 ? `Total horas trabajadas: ${totalHoras}h` : "Horas no registradas", margin + tableW - 4, y + 4, { align: "right" });
+
+  // ── FOOTER ───────────────────────────────────
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(160, 160, 160);
+  doc.text("CityRepair · Sistema de Reportes EDET", W / 2, 289, { align: "center" });
+
+  doc.save(`trabajos-resueltos-${nombre.replace(/\s+/g, "-").toLowerCase()}.pdf`);
+}
+window.exportarPDFTecnico = exportarPDFTecnico;

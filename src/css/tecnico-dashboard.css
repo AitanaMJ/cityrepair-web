@@ -1158,3 +1158,163 @@ select.filter-select {
   min-width: 0;
   max-width: 100%;
 }
+
+/* ══════════════════════════════
+   NUEVO DISEÑO SIMILAR AL ADMIN
+══════════════════════════════ */
+
+/* Navbar */
+.tec-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 28px;
+  height: 64px;
+  background: #fff;
+  border-bottom: 3px solid #003087;
+  box-shadow: 0 2px 8px rgba(0,48,135,.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.tec-nav-brand { display: flex; align-items: center; gap: 12px; }
+.tec-nav-actions { display: flex; gap: 10px; align-items: center; }
+
+.tec-nav-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 9px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem; font-weight: 600;
+  text-decoration: none; cursor: pointer;
+  border: 1.5px solid #e5e7eb;
+  background: #fff; color: #374151;
+  transition: all 0.15s;
+}
+.tec-nav-btn:hover { background: #f3f4f6; }
+.tec-nav-btn--active {
+  background: #003087; color: #fff; border-color: #003087;
+}
+.tec-nav-btn--active:hover { background: #002570; }
+
+/* Hero */
+.tec-hero {
+  background: linear-gradient(135deg, #001a5e 0%, #003087 50%, #0057B7 100%);
+  padding: 28px 0 22px;
+}
+.tec-hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.15); color: #fff;
+  font-size: 0.75rem; font-weight: 700;
+  padding: 4px 12px; border-radius: 999px; margin-bottom: 8px;
+  border: 1px solid rgba(255,255,255,.25);
+}
+.tec-hero-title {
+  font-size: 1.7rem; font-weight: 800; color: #fff;
+  margin: 0 0 4px; letter-spacing: -.5px;
+}
+.tec-hero-sub { font-size: 0.9rem; color: rgba(255,255,255,.75); margin: 0; }
+
+/* Main container */
+.tec-main { padding: 28px 0 60px; }
+
+/* KPI Cards */
+.tec-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.tec-kpi-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px 18px 16px;
+  box-shadow: 0 2px 12px rgba(0,48,135,.07);
+  display: flex; align-items: center; gap: 14px;
+  position: relative; overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.tec-kpi-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,48,135,.12); }
+.tec-kpi-icon {
+  width: 48px; height: 48px; border-radius: 13px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; flex-shrink: 0;
+}
+.tec-kpi-num {
+  font-size: 2rem; font-weight: 900; color: #111827; line-height: 1;
+}
+.tec-kpi-num--yellow { color: #d97706; }
+.tec-kpi-num--green  { color: #16a34a; }
+.tec-kpi-sub { font-size: 0.82rem; color: #6b7280; font-weight: 500; margin-top: 3px; }
+
+/* Card unificada */
+.tec-dash-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 22px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0,48,135,.06);
+}
+.tec-dash-card-title {
+  font-size: 0.97rem; font-weight: 700; color: #111827;
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 18px; padding-bottom: 12px;
+  border-bottom: 2px solid #003087;
+}
+.tec-dash-card-title i { color: #003087; }
+
+/* Filtros */
+.tec-filtros-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-end;
+}
+.tec-filtro-item {
+  display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 130px;
+}
+.tec-filtro-item label { font-size: 0.78rem; font-weight: 600; color: #374151; }
+.tec-select {
+  height: 40px; padding: 0 12px;
+  border-radius: 10px; border: 1.5px solid #e5e7eb;
+  background: #f9fafb; font-family: 'DM Sans', sans-serif;
+  font-size: 0.87rem; outline: none; transition: border-color 0.15s;
+}
+.tec-select:focus { border-color: #003087; background: #fff; }
+.tec-filtro-btns {
+  display: flex; gap: 8px; align-items: flex-end; flex-shrink: 0;
+}
+.tec-btn-filtro-primary {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 40px; padding: 0 18px;
+  background: #003087; color: #fff; border: none;
+  border-radius: 10px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.87rem; font-weight: 700; cursor: pointer;
+  transition: background 0.15s; white-space: nowrap;
+}
+.tec-btn-filtro-primary:hover { background: #002570; }
+.tec-btn-filtro-secondary {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 40px; padding: 0 16px;
+  background: #f3f4f6; color: #374151; border: none;
+  border-radius: 10px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.87rem; font-weight: 600; cursor: pointer;
+  transition: background 0.15s; white-space: nowrap;
+}
+.tec-btn-filtro-secondary:hover { background: #e5e7eb; }
+.tec-btn-filtro-export {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 40px; padding: 0 18px;
+  background: #dc2626; color: #fff; border: none;
+  border-radius: 10px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.87rem; font-weight: 700; cursor: pointer;
+  transition: background 0.15s; white-space: nowrap;
+}
+.tec-btn-filtro-export:hover { background: #b91c1c; }
+
+@media (max-width: 700px) {
+  .tec-kpis { grid-template-columns: 1fr; }
+  .tec-filtros-grid { flex-direction: column; }
+  .tec-filtro-item { min-width: 100%; }
+}

@@ -412,3 +412,144 @@ label {
   max-width: 100%;
   appearance: auto;
 }
+
+/* ══════════════════════════════
+   NUEVO DISEÑO MEJORADO
+══════════════════════════════ */
+
+/* Navbar mejorada */
+.edash-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 28px;
+  height: 64px;
+  background: #fff;
+  border-bottom: 3px solid #003087;
+  box-shadow: 0 2px 8px rgba(0,48,135,.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.edash-navbar-brand { display: flex; align-items: center; gap: 12px; }
+.edash-logo { width: 38px; height: 38px; object-fit: contain; }
+.edash-navbar-actions { display: flex; gap: 10px; align-items: center; }
+
+.edash-nav-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 9px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem; font-weight: 600;
+  text-decoration: none; cursor: pointer;
+  border: 1.5px solid #e5e7eb;
+  background: #fff; color: #374151;
+  transition: all 0.15s;
+}
+.edash-nav-btn:hover { background: #f3f4f6; }
+.edash-nav-btn--danger { color: #dc2626; border-color: #dc2626; }
+.edash-nav-btn--danger:hover { background: #dc2626; color: #fff; }
+
+/* Hero */
+.edash-hero {
+  background: linear-gradient(135deg, #001a5e 0%, #003087 50%, #0057B7 100%);
+  padding: 28px 0 22px;
+  border-bottom: 1px solid rgba(0,0,0,.1);
+}
+.edash-hero-inner { display: flex; align-items: center; justify-content: space-between; }
+.edash-hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.15);
+  color: #fff; font-size: 0.75rem; font-weight: 700;
+  padding: 4px 12px; border-radius: 999px; margin-bottom: 8px;
+  border: 1px solid rgba(255,255,255,.25);
+}
+.edash-hero-title {
+  font-size: 1.7rem; font-weight: 800; color: #fff;
+  margin: 0 0 4px; letter-spacing: -.5px;
+}
+.edash-hero-sub { font-size: 0.9rem; color: rgba(255,255,255,.75); margin: 0; }
+
+/* KPI Cards nuevas */
+.edash-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.kpi-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px 18px 16px;
+  box-shadow: 0 2px 12px rgba(0,48,135,.07);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.kpi-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,48,135,.12); }
+.kpi-bar {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+}
+.kpi-icon {
+  width: 48px; height: 48px;
+  border-radius: 13px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; flex-shrink: 0;
+}
+.kpi-num--yellow { color: #d97706; }
+
+/* Edash card unificada */
+.edash-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 22px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0,48,135,.06);
+}
+.edash-card-title {
+  font-size: 0.97rem; font-weight: 700; color: #111827;
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #003087;
+}
+.edash-card-title i { color: #003087; }
+
+/* Botones del filtro */
+.edash-btn-primary {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 20px; background: #003087; color: #fff;
+  border: none; border-radius: 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 700;
+  cursor: pointer; transition: all 0.15s;
+}
+.edash-btn-primary:hover { background: #002570; }
+
+.edash-btn-secondary {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 18px; background: #f3f4f6; color: #374151;
+  border: none; border-radius: 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600;
+  cursor: pointer; transition: all 0.15s;
+}
+.edash-btn-secondary:hover { background: #e5e7eb; }
+
+.edash-btn-export {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 20px; background: #dc2626; color: #fff;
+  border: none; border-radius: 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 700;
+  cursor: pointer; transition: all 0.15s;
+}
+.edash-btn-export:hover { background: #b91c1c; }
+
+@media (max-width: 900px) {
+  .edash-kpis { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 500px) {
+  .edash-kpis { grid-template-columns: 1fr; }
+}

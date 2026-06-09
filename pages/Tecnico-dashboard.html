@@ -1,116 +1,145 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CityRepair – Panel del Técnico</title>
-  <link rel="stylesheet" href="../src/css/styles.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../src/css/styles.css"/>
   <link rel="stylesheet" href="../src/css/tecnico-dashboard.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
-
 <body>
 
-<header class="navbar">
-  <div class="container">
-    <div class="brand-left">
-      <img src="../src/img/favicon.png" class="logo-sm" alt="CityRepair">
-      <div class="brand-txt">
-        <span class="brand-title">CityRepair</span>
-        <span class="brand-sub">Panel del Técnico</span>
+<!-- NAVBAR -->
+<header class="tec-nav">
+  <div class="tec-nav-brand">
+    <img src="../src/img/favicon.png" class="logo-sm" alt="CityRepair">
+    <div class="brand-txt">
+      <span class="brand-title">CityRepair</span>
+      <span class="brand-sub">Panel del Técnico</span>
+    </div>
+  </div>
+  <div class="tec-nav-actions">
+    <a href="./Tecnico-dashboard.html" class="tec-nav-btn tec-nav-btn--active">
+      <i class="bi bi-tools"></i> Mis trabajos
+    </a>
+    <div class="tec-nav-btn user-pill" id="userMenuBtn" data-user-panel hidden>
+      <div class="avatar-sm" data-user-avatar>T</div>
+      <span data-user-name>Técnico</span>
+      <i class="bi bi-caret-down-fill icon-dropdown"></i>
+      <div class="user-dropdown" id="userDropdown" hidden>
+        <a href="./tecnico-perfil.html" class="dropdown-btn">
+          <i class="bi bi-person-circle"></i> Mi Perfil
+        </a>
+        <button id="logoutFromMenu">
+          <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+        </button>
       </div>
     </div>
-    <nav class="nav-right">
-      <a class="nav-item active">
-        <span class="icon"><i class="bi bi-tools"></i></span> Mis trabajos
-      </a>
-      <div class="nav-item user-pill" id="userMenuBtn" data-user-panel hidden>
-        <img class="avatar-sm" data-user-avatar src="" alt="avatar">
-        <span data-user-name>Técnico</span>
-        <i class="bi bi-caret-down-fill icon-dropdown"></i>
-        <div class="user-dropdown" id="userDropdown" hidden>
-          <a href="./tecnico-perfil.html" class="dropdown-btn">
-            <i class="bi bi-person-circle"></i> Mi Perfil
-          </a>
-          <button id="logoutFromMenu">
-            <i class="bi bi-box-arrow-right"></i> Cerrar sesión
-          </button>
-        </div>
-      </div>
-    </nav>
   </div>
-  <div class="navbar-divider"></div>
 </header>
 
-<main class="container edet-main">
+<!-- HERO -->
+<div class="tec-hero">
+  <div class="container">
+    <p class="tec-hero-badge"><i class="bi bi-tools"></i> Panel del Técnico</p>
+    <h1 class="tec-hero-title">Mis Trabajos Asignados</h1>
+    <p class="tec-hero-sub">Gestioná tus reportes asignados y registrá el progreso</p>
+  </div>
+</div>
+
+<main class="container tec-main">
 
   <!-- KPIs -->
-  <section class="kpi-row">
-    <article class="kpi-card">
-      <h3>Asignados</h3>
-      <p id="kpiAsignados" class="kpi-number">0</p>
+  <section class="tec-kpis">
+    <article class="tec-kpi-card">
+      <div class="tec-kpi-icon" style="background:#EBF2FB;color:#003087">
+        <i class="bi bi-clipboard2-check-fill"></i>
+      </div>
+      <div>
+        <div class="tec-kpi-num" id="kpiAsignados">0</div>
+        <div class="tec-kpi-sub">Asignados</div>
+      </div>
+      <div class="kpi-bar" style="background:linear-gradient(90deg,#003087,#0057B7)"></div>
     </article>
-    <article class="kpi-card">
-      <h3>En revisión</h3>
-      <p id="kpiRevision" class="kpi-number">0</p>
+    <article class="tec-kpi-card">
+      <div class="tec-kpi-icon" style="background:#fef3c7;color:#d97706">
+        <i class="bi bi-arrow-repeat"></i>
+      </div>
+      <div>
+        <div class="tec-kpi-num tec-kpi-num--yellow" id="kpiRevision">0</div>
+        <div class="tec-kpi-sub">En revisión</div>
+      </div>
+      <div class="kpi-bar" style="background:linear-gradient(90deg,#d97706,#f59e0b)"></div>
     </article>
-    <article class="kpi-card">
-      <h3>Resueltos hoy</h3>
-      <p id="kpiResueltos" class="kpi-number">0</p>
+    <article class="tec-kpi-card">
+      <div class="tec-kpi-icon" style="background:#dcfce7;color:#16a34a">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+      <div>
+        <div class="tec-kpi-num tec-kpi-num--green" id="kpiResueltos">0</div>
+        <div class="tec-kpi-sub">Resueltos hoy</div>
+      </div>
+      <div class="kpi-bar" style="background:linear-gradient(90deg,#16a34a,#22c55e)"></div>
     </article>
   </section>
 
   <!-- FILTROS -->
-  <section class="card" style="padding:16px; margin-bottom:20px;">
-    <div style="font-weight:700; font-size:1rem; color:#111827; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid #f0f0f0;">
-      ⚙️ Filtros
+  <section class="tec-dash-card">
+    <div class="tec-dash-card-title">
+      <i class="bi bi-funnel-fill"></i> Filtros
     </div>
-    <div style="display:flex; flex-wrap:wrap; gap:14px; align-items:end;">
-      <div>
-        <label style="display:block; font-size:0.72rem; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.04em; margin-bottom:4px;">Estado</label>
-        <select id="filtro-estado-tec" style="height:38px; padding:0 12px; border-radius:10px; border:1.5px solid #e5e7eb; font-family:'DM Sans',sans-serif; font-size:0.85rem; background:#f9fafb;">
+    <div class="tec-filtros-grid">
+      <div class="tec-filtro-item">
+        <label>Estado</label>
+        <select id="filtro-estado-tec" class="tec-select">
           <option value="todos">Todos</option>
           <option value="pendiente">Pendiente</option>
           <option value="en revision">En revisión</option>
-          <option value="resuelto">Resuelto</option>
         </select>
       </div>
-      <div>
-        <label style="display:block; font-size:0.72rem; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.04em; margin-bottom:4px;">Prioridad</label>
-        <select id="filtro-prioridad-tec" style="height:38px; padding:0 12px; border-radius:10px; border:1.5px solid #e5e7eb; font-family:'DM Sans',sans-serif; font-size:0.85rem; background:#f9fafb;">
+      <div class="tec-filtro-item">
+        <label>Prioridad</label>
+        <select id="filtro-prioridad-tec" class="tec-select">
           <option value="todos">Todas</option>
           <option value="alta">Alta</option>
           <option value="media">Media</option>
           <option value="baja">Baja</option>
         </select>
       </div>
-      <div>
-        <label style="display:block; font-size:0.72rem; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.04em; margin-bottom:4px;">Desde</label>
-        <input type="date" id="fecha-desde-tec" style="height:38px; padding:0 10px; border-radius:10px; border:1.5px solid #e5e7eb; font-family:'DM Sans',sans-serif; font-size:0.85rem; background:#f9fafb;">
+      <div class="tec-filtro-item">
+        <label>Desde</label>
+        <input type="date" id="fecha-desde-tec" class="tec-select">
       </div>
-      <div>
-        <label style="display:block; font-size:0.72rem; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.04em; margin-bottom:4px;">Hasta</label>
-        <input type="date" id="fecha-hasta-tec" style="height:38px; padding:0 10px; border-radius:10px; border:1.5px solid #e5e7eb; font-family:'DM Sans',sans-serif; font-size:0.85rem; background:#f9fafb;">
+      <div class="tec-filtro-item">
+        <label>Hasta</label>
+        <input type="date" id="fecha-hasta-tec" class="tec-select">
       </div>
-      <div style="display:flex; gap:8px;">
-        <button id="btn-aplicar-tec" style="height:38px; padding:0 18px; background:#0d6efd; color:#fff; border:none; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer;">🔍 Aplicar</button>
-        <button id="btn-limpiar-tec" style="height:38px; padding:0 18px; background:#fff; color:#374151; border:1.5px solid #e5e7eb; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer;">✖ Limpiar</button>
+      <div class="tec-filtro-btns">
+        <button id="btn-aplicar-tec" class="tec-btn-filtro-primary">
+          <i class="bi bi-search"></i> Aplicar
+        </button>
+        <button id="btn-limpiar-tec" class="tec-btn-filtro-secondary">
+          <i class="bi bi-x-circle"></i> Limpiar
+        </button>
+        <button id="btnExportarPDFTec" class="tec-btn-filtro-export">
+          <i class="bi bi-file-earmark-pdf"></i> Exportar PDF
+        </button>
       </div>
     </div>
   </section>
 
   <!-- LISTA REPORTES -->
-  <section class="card edet-table-card">
-    <div class="edet-table-header">
-      <h2>Mis reportes asignados</h2>
+  <section class="tec-dash-card">
+    <div class="tec-dash-card-title">
+      <i class="bi bi-card-list"></i> Mis reportes asignados
     </div>
-    <div id="lista-tecnico" class="edet-list"></div>
+    <div id="lista-tecnico"></div>
   </section>
 
 </main>
 
-<footer class="footer"></footer>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script type="module" src="../src/js/navbar-auth.js"></script>
 <script type="module" src="../src/js/profile-menu.js"></script>
 <script type="module" src="../src/js/logout.js"></script>
@@ -123,20 +152,13 @@
       <span style="font-size:1.5rem;">🔄</span>
       <h3 style="margin:0;font-size:1.05rem;color:#111827;">Marcar en revisión</h3>
     </div>
-    <p style="margin:0 0 16px;font-size:0.85rem;color:#6b7280;">Explicá brevemente cuál es el problema y por qué podría llevar más tiempo resolverlo. El administrador recibirá este mensaje.</p>
+    <p style="margin:0 0 16px;font-size:0.85rem;color:#6b7280;">Explicá brevemente el problema y por qué podría llevar más tiempo. El administrador recibirá este mensaje.</p>
     <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:6px;">Mensaje al administrador</label>
-    <textarea id="textoRevision" rows="4"
-      placeholder="Ej: El transformador tiene daños más extensos de lo esperado. Necesitamos piezas de repuesto que tardarán 2 días en llegar."
+    <textarea id="textoRevision" rows="4" placeholder="Ej: El transformador tiene daños más extensos de lo esperado..."
       style="width:100%;padding:10px 12px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.88rem;resize:vertical;outline:none;margin-bottom:18px;"></textarea>
     <div style="display:flex;gap:10px;">
-      <button onclick="confirmarRevision()"
-        style="flex:1;height:42px;background:#f59e0b;color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;">
-        🔄 Confirmar revisión
-      </button>
-      <button onclick="document.getElementById('modalRevision').style.display='none'"
-        style="flex:1;height:42px;background:#f3f4f6;color:#374151;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.9rem;cursor:pointer;">
-        Cancelar
-      </button>
+      <button onclick="confirmarRevision()" style="flex:1;height:42px;background:#f59e0b;color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;">🔄 Confirmar</button>
+      <button onclick="document.getElementById('modalRevision').style.display='none'" style="flex:1;height:42px;background:#f3f4f6;color:#374151;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;">Cancelar</button>
     </div>
   </div>
 </div>
@@ -148,24 +170,16 @@
       <span style="font-size:1.5rem;">✅</span>
       <h3 style="margin:0;font-size:1.05rem;color:#111827;">Marcar como resuelto</h3>
     </div>
-    <p style="margin:0 0 16px;font-size:0.85rem;color:#6b7280;">Indicá cuántas horas tardaste en resolver este problema. Esta información quedará registrada.</p>
+    <p style="margin:0 0 16px;font-size:0.85rem;color:#6b7280;">Indicá cuántas horas tardaste en resolver este problema.</p>
     <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:6px;">Horas de resolución <span style="color:#ef4444">*</span></label>
-    <input type="number" id="horasResolucion" min="1" max="999"
-      placeholder="Ej: 3"
+    <input type="number" id="horasResolucion" min="1" max="999" placeholder="Ej: 3"
       style="width:100%;height:42px;padding:0 12px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;margin-bottom:14px;"/>
     <label style="font-size:0.82rem;font-weight:600;color:#374151;display:block;margin-bottom:6px;">Nota adicional (opcional)</label>
-    <textarea id="textoResolucion" rows="3"
-      placeholder="Ej: Se reemplazó el fusible y se restableció el servicio correctamente."
+    <textarea id="textoResolucion" rows="3" placeholder="Ej: Se reemplazó el fusible y se restableció el servicio."
       style="width:100%;padding:10px 12px;border:1.5px solid #e5e7eb;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.88rem;resize:vertical;outline:none;margin-bottom:18px;"></textarea>
     <div style="display:flex;gap:10px;">
-      <button onclick="confirmarResolucion()"
-        style="flex:1;height:42px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;">
-        ✅ Confirmar resolución
-      </button>
-      <button onclick="document.getElementById('modalResolucion').style.display='none'"
-        style="flex:1;height:42px;background:#f3f4f6;color:#374151;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.9rem;cursor:pointer;">
-        Cancelar
-      </button>
+      <button onclick="confirmarResolucion()" style="flex:1;height:42px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer;">✅ Confirmar</button>
+      <button onclick="document.getElementById('modalResolucion').style.display='none'" style="flex:1;height:42px;background:#f3f4f6;color:#374151;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;">Cancelar</button>
     </div>
   </div>
 </div>

@@ -461,11 +461,16 @@ app.post("/api/mensajes-admin", (req, res) => {
 });
 
 app.get("/api/mensajes-admin", (req, res) => {
+  const { tecnico } = req.query;
+  const where = tecnico ? "WHERE m.tecnico_email = ?" : "";
+  const params = tecnico ? [tecnico] : [];
   db.query(
     `SELECT m.*, r.tipo as reporte_tipo
      FROM mensajes_admin m
      LEFT JOIN reportes r ON r.id = m.reporte_id
+     ${where}
      ORDER BY m.fecha DESC`,
+    params,
     (err, results) => {
       if (err) return res.status(500).json({ error: "Error obteniendo mensajes" });
       res.json(results);
