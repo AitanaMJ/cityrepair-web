@@ -63,6 +63,8 @@ function aplicarFiltros() {
   const prio   = filtroPrioEl?.value   || "todos";
   const desde  = fechaDesdeEl?.value   || "";
   const hasta  = fechaHastaEl?.value   || "";
+  const tipo   = document.getElementById("filtro-tipo-tec")?.value || "";
+  const zona   = document.getElementById("filtro-zona-tec")?.value || "";
 
   if (estado !== "todos") {
     lista = lista.filter(r => {
@@ -71,9 +73,11 @@ function aplicarFiltros() {
       return est === estado;
     });
   }
-  if (prio !== "todos") lista = lista.filter(r => (r.prioridad || "").toLowerCase() === prio);
-  if (desde) lista = lista.filter(r => new Date(r.fecha) >= new Date(desde));
-  if (hasta) lista = lista.filter(r => new Date(r.fecha) <= new Date(hasta));
+  if (prio  !== "todos") lista = lista.filter(r => (r.prioridad || "").toLowerCase() === prio);
+  if (desde)             lista = lista.filter(r => new Date(r.fecha) >= new Date(desde));
+  if (hasta)             lista = lista.filter(r => new Date(r.fecha) <= new Date(hasta));
+  if (tipo)              lista = lista.filter(r => (r.tipo || "").toLowerCase().includes(tipo));
+  if (zona)              lista = lista.filter(r => (r.zona || "") === zona);
 
   actualizarKPIs(lista);
   renderReportes(lista);

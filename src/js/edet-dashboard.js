@@ -17,6 +17,8 @@ const filtroTipo        = document.getElementById("filtroTipo");
 const filtroZona        = document.getElementById("filtroZona");
 const fechaDesde        = document.getElementById("fechaDesde");
 const fechaHasta        = document.getElementById("fechaHasta");
+const filtroTecnico     = document.getElementById("filtroTecnico");
+const filtroUsuario     = document.getElementById("filtroUsuario");
 const btnAplicarFiltros = document.getElementById("btnAplicarFiltros");
 const btnLimpiarFiltros = document.getElementById("btnLimpiarFiltros");
 const ctxEstado         = document.getElementById("chartStatus");
@@ -49,6 +51,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     REPORTES_ORIGINALES  = data.map(r => ({ ...r, fecha: new Date(r.fecha) }));
     REPORTES_NOTIFICADOS = new Set(notif);
 
+    // Poblar filtros dinámicos
+    poblarFiltroTecnico();
+    poblarFiltroUsuario();
+
     aplicarFiltros();
   } catch (err) {
     console.error("Error cargando reportes:", err);
@@ -56,12 +62,35 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+function poblarFiltroTecnico() {
+  const sel = document.getElementById("filtroTecnico");
+  if (!sel) return;
+  const tecnicos = [...new Set(
+    REPORTES_ORIGINALES
+      .map(r => r.tecnico_email)
+      .filter(e => e && e.trim())
+  )].sort();
+  sel.innerHTML = `<option value="todos">Todos los técnicos</option>` +
+    tecnicos.map(e => `<option value="${e}">${e}</option>`).join("");
+}
+
+function poblarFiltroUsuario() {
+  const sel = document.getElementById("filtroUsuario");
+  if (!sel) return;
+  const usuarios = [...new Set(
+    REPORTES_ORIGINALES
+      .map(r => r.usuario_email)
+      .filter(e => e && e.trim())
+  )].sort();
+  sel.innerHTML = `<option value="todos">Todos los usuarios</option>` +
+    usuarios.map(e => `<option value="${e}">${e}</option>`).join("");
+}
+
 /* =======================================================
    FILTROS
 ======================================================= */
 function aplicarFiltros() {
   // Base: solo mostrar reportes sin técnico asignado O ya resueltos
-  // Los "en revisión" con técnico asignado van al dashboard del técnico
   let filtrados = REPORTES_ORIGINALES.filter(r =>
     !r.tecnico_email || r.estado === "resuelto"
   );
@@ -72,12 +101,16 @@ function aplicarFiltros() {
   const zona       = filtroZona?.value       || "todos";
   const desde      = fechaDesde?.value       || "";
   const hasta      = fechaHasta?.value       || "";
+  const tecnico    = filtroTecnico?.value    || "todos";
+  const usuario    = filtroUsuario?.value    || "todos";
 
-  if (resolucion === "resuelto")     filtrados = filtrados.filter(r => r.estado === "resuelto");
-  if (resolucion === "no_resuelto")  filtrados = filtrados.filter(r => r.estado !== "resuelto");
-  if (prioridad !== "todos")         filtrados = filtrados.filter(r => (r.prioridad || "").toLowerCase() === prioridad);
-  if (tipo !== "todos")              filtrados = filtrados.filter(r => (r.tipo || "").toLowerCase() === tipo);
-  if (zona !== "todos")              filtrados = filtrados.filter(r => (r.zona || "") === zona);
+  if (resolucion === "resuelto")    filtrados = filtrados.filter(r => r.estado === "resuelto");
+  if (resolucion === "no_resuelto") filtrados = filtrados.filter(r => r.estado !== "resuelto");
+  if (prioridad !== "todos")        filtrados = filtrados.filter(r => (r.prioridad || "").toLowerCase() === prioridad);
+  if (tipo !== "todos")             filtrados = filtrados.filter(r => (r.tipo || "").toLowerCase() === tipo);
+  if (zona !== "todos")             filtrados = filtrados.filter(r => (r.zona || "") === zona);
+  if (tecnico !== "todos")          filtrados = filtrados.filter(r => (r.tecnico_email || "") === tecnico);
+  if (usuario !== "todos")          filtrados = filtrados.filter(r => (r.usuario_email || "") === usuario);
   if (desde) filtrados = filtrados.filter(r => new Date(r.fecha) >= new Date(desde));
   if (hasta) filtrados = filtrados.filter(r => new Date(r.fecha) <= new Date(hasta));
 
