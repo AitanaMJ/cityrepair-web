@@ -90,8 +90,27 @@ function renderPagina() {
 
 function renderPaginado(total) {
   if (!paginadoEl) return;
+  const MINIMO = 5;
   const totalPaginas = Math.ceil(total / POR_PAGINA);
-  if (totalPaginas <= 1) { paginadoEl.innerHTML = ""; return; }
+  const sinDatos = total < MINIMO;
+
+  // Siempre mostrar, deshabilitar si hay menos de 5 reportes
+  if (sinDatos) {
+    paginadoEl.innerHTML = `
+      <button class="prev-next" disabled>← Anterior</button>
+      <button class="activa" disabled>1</button>
+      <button class="prev-next" disabled>Siguiente →</button>
+      <span class="pag-hint">Disponible desde 5 reportes</span>`;
+    return;
+  }
+
+  if (totalPaginas <= 1) {
+    paginadoEl.innerHTML = `
+      <button class="prev-next" disabled>← Anterior</button>
+      <button class="activa">1</button>
+      <button class="prev-next" disabled>Siguiente →</button>`;
+    return;
+  }
 
   let html = `<button class="prev-next" onclick="irPagina(${paginaActual - 1})" ${paginaActual === 1 ? "disabled" : ""}>← Anterior</button>`;
 

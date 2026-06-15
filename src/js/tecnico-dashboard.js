@@ -1,4 +1,7 @@
-const API = "http://localhost:3000/api";
+const API      = "http://localhost:3000/api";
+const POR_PAGINA_TEC = 5;
+let paginaActualTec  = 1;
+let reportesFiltradosTec = [];
 
 const listaEl      = document.getElementById("lista-tecnico");
 const kpiAsignados = document.getElementById("kpiAsignados");
@@ -80,7 +83,9 @@ function aplicarFiltros() {
   if (zona)              lista = lista.filter(r => (r.zona || "") === zona);
 
   actualizarKPIs(lista);
-  renderReportes(lista);
+  reportesFiltradosTec = lista;
+  paginaActualTec = 1;
+  renderPaginaTec();
 }
 
 btnAplicar?.addEventListener("click", aplicarFiltros);
@@ -105,6 +110,61 @@ function actualizarKPIs(lista) {
     return r.estado === "resuelto" && new Date(r.fecha).toDateString() === hoy;
   }).length;
 }
+
+/* =========================
+   PAGINACIÓN TÉCNICO
+========================= */
+function renderPaginaTec() {
+  const inicio = (paginaActualTec - 1) * POR_PAGINA_TEC;
+  const fin    = inicio + POR_PAGINA_TEC;
+  renderReportes(reportesFiltradosTec.slice(inicio, fin));
+  renderPaginadoTec(reportesFiltradosTec.length);
+}
+
+function renderPaginadoTec(total) {
+  const el = document.getElementById("paginado-tecnico");
+  if (!el) return;
+  const MINIMO = 5;
+  const totalPaginas = Math.ceil(total / POR_PAGINA_TEC);
+  const sinDatos = total < MINIMO;
+
+  if (sinDatos) {
+    el.innerHTML = `
+      <button class="prev-next" disabled>← Anterior</button>
+      <button class="activa" disabled>1</button>
+      <button class="prev-next" disabled>Siguiente →</button>
+      <span class="pag-hint">Disponible desde 5 reportes</span>`;
+    return;
+  }
+
+  if (totalPaginas <= 1) {
+    el.innerHTML = `
+      <button class="prev-next" disabled>← Anterior</button>
+      <button class="activa">1</button>
+      <button class="prev-next" disabled>Siguiente →</button>`;
+    return;
+  }
+
+  let html = `<button class="prev-next" onclick="irPaginaTec(${paginaActualTec - 1})" ${paginaActualTec === 1 ? "disabled" : ""}>← Anterior</button>`;
+  for (let i = 1; i <= totalPaginas; i++) {
+    if (i === 1 || i === totalPaginas || (i >= paginaActualTec - 2 && i <= paginaActualTec + 2)) {
+      html += `<button class="${i === paginaActualTec ? "activa" : ""}" onclick="irPaginaTec(${i})">${i}</button>`;
+    } else if (i === paginaActualTec - 3 || i === paginaActualTec + 3) {
+      html += `<button disabled>...</button>`;
+    }
+  }
+  html += `<button class="prev-next" onclick="irPaginaTec(${paginaActualTec + 1})" ${paginaActualTec === totalPaginas ? "disabled" : ""}>Siguiente →</button>`;
+  el.innerHTML = html;
+}
+
+function irPaginaTec(n) {
+  const totalPaginas = Math.ceil(reportesFiltradosTec.length / POR_PAGINA_TEC);
+  if (n < 1 || n > totalPaginas) return;
+  paginaActualTec = n;
+  renderPaginaTec();
+  document.getElementById("lista-tecnico")?.scrollIntoView({ behavior: "smooth" });
+}
+window.irPaginaTec = irPaginaTec;
 
 /* =========================
    RENDER

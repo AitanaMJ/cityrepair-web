@@ -148,29 +148,39 @@ function renderPagina() {
 
 function renderPaginado(total) {
   if (!paginadoEl) return;
+  const MINIMO = 10;
   const totalPaginas = Math.ceil(total / POR_PAGINA);
-  if (totalPaginas <= 1) { paginadoEl.innerHTML = ""; return; }
+  const sinDatos = total < MINIMO;
 
-  let html = "";
+  // Siempre mostrar, deshabilitar si hay menos de 10 reportes
+  if (sinDatos) {
+    paginadoEl.innerHTML = `
+      <button class="prev-next" disabled>← Anterior</button>
+      <button class="activa" disabled>1</button>
+      <button class="prev-next" disabled>Siguiente →</button>
+      <span class="pag-hint">Disponible desde 10 reportes</span>`;
+    return;
+  }
 
-  // Botón Anterior
-  html += `<button class="prev-next" onclick="irPagina(${paginaActual - 1})" ${paginaActual === 1 ? "disabled" : ""}>← Anterior</button>`;
+  if (totalPaginas <= 1) {
+    paginadoEl.innerHTML = `
+      <button class="prev-next" disabled>← Anterior</button>
+      <button class="activa">1</button>
+      <button class="prev-next" disabled>Siguiente →</button>`;
+    return;
+  }
 
-  // Números de página
+  let html = `<button class="prev-next" onclick="irPagina(${paginaActual - 1})" ${paginaActual === 1 ? "disabled" : ""}>← Anterior</button>`;
+
   for (let i = 1; i <= totalPaginas; i++) {
-    if (
-      i === 1 || i === totalPaginas ||
-      (i >= paginaActual - 2 && i <= paginaActual + 2)
-    ) {
+    if (i === 1 || i === totalPaginas || (i >= paginaActual - 2 && i <= paginaActual + 2)) {
       html += `<button class="${i === paginaActual ? "activa" : ""}" onclick="irPagina(${i})">${i}</button>`;
     } else if (i === paginaActual - 3 || i === paginaActual + 3) {
       html += `<button disabled>...</button>`;
     }
   }
 
-  // Botón Siguiente
   html += `<button class="prev-next" onclick="irPagina(${paginaActual + 1})" ${paginaActual === totalPaginas ? "disabled" : ""}>Siguiente →</button>`;
-
   paginadoEl.innerHTML = html;
 }
 

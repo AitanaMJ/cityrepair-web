@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
 
 :root {
-  --blue: #003087;
+  --blue: #0d6efd;
   --green: #16a34a;
   --red: #dc2626;
   --yellow: #d97706;
@@ -125,7 +125,7 @@ body { font-family: 'DM Sans', sans-serif; background: #f8fafc; }
   font-weight: 600; border-radius: 10px; border: none;
   cursor: pointer; transition: background 0.15s ease, transform 0.1s;
 }
-.btn-edit:hover { background: #002570; transform: scale(1.02); }
+.btn-edit:hover { background: #0b5ed7; transform: scale(1.02); }
 
 .btn-delete {
   flex: 1; padding: 8px 0;
@@ -171,16 +171,16 @@ body { font-family: 'DM Sans', sans-serif; background: #f8fafc; }
   font-size: 0.83rem; color: #374151;
   background: #f9fafb; cursor: pointer;
 }
-.fecha-input:focus { outline: none; border-color: #003087; background: #fff; }
+.fecha-input:focus { outline: none; border-color: #0d6efd; background: #fff; }
 .btn-fecha {
   height: 36px; padding: 0 16px;
-  background: #003087; color: #fff;
+  background: #0d6efd; color: #fff;
   border: none; border-radius: 8px;
   font-family: 'DM Sans', sans-serif;
   font-size: 0.83rem; font-weight: 600;
   cursor: pointer; transition: background 0.15s;
 }
-.btn-fecha:hover { background: #002570; }
+.btn-fecha:hover { background: #0b5ed7; }
 .btn-fecha-limpiar {
   height: 36px; padding: 0 16px;
   background: #fff; color: #6b7280;
@@ -205,12 +205,12 @@ body { font-family: 'DM Sans', sans-serif; background: #f8fafc; }
   border-radius: 50%; border: none;
   background: transparent;
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.9rem; color: #003087;
+  font-size: 0.9rem; color: #0d6efd;
   cursor: pointer; transition: background 0.15s;
 }
 .paginado button:hover { background: #e8f0fe; }
 .paginado button.activa {
-  background: #003087; color: #fff;
+  background: #0d6efd; color: #fff;
   font-weight: 700; border-radius: 50%;
 }
 .paginado button.prev-next {
@@ -218,3 +218,11 @@ body { font-family: 'DM Sans', sans-serif; background: #f8fafc; }
 }
 .paginado button.prev-next:hover { background: #f3f4f6; }
 .paginado button:disabled { color: #9ca3af; cursor: default; background: transparent; }
+
+.pag-hint {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  font-style: italic;
+  margin-left: 8px;
+  align-self: center;
+}
