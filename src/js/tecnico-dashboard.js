@@ -59,8 +59,12 @@ async function cargarReportes() {
    FILTROS
 ========================= */
 function aplicarFiltros() {
-  // Solo mostrar reportes NO resueltos (los resueltos vuelven al EDET admin)
-  let lista = reportesTecnico.filter(r => r.estado !== "resuelto");
+  // Mostrar solo los reportes activos (pendiente + en revisión) en la lista de trabajo.
+  // Los resueltos se consultan desde el perfil/historial del técnico.
+  let lista = reportesTecnico.filter(r => {
+    const est = (r.estado || "pendiente").toLowerCase();
+    return est === "pendiente" || est.includes("rev");
+  });
 
   const estado = filtroEstadoEl?.value || "todos";
   const prio   = filtroPrioEl?.value   || "todos";
@@ -104,10 +108,18 @@ filtroPrioEl?.addEventListener("change", aplicarFiltros);
 ========================= */
 function actualizarKPIs(lista) {
   const hoy = new Date().toDateString();
-  if (kpiAsignados) kpiAsignados.textContent = reportesTecnico.length;
-  if (kpiRevision)  kpiRevision.textContent  = reportesTecnico.filter(r => (r.estado||"").includes("rev")).length;
+  // Activos = pendientes + en revisión (sin resueltos)
+  const activos = reportesTecnico.filter(r => {
+    const est = (r.estado || "pendiente").toLowerCase();
+    return est === "pendiente" || est.includes("rev");
+  });
+  if (kpiAsignados) kpiAsignados.textContent = activos.length;
+  if (kpiRevision)  kpiRevision.textContent  = activos.filter(r => (r.estado||"").includes("rev")).length;
+  // Resueltos hoy: prioriza fecha_resuelto sobre fecha de creación
   if (kpiResueltos) kpiResueltos.textContent = reportesTecnico.filter(r => {
-    return r.estado === "resuelto" && new Date(r.fecha).toDateString() === hoy;
+    if (r.estado !== "resuelto") return false;
+    const fechaCheck = r.fecha_resuelto ? new Date(r.fecha_resuelto) : new Date(r.fecha);
+    return fechaCheck.toDateString() === hoy;
   }).length;
 }
 
