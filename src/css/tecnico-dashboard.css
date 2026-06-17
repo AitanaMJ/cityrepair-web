@@ -1,302 +1,102 @@
 /* =============================
-   CityRepair – Panel Técnico + Perfil Técnico
+   CityRepair – Panel Técnico
    Archivo: src/css/tecnico-dashboard.css
    ============================= */
 
-/* ── Navbar del técnico (Tecnico-dashboard.html) ── */
-.tec-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 28px;
-  height: 64px;
-  background: #fff;
-  border-bottom: 3px solid #003087;
-  box-shadow: 0 2px 8px rgba(0,48,135,.08);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+/* Fondo general un poco distinto al de ciudadano */
+body.edet-body {
+  background: #f3f4f6;
 }
 
-.tec-nav-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.tec-nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.tec-nav-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 0.87rem;
-  font-weight: 600;
-  text-decoration: none;
-  color: #374151;
-  background: #f1f5f9;
-  border: 1.5px solid #e2e8f0;
-  cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
-  transition: all 0.15s;
-}
-
-.tec-nav-btn:hover {
-  background: #e2e8f0;
-}
-
-.tec-nav-btn--active {
-  background: #003087;
-  color: #fff;
-  border-color: #003087;
-}
-
-.tec-nav-btn--active:hover {
-  background: #0057B7;
-  border-color: #0057B7;
-}
-
-/* ── Hero del técnico ── */
-.tec-hero {
-  background: linear-gradient(135deg, #003087 0%, #0057B7 60%, #0078D4 100%);
-  padding: 40px 0 36px;
-  color: #fff;
-  position: relative;
-  overflow: hidden;
-}
-
-.tec-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-}
-
-.tec-hero .container {
-  position: relative;
-  z-index: 1;
-}
-
-.tec-hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255,255,255,.15);
-  color: #fff;
-  font-size: 0.78rem;
-  font-weight: 700;
-  padding: 5px 14px;
-  border-radius: 999px;
-  margin-bottom: 12px;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  border: 1px solid rgba(255,255,255,.25);
-}
-
-.tec-hero-title {
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: -.5px;
-  margin-bottom: 8px;
-  color: #fff;
-}
-
-.tec-hero-sub {
-  font-size: 1rem;
-  color: rgba(255,255,255,.8);
-}
-
-/* ── Layout principal ── */
-.tec-main {
-  padding: 28px 0 60px;
+/* Contenido principal del panel técnico */
+.edet-main {
+  padding-top: 24px;
+  padding-bottom: 32px;
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-/* ── KPIs ── */
-.tec-kpis {
+/* =============================
+   KPIs
+   ============================= */
+
+.kpi-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
 }
 
-.tec-kpi-card {
-  background: #fff;
+.kpi-card {
+  background: #ffffff;
   border-radius: 14px;
-  padding: 20px 18px;
-  box-shadow: 0 2px 12px rgba(0,48,135,.07);
-  border: 1px solid #E2E8F0;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
   display: flex;
-  align-items: center;
-  gap: 14px;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.tec-kpi-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,48,135,.12);
-}
-
-.tec-kpi-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  font-size: 1.3rem;
-  flex-shrink: 0;
-}
-
-.tec-kpi-num {
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: #111827;
-  line-height: 1;
-}
-
-.tec-kpi-num--yellow { color: #d97706; }
-.tec-kpi-num--green  { color: #16a34a; }
-
-.tec-kpi-sub {
-  font-size: 0.8rem;
-  color: #6b7280;
+.kpi-card h3 {
+  font-size: 0.9rem;
   font-weight: 500;
-  margin-top: 2px;
+  color: #4b5563;
 }
 
-.kpi-bar {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 3px;
-}
-
-/* ── Cards de sección ── */
-.tec-dash-card {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0,48,135,.07);
-  border: 1px solid #E2E8F0;
-  padding: 20px 24px;
-}
-
-.tec-dash-card-title {
-  font-size: 1rem;
+.kpi-number {
+  font-size: 1.4rem;
   font-weight: 700;
   color: #111827;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #f3f4f6;
+}
+
+/* =============================
+   Contenedor de lista de reportes
+   ============================= */
+
+.edet-table-card {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+  padding: 14px 18px;
+}
+
+.edet-table-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.edet-table-header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Lista tipo tabla “flex” */
+.edet-list {
+  display: flex;
+  flex-direction: column;
   gap: 8px;
 }
 
-/* ── Grid de filtros ── */
-.tec-filtros-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: 14px;
-  align-items: end;
-}
-
-.tec-filtro-item label {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: #6b7280;
-  margin-bottom: 5px;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-}
-
-.tec-select {
-  width: 100%;
-  height: 40px;
-  padding: 0 12px;
-  border-radius: 10px;
-  border: 1.5px solid #E2E8F0;
-  background: #f9fafb;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem;
-  color: #374151;
-  outline: none;
-  cursor: pointer;
-  transition: border-color 0.15s;
-}
-
-.tec-select:focus {
-  border-color: #0057B7;
-  background: #fff;
-}
-
-.tec-filtro-btns {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: flex-end;
-}
-
-.tec-btn-filtro-primary,
-.tec-btn-filtro-secondary,
-.tec-btn-filtro-export {
-  height: 40px;
-  padding: 0 16px;
-  border: none;
-  border-radius: 10px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.15s;
-  white-space: nowrap;
-}
-
-.tec-btn-filtro-primary {
-  background: #003087;
-  color: #fff;
-}
-.tec-btn-filtro-primary:hover { background: #0057B7; }
-
-.tec-btn-filtro-secondary {
-  background: #fff;
-  color: #374151;
-  border: 1.5px solid #E2E8F0;
-}
-.tec-btn-filtro-secondary:hover { background: #f3f4f6; }
-
-.tec-btn-filtro-export {
-  background: #6366f1;
-  color: #fff;
-}
-.tec-btn-filtro-export:hover { background: #4f46e5; }
-
-/* ── Tarjetas de reportes asignados (generadas por JS) ── */
+/* Cada fila / tarjeta de reporte del técnico */
 .card-reporte-tec {
   display: grid;
-  grid-template-columns: minmax(0, 160px) minmax(0, 1.4fr) auto auto minmax(0, 180px);
+  grid-template-columns: minmax(0, 170px) minmax(0, 1.4fr) auto auto minmax(0, 180px);
   gap: 10px;
-  padding: 12px 14px;
+  padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid #e5e7eb;
   background: #f9fafb;
   align-items: center;
-  margin-bottom: 8px;
 }
 
-.card-reporte-tec:nth-child(even) { background: #fff; }
+.card-reporte-tec:nth-child(even) {
+  background: #ffffff;
+}
 
+/* En pantallas chicas, apilar la tarjeta */
 @media (max-width: 900px) {
   .card-reporte-tec {
     grid-template-columns: 1fr;
@@ -304,13 +104,20 @@
   }
 }
 
+/* =============================
+   Textos dentro de la tarjeta
+   ============================= */
+
 .rep-code {
   font-size: 0.85rem;
   font-weight: 600;
   color: #111827;
   cursor: pointer;
 }
-.rep-code:hover { text-decoration: underline; }
+
+.rep-code:hover {
+  text-decoration: underline;
+}
 
 .rep-date {
   font-size: 0.8rem;
@@ -342,6 +149,7 @@
   margin: 4px 0 2px;
 }
 
+/* Nota visible para el técnico (lo que verá el ciudadano) */
 .tec-nota {
   font-size: 0.8rem;
   color: #0f766e;
@@ -351,7 +159,10 @@
   margin-top: 4px;
 }
 
-/* ── Tags ── */
+/* =============================
+   Tags de estado / prioridad
+   ============================= */
+
 .tag {
   display: inline-flex;
   align-items: center;
@@ -359,57 +170,49 @@
   font-size: 0.78rem;
   padding: 3px 9px;
   border-radius: 999px;
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
 }
 
-.tag--green  { background: #dcfce7; color: #166534; }
-.tag--blue   { background: #dbeafe; color: #1d4ed8; }
-.tag--red    { background: #fee2e2; color: #b91c1c; }
-.tag--yellow { background: #fef9c3; color: #92400e; }
-.tag--gray   { background: #e5e7eb; color: #374151; }
-
-/* ── Badges de prioridad ── */
-.badge {
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: .02em;
+.tag--green {
+  background: #dcfce7;
+  color: #166534;
 }
-.prioridad-alta  { background: #fee2e2; color: #dc2626; }
-.prioridad-media { background: #fef3c7; color: #d97706; }
-.prioridad-baja  { background: #dcfce7; color: #16a34a; }
 
-/* ── Botones de acción en tarjeta ── */
-.acciones-tec {
-  grid-column: 1 / -1;
+.tag--blue {
+  background: #EBF2FB;
+  color: #003087;
+}
+
+.tag--red {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.tag--yellow {
+  background: #fef9c3;
+  color: #92400e;
+}
+
+.tag--gray {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+/* =============================
+   Imágenes
+   ============================= */
+
+.tec-imgs-wrapper {
   display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 6px;
+  justify-content: flex-start;
 }
 
-.btn-resolver-estado {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: none;
-  font-size: 0.8rem;
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: filter 0.15s;
+.reporte-imgs-tec {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
-.btn-resolver-estado:first-of-type { background: #dbeafe; color: #1d4ed8; }
-.btn-resolver-estado:last-of-type  { background: #bbf7d0; color: #166534; }
-.btn-resolver-estado:hover { filter: brightness(0.93); }
-
-/* ── Imágenes thumb ── */
-.reporte-imgs-tec { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .thumb-tec {
   width: 70px;
@@ -418,77 +221,277 @@
   border-radius: 8px;
   border: 1px solid #e5e7eb;
   cursor: pointer;
-  transition: transform 0.12s, box-shadow 0.12s;
-}
-.thumb-tec:hover { transform: scale(1.04); box-shadow: 0 2px 8px rgba(15,23,42,.3); }
-
-/* ── Paginado ── */
-.paginado {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
-  padding: 20px 0 8px;
-  flex-wrap: wrap;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
-.paginado button {
-  min-width: 36px;
-  height: 36px;
-  padding: 0 10px;
-  border-radius: 50%;
-  border: none;
-  background: transparent;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.9rem;
-  color: #0057B7;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.paginado button:hover { background: #EBF2FB; }
-.paginado button.activa { background: #003087; color: #fff; font-weight: 700; }
-.paginado button.prev-next { border-radius: 8px; color: #374151; font-weight: 600; }
-.paginado button.prev-next:hover { background: #f3f4f6; }
-.paginado button:disabled { color: #9ca3af; cursor: default; background: transparent; }
-
-.pag-hint {
-  font-size: 0.78rem;
-  color: #9ca3af;
-  font-style: italic;
-  margin-left: 8px;
-  align-self: center;
+.thumb-tec:hover {
+  transform: scale(1.04);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.3);
 }
 
-/* ── Botón "Mis trabajos" del navbar en tecnico-perfil ── */
-.btn-mis-trabajos {
+/* =============================
+   Botones de acción
+   ============================= */
+
+.ta-right {
+  text-align: right;
+}
+
+.btn-resolver-estado {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: #003087;
-  color: #fff;
-  padding: 8px 18px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.87rem;
-  text-decoration: none;
-  transition: background 0.15s;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: none;
+  background: #e5e7eb;
+  color: #111827;
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin-left: 4px;
+  margin-bottom: 4px;
+  white-space: nowrap;
 }
-.btn-mis-trabajos:hover { background: #0057B7; }
 
-/* ── Dropdown del técnico en navbar ── */
+.btn-resolver-estado:first-of-type {
+  background: #EBF2FB;
+  color: #003087;
+}
+
+.btn-resolver-estado:last-of-type {
+  background: #bbf7d0;
+  color: #166534;
+}
+
+.btn-resolver-estado:hover {
+  filter: brightness(0.95);
+}
+
+/* En mobile, que los botones ocupen toda la línea si hace falta */
+@media (max-width: 900px) {
+  .ta-right {
+    text-align: left;
+  }
+
+  .btn-resolver-estado {
+    width: auto;
+  }
+}
+
+/* Contenedor de acciones (botones En revisión / Marcar resuelto) */
+.acciones-tec {
+  grid-column: 1 / -1;           /* que ocupe todo el ancho de la tarjeta */
+  display: flex;
+  justify-content: flex-end;     /* botones alineados a la derecha */
+  gap: 8px;
+  margin-top: 6px;
+}
+
+/* En mobile que no se vea apretado */
+@media (max-width: 900px) {
+  .acciones-tec {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}
+/* ===== MINI MENÚ DEL TÉCNICO ===== */
+
+.tecnico-menu-btn {
+  background: #eef2ff;
+  border: 1px solid #d0d7ff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.tecnico-menu-btn:hover {
+  background: #e0e7ff;
+}
+
+.tecnico-dropdown {
+  position: absolute;
+  right: 20px;
+  top: 72px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  border-radius: 10px;
+  width: 180px;
+  padding: 8px 0;
+  z-index: 50;
+}
+
+.tecnico-dropdown button {
+  width: 100%;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.tecnico-dropdown button:hover {
+  background: #f3f4f6;
+}
+
+ 
+/* --- NAVBAR GENERAL --- */
+.navbar-technician {
+  display: flex;
+  align-items: center;
+  padding: 18px 40px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* Logo + título */
+.nav-tech-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.nav-tech-logo {
+  height: 60px;
+}
+
+.nav-tech-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* --- PARTE DERECHA DEL NAVBAR --- */
+.nav-tech-right {
+  margin-left: auto; /* Empuja todo a la derecha */
+  display: flex;
+  align-items: center;
+  gap: 24px; /* distancia entre mis trabajos y avatar */
+}
+
+/* Botón Mis trabajos */
+.btn-mis-trabajos {
+  background: #0f62fe;
+  padding: 10px 20px;
+  border-radius: 25px;
+  color: white !important;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.btn-mis-trabajos:hover {
+  background: #0c52d8;
+}
+
+/* --- Menú técnico (avatar + nombre) --- */
+.nav-tech-menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  position: relative;
+}
+
+.nav-tech-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.nav-tech-dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 10px 0;
+  width: 160px;
+  display: none;
+}
+
+.nav-tech-dropdown.show {
+  display: block;
+}
+
+.nav-tech-dropdown button {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.nav-tech-dropdown button:hover {
+  background: #f3f4f6;
+}
+
+/* ======== PERFIL DEL TÉCNICO ======== */
+
+.perfil-card-tec {
+  width: 50%;
+  max-width: 500px;
+  margin: 60px auto;
+  background: white;
+  padding: 50px 60px;
+  border-radius: 30px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+/* Foto redonda */
+.perfil-foto-tec {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+}
+
+.perfil-nombre-tec {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.perfil-email-tec {
+  font-size: 17px;
+  color: #444;
+  margin-bottom: 4px;
+}
+
+.perfil-uid-tec {
+  font-size: 14px;
+  color: #777;
+  margin-top: 10px;
+}
+
+
+/* =============================
+   DROPDOWN DEL TÉCNICO (CON ICONOS)
+   ============================= */
+
 .user-dropdown {
   position: absolute;
   top: 52px;
   right: 0;
-  background: #fff;
+  background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 14px;
-  box-shadow: 0 8px 20px rgba(0,0,0,.12);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
   padding: 6px 0;
   width: 190px;
   z-index: 9999;
 }
 
+/* Botones del menú */
 .user-dropdown a.dropdown-btn,
 .user-dropdown button {
   width: 100%;
@@ -499,103 +502,316 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
   color: #1f2937;
   text-decoration: none;
-  transition: background 0.15s;
+  transition: 0.2s;
 }
-.user-dropdown a.dropdown-btn:hover,
-.user-dropdown button:hover { background: #f3f4f6; }
 
-/* ═══════════════════════════════════
-   PERFIL DEL TÉCNICO (tecnico-perfil.html)
-   ═══════════════════════════════════ */
+.user-dropdown a.dropdown-btn i,
+.user-dropdown button i {
+  font-size: 18px;
+  color: #6b7280;
+}
+
+.user-dropdown a.dropdown-btn:hover,
+.user-dropdown button:hover {
+  background: #f3f4f6;
+}
+
+/* Avatar circulito azul */
+.user-pill .avatar-sm {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+}
+/* =============================
+   TARJETAS REDISEÑADAS
+   ============================= */
+
+.tec-report-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #f0f0f0;
+  border-left: 5px solid #0078D4;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.07);
+  padding: 20px;
+  margin-bottom: 14px;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.tec-report-card:hover {
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.13);
+  transform: translateY(-1px);
+}
+
+/* Cabecera de la tarjeta */
+.tec-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.tec-card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tec-type-icon {
+  font-size: 1.4rem;
+  width: 40px;
+  height: 40px;
+  background: #f3f4f6;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tec-tipo {
+  display: block;
+  font-size: 0.97rem;
+  color: #111827;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.tec-id {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+/* Badges */
+.tec-badges {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.tec-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  letter-spacing: 0.01em;
+}
+
+.tec-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* Descripción */
+.tec-desc {
+  font-size: 0.87rem;
+  color: #4b5563;
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+/* Meta info */
+.tec-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
+  color: #9ca3af;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+/* Botones de acción */
+.tec-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.tec-btn-revision,
+.tec-btn-resolver {
+  flex: 1;
+  padding: 9px 14px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+/* Revisión: blanco + borde amarillo siempre */
+.tec-btn-revision {
+  background: #fff;
+  color: #d97706;
+  border: 2px solid #f59e0b;
+}
+.tec-btn-revision:hover  { background: #fef3c7; }
+.tec-btn-revision:active { background: #f59e0b; color: #fff; }
+
+/* Resolver: blanco + borde verde siempre */
+.tec-btn-resolver {
+  background: #fff;
+  color: #16a34a;
+  border: 2px solid #16a34a;
+}
+.tec-btn-resolver:hover  { background: #dcfce7; }
+.tec-btn-resolver:active { background: #16a34a; color: #fff; }
+
+/* Estado vacío */
+.tec-empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: #6b7280;
+}
+
+.tec-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.tec-empty-state h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.tec-empty-state p {
+  font-size: 0.87rem;
+}
+
+@media (max-width: 600px) {
+  .tec-card-header {
+    flex-direction: column;
+  }
+  .tec-badges {
+    justify-content: flex-start;
+  }
+  .tec-actions {
+    flex-direction: column;
+  }
+}
+
+/* =========================================
+   PERFIL DEL TÉCNICO — NUEVO DISEÑO
+   ========================================= */
 
 .perfil-tec-main {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 32px 20px 60px;
+  max-width: 700px;
+  margin: 32px auto;
+  padding: 0 16px 48px;
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-/* Hero card con banner + avatar */
+/* --- Hero Card --- */
 .perfil-hero-card {
   background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 2px 12px rgba(0,48,135,.07);
-  border: 1px solid #E2E8F0;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(15,23,42,0.09);
   overflow: hidden;
 }
 
 .perfil-hero-banner {
-  height: 90px;
-  background: linear-gradient(135deg, #003087 0%, #0057B7 60%, #0078D4 100%);
+  height: 110px;
+  background: linear-gradient(135deg, #003087 0%, #0057B7 60%, #38bdf8 100%);
+  position: relative;
+}
+
+.perfil-hero-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
 .perfil-hero-body {
+  padding: 0 28px 28px;
   display: flex;
   align-items: flex-end;
   gap: 20px;
-  padding: 0 28px 24px;
-  margin-top: -32px;
   flex-wrap: wrap;
 }
 
+/* Avatar con borde blanco y punto de estado */
 .perfil-avatar-wrapper {
   position: relative;
+  margin-top: -42px;
   flex-shrink: 0;
 }
 
 .perfil-avatar-circle {
-  width: 80px;
-  height: 80px;
+  width: 84px;
+  height: 84px;
   border-radius: 50%;
-  background: #003087;
+  background: linear-gradient(135deg, #001a5e, #003087);
   color: #fff;
-  display: grid;
-  place-items: center;
   font-size: 2rem;
   font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 4px solid #fff;
-  box-shadow: 0 4px 14px rgba(0,48,135,.2);
+  box-shadow: 0 4px 14px rgba(29,78,216,0.3);
+  letter-spacing: 1px;
 }
 
 .perfil-status-dot {
   position: absolute;
   bottom: 4px;
   right: 4px;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
+  background: #22c55e;
   border-radius: 50%;
-  background: #16a34a;
-  border: 2px solid #fff;
+  border: 3px solid #fff;
 }
 
 .perfil-hero-info {
+  padding-top: 14px;
   flex: 1;
-  min-width: 200px;
-  padding-top: 36px;
+  min-width: 0;
 }
 
 .perfil-hero-name {
-  font-size: 1.5rem;
+  font-size: 1.45rem;
   font-weight: 800;
   color: #111827;
-  margin-bottom: 4px;
+  margin: 0 0 4px;
+  text-transform: capitalize;
 }
 
 .perfil-hero-email {
-  font-size: 0.9rem;
+  font-size: 0.87rem;
   color: #6b7280;
-  margin-bottom: 10px;
+  margin: 0 0 10px;
 }
 
 .perfil-hero-tags {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
@@ -603,17 +819,17 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 12px;
+  padding: 4px 11px;
   border-radius: 999px;
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   font-weight: 700;
 }
 
-.perfil-tag--blue  { background: #dbeafe; color: #1d4ed8; }
-.perfil-tag--green { background: #dcfce7; color: #166534; }
-.perfil-tag--gray  { background: #e5e7eb; color: #374151; }
+.perfil-tag--blue  { background: #EBF2FB; color: #003087; }
+.perfil-tag--green { background: #dcfce7; color: #16a34a; }
+.perfil-tag--gray  { background: #f3f4f6; color: #374151; }
 
-/* Stats row */
+/* --- Stats --- */
 .perfil-stats-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -622,215 +838,483 @@
 
 .perfil-stat-card {
   background: #fff;
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 18px 16px;
-  box-shadow: 0 2px 10px rgba(0,48,135,.06);
-  border: 1px solid #E2E8F0;
   display: flex;
   align-items: center;
   gap: 14px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 12px rgba(15,23,42,0.07);
+  transition: transform 0.15s ease;
 }
+
 .perfil-stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,48,135,.1);
 }
 
 .perfil-stat-icon {
   width: 44px;
   height: 44px;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1.2rem;
   flex-shrink: 0;
 }
 
 .perfil-stat-label {
-  font-size: 0.78rem;
+  font-size: 0.77rem;
   color: #6b7280;
-  font-weight: 500;
-  margin-bottom: 2px;
+  font-weight: 600;
+  margin: 0 0 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .perfil-stat-num {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 800;
   color: #111827;
+  margin: 0;
   line-height: 1;
 }
 
-/* Cards de info / sección */
+/* --- Info card --- */
 .perfil-info-card,
 .perfil-acciones-card {
   background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 2px 10px rgba(0,48,135,.06);
-  border: 1px solid #E2E8F0;
+  border-radius: 18px;
   padding: 24px 28px;
+  box-shadow: 0 2px 12px rgba(15,23,42,0.07);
 }
 
 .perfil-section-title {
   font-size: 1rem;
   font-weight: 700;
   color: #111827;
-  margin-bottom: 18px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #f3f4f6;
+  margin: 0 0 18px;
   display: flex;
   align-items: center;
   gap: 8px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f3f4f6;
 }
 
-/* Grid info de cuenta */
+.perfil-section-title i {
+  color: #003087;
+  font-size: 1.1rem;
+}
+
 .perfil-info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 14px;
 }
 
 .perfil-info-item {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: #f9fafb;
+  border-radius: 10px;
+  gap: 12px;
 }
 
 .perfil-info-label {
-  font-size: 0.72rem;
+  font-size: 0.83rem;
+  color: #6b7280;
   font-weight: 600;
-  color: #9ca3af;
-  text-transform: uppercase;
-  letter-spacing: .04em;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 7px;
+  flex-shrink: 0;
+}
+
+.perfil-info-label i {
+  color: #9ca3af;
 }
 
 .perfil-info-val {
-  font-size: 0.92rem;
-  font-weight: 600;
+  font-size: 0.87rem;
   color: #111827;
+  font-weight: 600;
+  text-align: right;
+  word-break: break-all;
 }
 
-.perfil-info-muted { color: #9ca3af; font-size: 0.82rem; }
+.perfil-info-muted {
+  color: #9ca3af;
+  font-weight: 400;
+  font-size: 0.78rem;
+}
 
-/* Acciones rápidas */
+/* --- Acciones --- */
 .perfil-acciones-grid {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
-  flex-wrap: wrap;
 }
 
 .perfil-accion-btn {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 10px 20px;
-  border-radius: 10px;
+  padding: 13px 18px;
+  border-radius: 12px;
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.87rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 700;
   cursor: pointer;
   border: none;
   text-decoration: none;
-  transition: all 0.15s;
+  transition: all 0.18s ease;
 }
 
 .perfil-accion-btn--primary {
   background: #003087;
   color: #fff;
 }
-.perfil-accion-btn--primary:hover { background: #0057B7; }
+
+.perfil-accion-btn--primary:hover {
+  background: #002570;
+  transform: translateY(-1px);
+}
 
 .perfil-accion-btn--danger {
-  background: #fff;
-  color: #dc2626;
-  border: 1.5px solid #dc2626;
+  background: #fee2e2;
+  color: #b91c1c;
 }
-.perfil-accion-btn--danger:hover { background: #dc2626; color: #fff; }
 
-/* ── Historial de reportes (filtros) ── */
+.perfil-accion-btn--danger:hover {
+  background: #fecaca;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 560px) {
+  .perfil-stats-row { grid-template-columns: 1fr; }
+  .perfil-acciones-grid { grid-template-columns: 1fr; }
+  .perfil-hero-body { flex-direction: column; align-items: flex-start; }
+  .perfil-info-item { flex-direction: column; align-items: flex-start; }
+  .perfil-info-val { text-align: left; }
+}
+
+/* =========================================
+   CARD ZONA PELIGROSA (DAR DE BAJA)
+   ========================================= */
+.perfil-baja-card {
+  background: #fff;
+  border: 1.5px solid #fecaca;
+  border-radius: 16px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.perfil-baja-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+.perfil-baja-icon { font-size: 1.4rem; color: #f59e0b; flex-shrink: 0; margin-top: 2px; }
+.perfil-baja-info strong { display: block; font-size: 0.92rem; color: #111827; margin-bottom: 4px; }
+.perfil-baja-info p { font-size: 0.82rem; color: #6b7280; margin: 0; line-height: 1.4; }
+.perfil-baja-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 10px 20px;
+  background: #fff; color: #dc2626;
+  border: 1.5px solid #dc2626;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.87rem; font-weight: 700;
+  cursor: pointer; white-space: nowrap;
+  transition: all 0.15s ease; flex-shrink: 0;
+}
+.perfil-baja-btn:hover { background: #dc2626; color: #fff; }
+@media (max-width: 560px) { .perfil-baja-card { flex-direction: column; } }
+
+/* =========================================
+   HISTORIAL - FILTROS
+   ========================================= */
 .hist-filtros {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  display: flex;
   gap: 12px;
-  align-items: end;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-bottom: 18px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+}
+
+.hist-filtro-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-width: 140px;
 }
 
 .hist-filtro-item label {
-  display: block;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  color: #6b7280;
-  margin-bottom: 4px;
-  text-transform: uppercase;
-  letter-spacing: .04em;
+  color: #374151;
 }
 
 .hist-filtro-item select,
 .hist-filtro-item input[type="date"] {
-  width: 100%;
   height: 38px;
   padding: 0 10px;
-  border-radius: 8px;
-  border: 1.5px solid #E2E8F0;
-  background: #f9fafb;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 9px;
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem;
-  color: #374151;
+  font-size: 0.87rem;
+  color: #111827;
+  background: #fff;
   outline: none;
-  cursor: pointer;
+  transition: border-color 0.15s;
 }
+
 .hist-filtro-item select:focus,
 .hist-filtro-item input[type="date"]:focus {
-  border-color: #0057B7;
-  background: #fff;
+  border-color: #003087;
 }
 
 .hist-filtro-btns {
-  display: flex;
-  gap: 8px;
+  flex-direction: row;
   align-items: flex-end;
+  gap: 8px;
+  min-width: auto;
+  flex: 0;
 }
 
 .hist-btn-aplicar,
 .hist-btn-limpiar {
   height: 38px;
-  padding: 0 14px;
-  border: none;
-  border-radius: 8px;
+  padding: 0 16px;
+  border-radius: 9px;
   font-family: 'DM Sans', sans-serif;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  transition: all 0.15s;
+  gap: 6px;
+  border: none;
+  transition: all 0.15s ease;
+  white-space: nowrap;
 }
+
 .hist-btn-aplicar {
   background: #003087;
   color: #fff;
 }
-.hist-btn-aplicar:hover { background: #0057B7; }
+.hist-btn-aplicar:hover { background: #002570; }
 
 .hist-btn-limpiar {
-  background: #fff;
+  background: #f3f4f6;
   color: #374151;
-  border: 1.5px solid #E2E8F0;
 }
-.hist-btn-limpiar:hover { background: #f3f4f6; }
+.hist-btn-limpiar:hover { background: #e5e7eb; }
 
-/* ── Responsive ── */
-@media (max-width: 768px) {
-  .tec-nav { padding: 0 16px; }
-  .tec-hero-title { font-size: 1.5rem; }
+@media (max-width: 560px) {
+  .hist-filtros { flex-direction: column; }
+  .hist-filtro-item { min-width: 100%; }
+  .hist-filtro-btns { flex-direction: row; }
+}
+
+/* ── Botón revisión activo (estado: en revisión) ── */
+.tec-btn-revision--activo {
+  background: #f59e0b !important;
+  color: #fff !important;
+  border: 2px solid #f59e0b !important;
+}
+.tec-btn-revision--activo:hover {
+  background: #d97706 !important;
+}
+
+/* ── Botón resolver outline (cuando ya está en revisión) ── */
+.tec-btn-resolver--outline {
+  background: #fff !important;
+  color: #16a34a !important;
+  border: 2px solid #16a34a !important;
+}
+.tec-btn-resolver--outline:hover {
+  background: #dcfce7 !important;
+}
+
+/* ── Fix dropdown texto largo ── */
+.hist-filtro-item select,
+select.filter-select {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* ══════════════════════════════
+   NUEVO DISEÑO SIMILAR AL ADMIN
+══════════════════════════════ */
+
+/* Navbar */
+.tec-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 28px;
+  height: 64px;
+  background: #fff;
+  border-bottom: 3px solid #003087;
+  box-shadow: 0 2px 8px rgba(0,48,135,.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.tec-nav-brand { display: flex; align-items: center; gap: 12px; }
+.tec-nav-actions { display: flex; gap: 10px; align-items: center; }
+
+.tec-nav-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 9px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem; font-weight: 600;
+  text-decoration: none; cursor: pointer;
+  border: 1.5px solid #e5e7eb;
+  background: #fff; color: #374151;
+  transition: all 0.15s;
+}
+.tec-nav-btn:hover { background: #f3f4f6; }
+.tec-nav-btn--active {
+  background: #003087; color: #fff; border-color: #003087;
+}
+.tec-nav-btn--active:hover { background: #002570; }
+
+/* Hero */
+.tec-hero {
+  background: linear-gradient(135deg, #001a5e 0%, #003087 50%, #0057B7 100%);
+  padding: 28px 0 22px;
+}
+.tec-hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.15); color: #fff;
+  font-size: 0.75rem; font-weight: 700;
+  padding: 4px 12px; border-radius: 999px; margin-bottom: 8px;
+  border: 1px solid rgba(255,255,255,.25);
+}
+.tec-hero-title {
+  font-size: 1.7rem; font-weight: 800; color: #fff;
+  margin: 0 0 4px; letter-spacing: -.5px;
+}
+.tec-hero-sub { font-size: 0.9rem; color: rgba(255,255,255,.75); margin: 0; }
+
+/* Main container */
+.tec-main { padding: 28px 0 60px; }
+
+/* KPI Cards */
+.tec-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.tec-kpi-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px 18px 16px;
+  box-shadow: 0 2px 12px rgba(0,48,135,.07);
+  display: flex; align-items: center; gap: 14px;
+  position: relative; overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.tec-kpi-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,48,135,.12); }
+.tec-kpi-icon {
+  width: 48px; height: 48px; border-radius: 13px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; flex-shrink: 0;
+}
+.tec-kpi-num {
+  font-size: 2rem; font-weight: 900; color: #111827; line-height: 1;
+}
+.tec-kpi-num--yellow { color: #d97706; }
+.tec-kpi-num--green  { color: #16a34a; }
+.tec-kpi-sub { font-size: 0.82rem; color: #6b7280; font-weight: 500; margin-top: 3px; }
+
+/* Card unificada */
+.tec-dash-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 22px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0,48,135,.06);
+}
+.tec-dash-card-title {
+  font-size: 0.97rem; font-weight: 700; color: #111827;
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 18px; padding-bottom: 12px;
+  border-bottom: 2px solid #003087;
+}
+.tec-dash-card-title i { color: #003087; }
+
+/* Filtros */
+.tec-filtros-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-end;
+}
+.tec-filtro-item {
+  display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 130px;
+}
+.tec-filtro-item label { font-size: 0.78rem; font-weight: 600; color: #374151; }
+.tec-select {
+  height: 40px; padding: 0 12px;
+  border-radius: 10px; border: 1.5px solid #e5e7eb;
+  background: #f9fafb; font-family: 'DM Sans', sans-serif;
+  font-size: 0.87rem; outline: none; transition: border-color 0.15s;
+}
+.tec-select:focus { border-color: #003087; background: #fff; }
+.tec-filtro-btns {
+  display: flex; gap: 8px; align-items: flex-end; flex-shrink: 0;
+}
+.tec-btn-filtro-primary {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 40px; padding: 0 18px;
+  background: #003087; color: #fff; border: none;
+  border-radius: 10px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.87rem; font-weight: 700; cursor: pointer;
+  transition: background 0.15s; white-space: nowrap;
+}
+.tec-btn-filtro-primary:hover { background: #002570; }
+.tec-btn-filtro-secondary {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 40px; padding: 0 16px;
+  background: #f3f4f6; color: #374151; border: none;
+  border-radius: 10px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.87rem; font-weight: 600; cursor: pointer;
+  transition: background 0.15s; white-space: nowrap;
+}
+.tec-btn-filtro-secondary:hover { background: #e5e7eb; }
+.tec-btn-filtro-export {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 40px; padding: 0 18px;
+  background: #dc2626; color: #fff; border: none;
+  border-radius: 10px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.87rem; font-weight: 700; cursor: pointer;
+  transition: background 0.15s; white-space: nowrap;
+}
+.tec-btn-filtro-export:hover { background: #be1b1b; }
+
+@media (max-width: 700px) {
   .tec-kpis { grid-template-columns: 1fr; }
-  .tec-filtros-grid { grid-template-columns: 1fr 1fr; }
-  .perfil-stats-row { grid-template-columns: 1fr; }
-  .perfil-hero-body { padding: 0 16px 20px; }
-  .perfil-info-card,
-  .perfil-acciones-card { padding: 18px 16px; }
-  .acciones-tec { justify-content: flex-start; flex-wrap: wrap; }
+  .tec-filtros-grid { flex-direction: column; }
+  .tec-filtro-item { min-width: 100%; }
 }

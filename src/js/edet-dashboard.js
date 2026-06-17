@@ -90,10 +90,8 @@ function poblarFiltroUsuario() {
    FILTROS
 ======================================================= */
 function aplicarFiltros() {
-  // Base: solo mostrar reportes sin técnico asignado O ya resueltos
-  let filtrados = REPORTES_ORIGINALES.filter(r =>
-    !r.tecnico_email || r.estado === "resuelto"
-  );
+  // Base: todos los reportes (pendientes, en revisión y resueltos)
+  let filtrados = [...REPORTES_ORIGINALES];
 
   const resolucion = filtroResolucion?.value || "todos";
   const prioridad  = filtroPrioridad?.value  || "todos";
@@ -256,13 +254,12 @@ function renderTabla(reportes) {
                      </select>
                      ${yaNotificado
                        ? `<button class="btn-comunicar" disabled
-                            style="opacity:0.5;cursor:not-allowed;background:#9ca3af;"
                             title="Ya se envió una notificación para este reporte">
-                            ✉️ Notificación enviada
+                            <i class="bi bi-check2-circle"></i> Notificación enviada
                           </button>`
                        : `<button class="btn-comunicar" id="btn-comunicar-${r.id}"
                             onclick="abrirModalComunicar(${r.id}, ${r.usuario_id})">
-                            📩 Comunicar al usuario
+                            <i class="bi bi-envelope-fill"></i> Comunicar al usuario
                           </button>`
                      }`;
                   })()
@@ -285,10 +282,12 @@ function renderTabla(reportes) {
    KPIs
 ======================================================= */
 function actualizarKPIs(reportes) {
-  kpiTotal.textContent  = reportes.length;
-  kpiOk.textContent     = reportes.filter(r => r.estado === "resuelto").length;
-  kpiReview.textContent = reportes.filter(r => (r.estado || "").includes("rev")).length;
-  kpiHigh.textContent   = reportes.filter(r => r.prioridad === "alta").length;
+  // KPIs siempre sobre el universo COMPLETO (no el subset filtrado)
+  const base = REPORTES_ORIGINALES;
+  kpiTotal.textContent  = base.length;
+  kpiOk.textContent     = base.filter(r => r.estado === "resuelto").length;
+  kpiReview.textContent = base.filter(r => (r.estado || "").includes("rev")).length;
+  kpiHigh.textContent   = base.filter(r => (r.prioridad || "").toLowerCase() === "alta").length;
 }
 
 /* =======================================================
