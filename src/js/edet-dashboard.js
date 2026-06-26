@@ -90,8 +90,10 @@ function poblarFiltroUsuario() {
    FILTROS
 ======================================================= */
 function aplicarFiltros() {
-  // Base: todos los reportes (pendientes, en revisión y resueltos)
-  let filtrados = [...REPORTES_ORIGINALES];
+  // Base: solo mostrar reportes sin técnico asignado O ya resueltos
+  let filtrados = REPORTES_ORIGINALES.filter(r =>
+    !r.tecnico_email || r.estado === "resuelto"
+  );
 
   const resolucion = filtroResolucion?.value || "todos";
   const prioridad  = filtroPrioridad?.value  || "todos";
@@ -102,13 +104,24 @@ function aplicarFiltros() {
   const tecnico    = filtroTecnico?.value    || "todos";
   const usuario    = filtroUsuario?.value    || "todos";
 
-  if (resolucion === "resuelto")    filtrados = filtrados.filter(r => r.estado === "resuelto");
-  if (resolucion === "no_resuelto") filtrados = filtrados.filter(r => r.estado !== "resuelto");
-  if (prioridad !== "todos")        filtrados = filtrados.filter(r => (r.prioridad || "").toLowerCase() === prioridad);
-  if (tipo !== "todos")             filtrados = filtrados.filter(r => (r.tipo || "").toLowerCase() === tipo);
-  if (zona !== "todos")             filtrados = filtrados.filter(r => (r.zona || "") === zona);
-  if (tecnico !== "todos")          filtrados = filtrados.filter(r => (r.tecnico_email || "") === tecnico);
-  if (usuario !== "todos")          filtrados = filtrados.filter(r => (r.usuario_email || "") === usuario);
+  if (resolucion === "resuelto")      filtrados = filtrados.filter(r => (r.estado||"").toLowerCase() === "resuelto");
+  if (resolucion === "pendiente")     filtrados = filtrados.filter(r => (r.estado||"").toLowerCase() === "pendiente");
+  if (resolucion === "en revision")   filtrados = filtrados.filter(r => (r.estado||"").toLowerCase().includes("rev"));
+  if (prioridad !== "todos")          filtrados = filtrados.filter(r => (r.prioridad || "").toLowerCase() === prioridad);
+  if (tipo !== "todos")               filtrados = filtrados.filter(r => (r.tipo || "").toLowerCase() === tipo);
+  if (zona !== "todos")               filtrados = filtrados.filter(r => (r.zona || "") === zona);
+  if (tecnico !== "todos")            filtrados = filtrados.filter(r => (r.tecnico_email || "") === tecnico);
+  if (usuario !== "todos")            filtrados = filtrados.filter(r => (r.usuario_email || "") === usuario);
+  if (desde)                          filtrados = filtrados.filter(r => new Date(r.fecha) >= new Date(desde));
+  if (hasta)                          filtrados = filtrados.filter(r => new Date(r.fecha) <= new Date(hasta));
+
+  // Actualizar label del KPI total según si hay filtros activos
+  const hayFiltros = resolucion !== "todos" || prioridad !== "todos" ||
+    tipo !== "todos" || zona !== "todos" || tecnico !== "todos" ||
+    usuario !== "todos" || desde || hasta;
+  const kpiSubEl = document.querySelector("#kpiTotal ~ * .kpi-sub") ||
+    document.querySelector(".kpi-card:first-child .kpi-sub");
+  if (kpiSubEl) kpiSubEl.textContent = hayFiltros ? "Reportes filtrados" : "Total Reportes";
   if (desde) filtrados = filtrados.filter(r => new Date(r.fecha) >= new Date(desde));
   if (hasta) filtrados = filtrados.filter(r => new Date(r.fecha) <= new Date(hasta));
 
@@ -254,12 +267,13 @@ function renderTabla(reportes) {
                      </select>
                      ${yaNotificado
                        ? `<button class="btn-comunicar" disabled
+                            style="opacity:0.5;cursor:not-allowed;background:#9ca3af;"
                             title="Ya se envió una notificación para este reporte">
-                            <i class="bi bi-check2-circle"></i> Notificación enviada
+                            ✉️ Notificación enviada
                           </button>`
                        : `<button class="btn-comunicar" id="btn-comunicar-${r.id}"
                             onclick="abrirModalComunicar(${r.id}, ${r.usuario_id})">
-                            <i class="bi bi-envelope-fill"></i> Comunicar al usuario
+                            📩 Comunicar al usuario
                           </button>`
                      }`;
                   })()
@@ -282,12 +296,10 @@ function renderTabla(reportes) {
    KPIs
 ======================================================= */
 function actualizarKPIs(reportes) {
-  // KPIs siempre sobre el universo COMPLETO (no el subset filtrado)
-  const base = REPORTES_ORIGINALES;
-  kpiTotal.textContent  = base.length;
-  kpiOk.textContent     = base.filter(r => r.estado === "resuelto").length;
-  kpiReview.textContent = base.filter(r => (r.estado || "").includes("rev")).length;
-  kpiHigh.textContent   = base.filter(r => (r.prioridad || "").toLowerCase() === "alta").length;
+  kpiTotal.textContent  = reportes.length;
+  kpiOk.textContent     = reportes.filter(r => r.estado === "resuelto").length;
+  kpiReview.textContent = reportes.filter(r => (r.estado || "").includes("rev")).length;
+  kpiHigh.textContent   = reportes.filter(r => r.prioridad === "alta").length;
 }
 
 /* =======================================================
